@@ -1,0 +1,29 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+@media (min-width: 992px) {
+    .dropdown:hover .dropdown-menu {
+        display: block;
+        margin-top: 0; /* Xóa khoảng trống nhỏ giữa menu và nút */
+    }
+    
+    /* Làm mờ nút khi hover để người dùng biết nó đang hoạt động */
+    .dropdown:hover .dropdown-toggle {
+        color: #ffc107 !important; /* Màu vàng của text-warning */
+    }
+}

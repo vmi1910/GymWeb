@@ -1,0 +1,51 @@
+@{
+    ViewData["Title"] = "Đăng nhập hệ thống";
+}
+
+<section class="position-relative d-flex align-items-center justify-content-center" 
+         style="min-height: 80vh; background: url('https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=1470&auto=format&fit=crop') no-repeat center center/cover;">
+    
+    <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0,0,0,0.7);"></div>
+
+    <div class="container position-relative z-index-1">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-5">
+                <div class="card bg-dark text-white border-danger shadow-lg rounded-4 overflow-hidden">
+                    <div class="card-header border-danger text-center py-4 bg-transparent">
+                        <h3 class="fw-bold text-danger mb-0">GYM FITNESS</h3>
+                        <p class="text-muted small mb-0 mt-1">Hệ thống quản lý nội bộ</p>
+                    </div>
+                    
+                    <div class="card-body p-4 p-md-5">
+                        <form aasp-controller="Account" asp-action="Login" method="post">
+                            <div class="mb-4">
+                                <label for="username" class="form-label text-light small fw-bold">TÊN ĐĂNG NHẬP</label>
+                                <input type="text" name="username"class="form-control bg-dark text-white border-secondary py-2" id="username" placeholder="Nhập tài khoản (VD: admin)">
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="password" class="form-label text-light small fw-bold">MẬT KHẨU</label>
+                                <input type="password" name="password" class="form-control bg-dark text-white border-secondary py-2" id="password" placeholder="Nhập mật khẩu">
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input border-secondary bg-dark" id="rememberMe">
+                                    <label class="form-check-label text-muted small" for="rememberMe">Ghi nhớ tôi</label>
+                                </div>
+                                <div>
+                                    <a href="#" class="text-secondary text-decoration-none small me-2">Quên mật khẩu?</a>
+                                    <a asp-controller="Account" asp-action="Register" class="text-danger text-decoration-none small fw-bold">Đăng ký ngay</a>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid mt-4">
+                                <button type="submit" class="btn btn-danger btn-lg fw-bold rounded-pill shadow-sm">ĐĂNG NHẬP</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
