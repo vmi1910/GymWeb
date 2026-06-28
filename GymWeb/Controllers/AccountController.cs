@@ -20,12 +20,17 @@ namespace ProjectWeb.Controllers //
 
             if (user != null && hasher.VerifyHashedPassword(user, user.PasswordHash, password) == PasswordVerificationResult.Success)
             {
-                // Đăng nhập thành công -> Lưu vào Session
                 HttpContext.Session.SetString("Username", user.Username);
                 HttpContext.Session.SetString("Role", user.Role);
-                return RedirectToAction("Index", "Home");
-            }
 
+                // KIỂM TRA ROLE ĐỂ ĐIỀU HƯỚNG
+                if (user.Role == "Admin")
+                {
+                    return RedirectToAction("Accounts", "Admin"); // Sang trang quản lý tài khoản của Admin
+                }
+    
+                return RedirectToAction("Index", "Home"); // Khách thường về trang chủ
+            }
             ModelState.AddModelError("", "Sai tài khoản hoặc mật khẩu!");
             return View();
         }

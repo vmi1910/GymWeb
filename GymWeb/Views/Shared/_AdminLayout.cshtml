@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Hệ thống Quản trị GymFitness</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #1a1a1a; color: #ffffff; }
+        .sidebar { min-height: 100vh; background-color: #111111; border-right: 1px solid #222222; }
+        .nav-link-admin { color: #aaaaaa; padding: 12px 20px; display: block; text-decoration: none; font-weight: bold; }
+        .nav-link-admin:hover { background-color: #222222; color: #ff3333; }
+        .nav-link-admin.active { background-color: #ff3333; color: #ffffff; }
+        .admin-card { background-color: #111111; border: 1px solid #222222; border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3 col-lg-2 px-0 sidebar">
+                <div class="text-center py-4 border-bottom border-secondary">
+                    <h4 class="text-danger fw-bold mb-0">GYMFITNESS ADMIN</h4>
+                    <small class="text-muted">Quản lý hệ thống</small>
+                </div>
+                <div class="py-3">
+                    <a class="nav-link-admin active" asp-controller="Admin" asp-action="Accounts">
+                        <i class="bi bi-people-fill me-2"></i> Quản lý tài khoản
+                    </a>
+                    <a class="nav-link-admin" href="#">
+                        <i class="bi bi-card-list me-2"></i> Quản lý gói tập
+                    </a>
+                    <a class="nav-link-admin" href="#">
+                        <i class="bi bi-person-vcard-fill me-2"></i> Quản lý hội viên
+                    </a>
+                    <div class="border-top border-secondary my-3"></div>
+                    <a class="nav-link-admin text-muted" asp-controller="Home" asp-action="Index">
+                        <i class="bi bi-arrow-left-circle me-2"></i> Về trang chủ
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-9 col-lg-10 p-4">
+                <header class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary">
+                    <h5 class="mb-0 text-secondary">Xin chào, <span class="text-white">@Context.Session.GetString("Username")</span></h5>
+                    <a class="btn btn-outline-danger btn-sm rounded-pill" asp-controller="Account" asp-action="Logout">Đăng xuất</a>
+                </header>
+                
+                <main role="main">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
