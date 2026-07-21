@@ -20,7 +20,7 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<DataContext>();
-    context.Database.EnsureCreated(); // Tự tạo database nếu chưa có
+    context.Database.Migrate();// Tự tạo database nếu chưa có
     GymManagement.Data.SeedData.EnsurePopulated(context);
 }
 
