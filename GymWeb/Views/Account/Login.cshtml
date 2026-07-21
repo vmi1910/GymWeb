@@ -20,8 +20,8 @@
 
                         @if (!ViewData.ModelState.IsValid)
                         {
-                            <div class="alert alert-danger py-2 small">
-                                <div asp-validation-summary="ModelOnly"></div>
+                            <div class="alert alert-danger py-2">
+                                <div asp-validation-summary="All" class="text-danger small mb-0"></div>
                             </div>
                         }
 

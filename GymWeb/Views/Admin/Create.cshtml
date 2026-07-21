@@ -29,11 +29,13 @@
                 <div class="row mb-4">
                     <div class="col-md-4">
                         <label class="form-label text-muted small fw-bold">TÊN ĐĂNG NHẬP *</label>
-                        <input asp-for="Username" class="form-control bg-dark text-white border-secondary" required>
+                        <input asp-for="Username" class="form-control bg-dark text-white border-secondary">
+                        <span asp-validation-for="Username" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label text-muted small fw-bold">MẬT KHẨU *</label>
-                        <input type="password" asp-for="RawPassword" class="form-control bg-dark text-white border-secondary" required>
+                        <input type="password" asp-for="RawPassword" class="form-control bg-dark text-white border-secondary">
+                        <span asp-validation-for="RawPassword" class="text-danger small"></span>
                     </div>
                     <div class="col-md-4">
                         <label class="form-label text-muted small fw-bold">VAI TRÒ (ROLE) *</label>
@@ -49,7 +51,8 @@
                 <h6 class="text-white border-bottom border-secondary pb-2 mb-3 mt-4">2. THÔNG TIN CÁ NHÂN</h6>
                 <div class="mb-3">
                     <label class="form-label text-muted small fw-bold">HỌ VÀ TÊN *</label>
-                    <input asp-for="FullName" class="form-control bg-dark text-white border-secondary" required>
+                    <input asp-for="FullName" class="form-control bg-dark text-white border-secondary">
+                    <span asp-validation-for="FullName" class="text-danger small"></span>
                 </div>
 
                 <div class="row mb-4">
@@ -67,6 +70,7 @@
                     <div class="col-md-4">
                         <label class="form-label text-muted small fw-bold">EMAIL</label>
                         <input asp-for="Email" type="email" class="form-control bg-dark text-white border-secondary">
+                        <span asp-validation-for="Email" class="text-danger small"></span>
                     </div>
                 </div>
 
@@ -102,11 +106,5 @@
 </div>
 
 @section Scripts {
-    <script>
-        function toggleTrainerFields() {
-            var role = document.getElementById('roleSelect').value;
-            document.getElementById('trainerFields').style.display = (role === 'Trainer') ? 'block' : 'none';
-        }
-        document.addEventListener('DOMContentLoaded', toggleTrainerFields);
-    </script>
+    <partial name="_ValidationScriptsPartial" />
 }

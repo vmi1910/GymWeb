@@ -1,3 +1,4 @@
+@model GymWeb.ViewModels.AccountCreateViewModel
 @{
     ViewData["Title"] = "Đăng ký tài khoản mới";
 }
@@ -17,37 +18,51 @@
                     </div>
 
                     <div class="card-body p-4 p-md-5">
-                        <form action="#" method="post">
+
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div class="alert alert-danger">
+                                <div asp-validation-summary="All" class="text-danger small"></div>
+                            </div>
+                        }
+
+                        <form asp-controller="Account" asp-action="Register" method="post">
 
                             <div class="mb-3">
-                                <label for="fullname" class="form-label text-light small fw-bold">HỌ VÀ TÊN</label>
-                                <input type="text" class="form-control bg-dark text-white border-secondary py-2" id="fullname" placeholder="Nhập đầy đủ họ và tên" required>
+                                <label asp-for="FullName" class="form-label text-light small fw-bold">HỌ VÀ TÊN</label>
+                                <input asp-for="FullName" class="form-control bg-dark text-white border-secondary py-2" placeholder="Nhập đầy đủ họ và tên">
+                                <span asp-validation-for="FullName" class="text-danger small"></span>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="phone" class="form-label text-light small fw-bold">SỐ ĐIỆN THOẠI</label>
-                                    <input type="tel" class="form-control bg-dark text-white border-secondary py-2" id="phone" placeholder="Số điện thoại" required>
+                                    <label asp-for="PhoneNumber" class="form-label text-light small fw-bold">SỐ ĐIỆN THOẠI</label>
+                                    <input asp-for="PhoneNumber" type="tel" class="form-control bg-dark text-white border-secondary py-2" placeholder="Số điện thoại">
+                                    <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="email" class="form-label text-light small fw-bold">EMAIL</label>
-                                    <input type="email" class="form-control bg-dark text-white border-secondary py-2" id="email" placeholder="Địa chỉ email" required>
+                                    <label asp-for="Email" class="form-label text-light small fw-bold">EMAIL</label>
+                                    <input asp-for="Email" type="email" class="form-control bg-dark text-white border-secondary py-2" placeholder="Địa chỉ email">
+                                    <span asp-validation-for="Email" class="text-danger small"></span>
                                 </div>
                             </div>
 
                             <div class="mb-3">
-                                <label for="reg-username" class="form-label text-light small fw-bold">TÊN ĐĂNG NHẬP (TÀI KHOẢN)</label>
-                                <input type="text" class="form-control bg-dark text-white border-secondary py-2" id="reg-username" placeholder="Tạo tên tài khoản đăng nhập" required>
+                                <label asp-for="Username" class="form-label text-light small fw-bold">TÊN ĐĂNG NHẬP (TÀI KHOẢN)</label>
+                                <input asp-for="Username" class="form-control bg-dark text-white border-secondary py-2" placeholder="Tạo tên tài khoản đăng nhập">
+                                <span asp-validation-for="Username" class="text-danger small"></span>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="reg-password" class="form-label text-light small fw-bold">MẬT KHẨU</label>
-                                    <input type="password" class="form-control bg-dark text-white border-secondary py-2" id="reg-password" placeholder="Nhập mật khẩu" required>
+                                    <label asp-for="RawPassword" class="form-label text-light small fw-bold">MẬT KHẨU</label>
+                                    <input asp-for="RawPassword" type="password" class="form-control bg-dark text-white border-secondary py-2" placeholder="Nhập mật khẩu">
+                                    <span asp-validation-for="RawPassword" class="text-danger small"></span>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="confirm-password" class="form-label text-light small fw-bold">NHẬP LẠI MẬT KHẨU</label>
-                                    <input type="password" class="form-control bg-dark text-white border-secondary py-2" id="confirm-password" placeholder="Xác nhận mật khẩu" required>
+                                    <label asp-for="ConfirmPassword" class="form-label text-light small fw-bold">NHẬP LẠI MẬT KHẨU</label>
+                                    <input asp-for="ConfirmPassword" type="password" class="form-control bg-dark text-white border-secondary py-2" placeholder="Xác nhận mật khẩu">
+                                    <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
                                 </div>
                             </div>
 
@@ -70,3 +85,7 @@
         </div>
     </div>
 </section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

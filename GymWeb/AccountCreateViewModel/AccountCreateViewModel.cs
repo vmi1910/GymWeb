@@ -9,8 +9,13 @@ namespace GymWeb.ViewModels
         [Required(ErrorMessage = "Tên đăng nhập không được để trống")]
         public string Username { get; set; } = string.Empty;
 
-        [Required(ErrorMessage = "Mật khẩu không được để trống")]
+        // Không đặt [Required] ở đây vì màn Sửa (Edit) cho phép để trống = không đổi mật khẩu.
+        // Màn Tạo mới (Create) và Đăng ký (Register) tự kiểm tra bắt buộc trong controller.
         public string RawPassword { get; set; } = string.Empty;
+
+        // Chỉ dùng cho form Đăng ký công khai (Member tự đăng ký), Admin Create/Edit không cần
+        [Compare("RawPassword", ErrorMessage = "Mật khẩu nhập lại không khớp")]
+        public string ConfirmPassword { get; set; } = string.Empty;
 
         public string Role { get; set; } = "Member";
 
