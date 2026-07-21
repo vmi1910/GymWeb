@@ -50,7 +50,13 @@
                                         </li>
                                         <li><hr class="dropdown-divider border-secondary"></li>
                                     }
-                                    <li><a class="dropdown-item text-white" href="#">Thông tin cá nhân</a></li>
+                                    @if (Context.Session.GetString("Role") == "Member") {
+                                        <li>
+                                            <a class="dropdown-item text-white" asp-controller="Profile" asp-action="Index">
+                                                <i class="bi bi-person-fill me-2"></i> Hồ sơ của tôi
+                                            </a>
+                                        </li>
+                                    }
                                     <li><hr class="dropdown-divider border-secondary"></li>
                                     <li>
                                         <a class="dropdown-item text-white" asp-controller="Account" asp-action="Logout">
