@@ -1,7 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Trang chủ";
 }
-
+<script src="https://unpkg.com/lucky-canvas@1.7.20"></script>
 <style>
     /* Ép ảnh các bộ môn tập luyện có chiều cao bằng nhau */
     .course-img {
@@ -31,11 +31,87 @@
          style="min-height: 70vh; background: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1470&auto=format&fit=crop') no-repeat center center/cover;">
     <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0,0,0,0.5);"></div>
     
-    <div class="container position-relative text-center text-white z-index-1">
-        <h1 class="display-3 fw-bold text-danger text-uppercase mb-3">Trải nghiệm phòng tập 5 sao</h1>
-        <p class="lead mb-4 fw-normal">Tặng ngay 1 tháng tập luyện miễn phí với hệ thống máy móc hiện đại nhất.</p>
-        <a href="#" class="btn btn-danger btn-lg px-5 py-3 fw-bold rounded-pill shadow">ĐĂNG KÝ NHẬN ƯU ĐÃI</a>
-    </div>
+    <div class="container position-relative z-index-1">
+        <div class="row align-items-center">            
+            <div class="col-md-6 text-center">
+                
+
+                <div id="my-lucky"></div>
+                <script src="https://unpkg.com/lucky-canvas@1.7.20"></script>
+                <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                    const myLucky = new LuckyCanvas.LuckyWheel('#my-lucky', {
+                    width: '500px',
+                    height: '500px',
+                    blocks: [{ padding: '10px', background: '#869cfa' }],
+                     prizes: 
+                    [
+                        {
+                            background: '#ffffff',
+                            fonts: [{ text: '1 BÌNH NƯỚC', top: '70%', fontColor: '#d60000',fontSize: '20px'  }],
+                            imgs: [{ src: '/images/binh-nuoc.png', width: '60%', top: '15%' }] // Chèn ảnh vào đây!
+                        },
+                        {
+                            background: '#F08080',
+                            fonts: [{ text: '01 CHỈ VÀNG', top: '70%', fontColor: '#d60000',fontSize: '20px'  }],
+                            imgs: [{ src: 'https://sjc.com.vn/Data/Sites/1/Product/10759/1-chi_1474808161.jpg', width: '60%', top: '15%' }]
+                        },
+                        {
+                            background: '#ffffff',
+                            fonts: [{ text: '01 CHỈ VÀNG', top: '70%', fontColor: '#d60000',fontSize: '20px'  }],
+                            imgs: [{ src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQSbqFq7BW1jl3C13LbPEOWMKTsWQnhn5U7IMzMeCg1w&s=10', width: '60%', top: '15%' }]
+                        },
+                        {
+                            background: '#F08080',
+                            fonts: [{ text: '01 CHỈ VÀNG', top: '70%', fontColor: '#d60000',fontSize: '20px'  }],
+                            imgs: [{ src: '/images/price1.png', width: '60%', top: '15%' }]
+                        },
+                        {
+                            background: '#ffffff',
+                            fonts: [{ text: '01 CHỈ VÀNG', top: '70%', fontColor: '#d60000', fontSize: '20px' }],
+                            imgs: [{ src: '/images/vang.png', width: '60%', top: '15%' }]
+                        },
+                        {
+                            background: '#F08080',
+                            fonts: [{ text: '01 CHỈ VÀNG', top: '70%', fontColor: '#d60000',fontSize: '20px'  }],
+                            imgs: [{ src: '/images/vang.png', width: '60%', top: '15%' }]
+                        },
+                    ],
+                    buttons: [{
+                                radius: '30%',
+                                // Dùng mã màu vàng kim (Gold) cho sang
+                                background: '#FFD700', 
+                                pointer: true, // Thêm con trỏ chuột khi di vào
+                                fonts: [{ 
+                                    text: 'QUAY',
+                                    textAlign: 'Center' ,
+                                    top: '30%', 
+                                    fontSize: '24px', 
+                                    fontColor: '#8B4513', // Màu nâu gỗ cho sang
+                                    fontWeight: 'bold' 
+                                        }],
+                                // Hiệu ứng 3D nằm ở đây
+                                shadow: '0px 5px 0px #B8860B' 
+                            }],
+                    click: function() {
+                    this.play();
+                    setTimeout(() => {
+                    this.stop(Math.random() * 3 | 0);
+                    }, 3000);
+                            }
+                        });
+                    });
+                </script>
+            </div>
+            
+            <div class="col-md-6 text-center text-md-start text-white">
+            <h1 class="display-3 fw-bold text-danger text-uppercase mb-3">Trải nghiệm phòng tập 5 sao</h1>
+            <p class="lead mb-4 fw-normal">Tặng ngay 1 tháng tập luyện miễn phí với hệ thống máy móc hiện đại nhất.</p>
+            <a href="#" class="btn btn-danger btn-lg px-5 py-3 fw-bold rounded-pill shadow">ĐĂNG KÝ NHẬN ƯU ĐÃI</a>
+            </div>
+
+        </div>
+</div>
 </section>
 
 <section id="bomontap" class="container mt-5 pt-4">
