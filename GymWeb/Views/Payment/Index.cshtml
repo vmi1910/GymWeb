@@ -1,0 +1,89 @@
+@using GymWeb.Models
+@model IEnumerable<GymWeb.Models.Payment>
+@{
+    ViewData["Title"] = "Quản lý thanh toán";
+    Layout = "_AdminLayout";
+    var list = Model.ToList();
+    var subscriptions = (Dictionary<int, Subscription>)ViewBag.Subscriptions;
+    var members = (Dictionary<int, Member>)ViewBag.Members;
+    var packages = (Dictionary<int, MembershipPackage>)ViewBag.Packages;
+    var staffs = (Dictionary<int, Staff>)ViewBag.Staffs;
+    decimal totalRevenue = ViewBag.TotalRevenue;
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success py-2 small">@TempData["Success"]</div>
+}
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="admin-card p-4">
+            <div class="d-flex align-items-center">
+                <div class="feature-icon me-3" style="width:52px;height:52px;font-size:1.2rem;margin:0;"><i class="bi bi-cash-stack"></i></div>
+                <div>
+                    <div class="fs-4 fw-bold">@totalRevenue.ToString("N0") đ</div>
+                    <div class="text-muted small text-uppercase">Tổng doanh thu</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="admin-card p-4">
+            <div class="d-flex align-items-center">
+                <div class="feature-icon me-3" style="width:52px;height:52px;font-size:1.2rem;margin:0;"><i class="bi bi-receipt"></i></div>
+                <div>
+                    <div class="fs-4 fw-bold">@list.Count</div>
+                    <div class="text-muted small text-uppercase">Tổng số hóa đơn</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="admin-card p-4 d-flex align-items-center justify-content-center">
+            <a asp-action="Create" class="btn btn-brand fw-bold px-4 rounded-pill w-100">
+                <i class="bi bi-plus-circle me-2"></i> Lập hóa đơn mới
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="admin-card p-4 shadow">
+    <h3 class="fw-bold mb-4">LỊCH SỬ THANH TOÁN</h3>
+
+    <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle mb-0" style="border-color: #222222;">
+            <thead>
+                <tr class="text-secondary small text-uppercase">
+                    <th>Ngày thanh toán</th>
+                    <th>Hội viên</th>
+                    <th>Gói tập</th>
+                    <th>Số tiền</th>
+                    <th>Phương thức</th>
+                    <th>Nhân viên xử lý</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!list.Any())
+                {
+                    <tr><td colspan="6" class="text-center text-muted py-4">Chưa có giao dịch thanh toán nào.</td></tr>
+                }
+                @foreach (var item in list)
+                {
+                    Subscription? sub = item.SubscriptionID > 0 && subscriptions.ContainsKey(item.SubscriptionID) ? subscriptions[item.SubscriptionID] : null;
+                    Member? member = sub != null && members.ContainsKey(sub.MemberID) ? members[sub.MemberID] : null;
+                    MembershipPackage? package = sub != null && packages.ContainsKey(sub.PackageID) ? packages[sub.PackageID] : null;
+                    Staff? staff = item.StaffID.HasValue && staffs.ContainsKey(item.StaffID.Value) ? staffs[item.StaffID.Value] : null;
+                    <tr>
+                        <td>@item.PaymentDate.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td class="fw-bold">@(member?.FullName ?? "—")</td>
+                        <td>@(package?.PackageName ?? "—")</td>
+                        <td class="text-brand-red fw-bold">@item.Amount.ToString("N0") đ</td>
+                        <td><span class="badge bg-info text-dark">@item.Method</span></td>
+                        <td class="text-muted small">@(staff?.FullName ?? "—")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

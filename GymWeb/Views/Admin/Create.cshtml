@@ -7,18 +7,23 @@
 <div class="row justify-content-center">
     <div class="col-md-10 col-lg-8">
         <div class="admin-card p-4 shadow mt-4">
-            <h4 class="text-danger fw-bold mb-4">
-                <i class="bi bi-person-plus-fill me-2"></i> THÊM TÀI KHOẢN & THÔNG TIN
-            </h4>
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="text-brand-red fw-bold mb-0">
+                    <i class="bi bi-person-plus-fill me-2"></i> THÊM TÀI KHOẢN &amp; THÔNG TIN
+                </h4>
+                <a asp-action="Accounts" class="text-muted small text-decoration-none">
+                    <i class="bi bi-arrow-left me-1"></i> Quay lại danh sách
+                </a>
+            </div>
 
             @if (!ViewData.ModelState.IsValid)
             {
-                <div class="alert alert-danger">
-                    <div asp-validation-summary="All" class="text-danger small"></div>
+                <div class="alert alert-danger py-2">
+                    <div asp-validation-summary="All" class="small mb-0"></div>
                 </div>
             }
 
-            <form asp-controller="Admin" asp-action="Create" method="post">
+            <form asp-controller="Admin" asp-action="Create" method="post" enctype="multipart/form-data">
                 
                 <h6 class="text-white border-bottom border-secondary pb-2 mb-3">1. THÔNG TIN ĐĂNG NHẬP</h6>
                 <div class="row mb-4">
@@ -32,9 +37,10 @@
                     </div>
                     <div class="col-md-4">
                         <label class="form-label text-muted small fw-bold">VAI TRÒ (ROLE) *</label>
-                        <select asp-for="Role" class="form-select bg-dark text-white border-secondary">
+                        <select asp-for="Role" id="roleSelect" class="form-select bg-dark text-white border-secondary" onchange="toggleTrainerFields()">
                             <option value="Member">Hội viên (Member)</option>
                             <option value="Staff">Nhân viên (Staff)</option>
+                            <option value="Trainer">Huấn luyện viên (Trainer)</option>
                             <option value="Admin">Quản trị viên (Admin)</option>
                         </select>
                     </div>
@@ -45,7 +51,7 @@
                     <label class="form-label text-muted small fw-bold">HỌ VÀ TÊN *</label>
                     <input asp-for="FullName" class="form-control bg-dark text-white border-secondary" required>
                 </div>
-                
+
                 <div class="row mb-4">
                     <div class="col-md-4">
                         <label class="form-label text-muted small fw-bold">GIỚI TÍNH</label>
@@ -64,9 +70,29 @@
                     </div>
                 </div>
 
+                <div id="trainerFields" style="display:none;">
+                    <h6 class="text-white border-bottom border-secondary pb-2 mb-3 mt-4">3. HỒ SƠ HUẤN LUYỆN VIÊN</h6>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold">CHUYÊN MÔN</label>
+                            <input asp-for="Specialty" class="form-control bg-dark text-white border-secondary" placeholder="VD: Tăng cơ, Yoga, Cardio...">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-muted small fw-bold">CHỨNG CHỈ</label>
+                            <input asp-for="Certification" class="form-control bg-dark text-white border-secondary" placeholder="VD: ACE Certified, Yoga Alliance...">
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label text-muted small fw-bold">ẢNH CHỨNG CHỈ</label>
+                        <input asp-for="CertificateImage" type="file" accept="image/*" class="form-control bg-dark text-white border-secondary">
+                        <div class="form-text text-muted">Chấp nhận jpg, png, webp, gif — tối đa 5MB.</div>
+                        <span asp-validation-for="CertificateImage" class="text-danger small"></span>
+                    </div>
+                </div>
+
                 <div class="d-flex justify-content-end mt-5 pt-3 border-top border-secondary">
                     <a asp-action="Accounts" class="btn btn-outline-secondary rounded-pill px-4 me-3">Hủy bỏ</a>
-                    <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">
+                    <button type="submit" class="btn btn-brand rounded-pill px-4 fw-bold">
                         <i class="bi bi-floppy-fill me-2"></i> Lưu hồ sơ
                     </button>
                 </div>
@@ -74,3 +100,13 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        function toggleTrainerFields() {
+            var role = document.getElementById('roleSelect').value;
+            document.getElementById('trainerFields').style.display = (role === 'Trainer') ? 'block' : 'none';
+        }
+        document.addEventListener('DOMContentLoaded', toggleTrainerFields);
+    </script>
+}

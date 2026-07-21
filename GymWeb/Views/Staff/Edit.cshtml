@@ -1,0 +1,87 @@
+@model GymWeb.Models.Staff
+@{
+    ViewData["Title"] = "Chỉnh sửa nhân viên";
+    Layout = "_AdminLayout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+        <div class="admin-card p-4 shadow mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="text-brand-red fw-bold mb-0">
+                    <i class="bi bi-person-badge me-2"></i> CHỈNH SỬA NHÂN VIÊN
+                </h4>
+                <a asp-action="Index" class="text-muted small text-decoration-none">
+                    <i class="bi bi-arrow-left me-1"></i> Quay lại danh sách
+                </a>
+            </div>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger py-2">
+                    <div asp-validation-summary="All" class="small mb-0"></div>
+                </div>
+            }
+
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="StaffID" />
+                <input type="hidden" asp-for="AccountID" />
+                <input type="hidden" asp-for="Role" />
+                <input type="hidden" asp-for="HireDate" />
+
+                <div class="mb-3">
+                    <label class="form-label text-muted small fw-bold">HỌ VÀ TÊN *</label>
+                    <input asp-for="FullName" class="form-control bg-dark text-white border-secondary" required>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small fw-bold">NGÀY SINH</label>
+                        <input type="date" name="DateOfBirth" id="DateOfBirth" class="form-control bg-dark text-white border-secondary" value="@Model.DateOfBirth.ToString("yyyy-MM-dd")">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small fw-bold">GIỚI TÍNH</label>
+                        <select asp-for="Gender" class="form-select bg-dark text-white border-secondary">
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small fw-bold">TRẠNG THÁI</label>
+                        <select asp-for="Status" class="form-select bg-dark text-white border-secondary">
+                            <option value="Active">Đang làm việc</option>
+                            <option value="Inactive">Đã nghỉ việc</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small fw-bold">SỐ ĐIỆN THOẠI</label>
+                        <input asp-for="PhoneNumber" class="form-control bg-dark text-white border-secondary">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small fw-bold">EMAIL</label>
+                        <input asp-for="Email" type="email" class="form-control bg-dark text-white border-secondary">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small fw-bold">LƯƠNG CƠ BẢN</label>
+                        <input asp-for="Salary" type="number" step="100000" class="form-control bg-dark text-white border-secondary">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label text-muted small fw-bold">ĐỊA CHỈ</label>
+                    <input asp-for="Address" class="form-control bg-dark text-white border-secondary">
+                </div>
+
+                <div class="d-flex justify-content-end pt-3 border-top border-secondary">
+                    <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4 me-3">Hủy bỏ</a>
+                    <button type="submit" class="btn btn-brand rounded-pill px-4 fw-bold">
+                        <i class="bi bi-floppy-fill me-2"></i> Lưu thay đổi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
