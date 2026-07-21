@@ -1,159 +1,123 @@
-﻿@{
+@{
     ViewData["Title"] = "Trang chủ";
 }
-<script src="https://unpkg.com/lucky-canvas@1.7.20"></script>
-<style>
-    /* Ép ảnh các bộ môn tập luyện có chiều cao bằng nhau */
-    .course-img {
-        height: 250px;
-        object-fit: cover;
-    }
-    
-    /* Ép ảnh hệ thống chi nhánh có chiều cao bằng nhau và làm tối nền ảnh để dễ đọc chữ */
-    .branch-card {
-        height: 350px;
-        overflow: hidden;
-        border-radius: 10px;
-    }
-    .branch-img {
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-        filter: brightness(0.6); /* Làm tối ảnh 40% để chữ trắng nổi bật hơn */
-        transition: transform 0.5s ease;
-    }
-    .branch-card:hover .branch-img {
-        transform: scale(1.1); /* Hiệu ứng zoom nhẹ khi hover */
-    }
-</style>
 
-<section class="position-relative d-flex align-items-center justify-content-center" 
-         style="min-height: 70vh; background: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1470&auto=format&fit=crop') no-repeat center center/cover;">
-    <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0,0,0,0.5);"></div>
-    
-    <div class="container position-relative z-index-1">
-        <div class="row align-items-center">            
-            <div class="col-md-6 text-center">
-                
+<section class="position-relative d-flex align-items-center justify-content-center"
+         style="min-height: 80vh; background: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&amp;w=1470&amp;auto=format&amp;fit=crop') no-repeat center center/cover;">
 
-                <div id="my-lucky"></div>
-                <script src="https://unpkg.com/lucky-canvas@1.7.20"></script>
-                <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                    const myLucky = new LuckyCanvas.LuckyWheel('#my-lucky', {
-                    width: '500px',
-                    height: '500px',
-                    blocks: [{ padding: '10px', background: '#869cfa' }],
-                     prizes: 
-                    [
-                        {
-                            background: '#ffffff',
-                            fonts: [{ text: '1 BÌNH NƯỚC', top: '70%', fontColor: '#d60000',fontSize: '20px'  }],
-                            imgs: [{ src: '/images/binh-nuoc.png', width: '60%', top: '15%' }] // Chèn ảnh vào đây!
-                        },
-                        {
-                            background: '#F08080',
-                            fonts: [{ text: '01 CHỈ VÀNG', top: '70%', fontColor: '#d60000',fontSize: '20px'  }],
-                            imgs: [{ src: 'https://sjc.com.vn/Data/Sites/1/Product/10759/1-chi_1474808161.jpg', width: '60%', top: '15%' }]
-                        },
-                        {
-                            background: '#ffffff',
-                            fonts: [{ text: '01 CHỈ VÀNG', top: '70%', fontColor: '#d60000',fontSize: '20px'  }],
-                            imgs: [{ src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQSbqFq7BW1jl3C13LbPEOWMKTsWQnhn5U7IMzMeCg1w&s=10', width: '60%', top: '15%' }]
-                        },
-                        {
-                            background: '#F08080',
-                            fonts: [{ text: '01 CHỈ VÀNG', top: '70%', fontColor: '#d60000',fontSize: '20px'  }],
-                            imgs: [{ src: '/images/price1.png', width: '60%', top: '15%' }]
-                        },
-                        {
-                            background: '#ffffff',
-                            fonts: [{ text: '01 CHỈ VÀNG', top: '70%', fontColor: '#d60000', fontSize: '20px' }],
-                            imgs: [{ src: '/images/vang.png', width: '60%', top: '15%' }]
-                        },
-                        {
-                            background: '#F08080',
-                            fonts: [{ text: '01 CHỈ VÀNG', top: '70%', fontColor: '#d60000',fontSize: '20px'  }],
-                            imgs: [{ src: '/images/vang.png', width: '60%', top: '15%' }]
-                        },
-                    ],
-                    buttons: [{
-                                radius: '30%',
-                                // Dùng mã màu vàng kim (Gold) cho sang
-                                background: '#FFD700', 
-                                pointer: true, // Thêm con trỏ chuột khi di vào
-                                fonts: [{ 
-                                    text: 'QUAY',
-                                    textAlign: 'Center' ,
-                                    top: '30%', 
-                                    fontSize: '24px', 
-                                    fontColor: '#8B4513', // Màu nâu gỗ cho sang
-                                    fontWeight: 'bold' 
-                                        }],
-                                // Hiệu ứng 3D nằm ở đây
-                                shadow: '0px 5px 0px #B8860B' 
-                            }],
-                    click: function() {
-                    this.play();
-                    setTimeout(() => {
-                    this.stop(Math.random() * 3 | 0);
-                    }, 3000);
-                            }
-                        });
-                    });
-                </script>
-            </div>
-            
-            <div class="col-md-6 text-center text-md-start text-white">
-            <h1 class="display-3 fw-bold text-danger text-uppercase mb-3">Trải nghiệm phòng tập 5 sao</h1>
-            <p class="lead mb-4 fw-normal">Tặng ngay 1 tháng tập luyện miễn phí với hệ thống máy móc hiện đại nhất.</p>
-            <a href="#" class="btn btn-danger btn-lg px-5 py-3 fw-bold rounded-pill shadow">ĐĂNG KÝ NHẬN ƯU ĐÃI</a>
-            </div>
+    <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(180deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.85) 100%);"></div>
 
-        </div>
-</div>
+    <div class="container position-relative text-center text-white mx-auto px-3" style="z-index: 2; max-width: 800px;">
+        <span class="section-eyebrow d-inline-block mb-3">Hệ thống phòng tập đẳng cấp</span>
+        <h1 class="display-3 fw-bold text-uppercase mb-3">Trải nghiệm phòng tập <span class="text-brand-red">5 sao</span></h1>
+        <p class="lead mb-4 fw-normal">Tặng ngay 1 tháng tập luyện miễn phí với hệ thống máy móc hiện đại nhất.</p>
+        <a href="#hethongphong" class="btn btn-brand btn-lg px-5 py-3 rounded-pill shadow">Đăng ký nhận ưu đãi</a>
+    </div>
 </section>
 
-<section id="bomontap" class="container mt-5 pt-4">
-    <div class="text-center mb-5">
-        <h2 class="fw-bold text-uppercase">Trải nghiệm bộ môn <span class="text-danger">xu hướng</span> hàng đầu</h2>
-        <p class="text-muted">Tập luyện các bộ môn được hội viên yêu thích nhất cùng HLV chuyên nghiệp.</p>
+<section class="stats-strip py-4 border-bottom border-dark">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-6 col-md-3">
+                <div class="stat-block">
+                    <div class="stat-number">10+</div>
+                    <div class="stat-label text-white-50">Chi nhánh</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-block">
+                    <div class="stat-number">50K+</div>
+                    <div class="stat-label text-white-50">Hội viên</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-block">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label text-white-50">Huấn luyện viên</div>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-block">
+                    <div class="stat-number">8+</div>
+                    <div class="stat-label text-white-50">Năm kinh nghiệm</div>
+                </div>
+            </div>
+        </div>
     </div>
-    
+</section>
+
+<section class="container mt-5 pt-5">
+    <div class="text-center mb-5">
+        <span class="section-eyebrow">Vì sao chọn chúng tôi</span>
+        <h2 class="section-title">Cam kết chất lượng <span class="text-brand-red">hàng đầu</span></h2>
+        <p class="section-subtitle">Đồng hành cùng bạn trên hành trình thay đổi vóc dáng với tiêu chuẩn dịch vụ chuyên nghiệp.</p>
+    </div>
+
+    <div class="row g-4 text-center">
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="feature-icon"><i class="bi bi-cpu"></i></div>
+            <h5 class="fw-bold">Trang thiết bị hiện đại</h5>
+            <p class="text-muted small">Máy móc nhập khẩu Technogym, không gian tập luyện rộng rãi, thoáng mát.</p>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="feature-icon"><i class="bi bi-person-badge"></i></div>
+            <h5 class="fw-bold">Huấn luyện viên chuyên nghiệp</h5>
+            <p class="text-muted small">Đội ngũ PT giàu kinh nghiệm, đồng hành xây dựng lộ trình tập luyện riêng.</p>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="feature-icon"><i class="bi bi-calendar2-check"></i></div>
+            <h5 class="fw-bold">Lịch tập linh hoạt</h5>
+            <p class="text-muted small">Đa dạng khung giờ, lớp học nhóm và phòng tập cá nhân theo nhu cầu.</p>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="feature-icon"><i class="bi bi-shield-check"></i></div>
+            <h5 class="fw-bold">Chính sách minh bạch</h5>
+            <p class="text-muted small">Bảng giá rõ ràng, không phát sinh chi phí, hỗ trợ hội viên tận tâm.</p>
+        </div>
+    </div>
+</section>
+
+<section id="bomontap" class="container mt-5 pt-5">
+    <div class="text-center mb-5">
+        <span class="section-eyebrow">Bộ môn tập luyện</span>
+        <h2 class="section-title">Trải nghiệm bộ môn <span class="text-brand-red">xu hướng</span></h2>
+        <p class="section-subtitle">Tập luyện các bộ môn được hội viên yêu thích nhất cùng HLV chuyên nghiệp.</p>
+    </div>
+
     <div class="row g-4">
         <div class="col-12 col-md-6 col-lg-3">
             <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=500&auto=format&fit=crop" class="card-img-top course-img" alt="Yoga">
+                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=500&amp;auto=format&amp;fit=crop" class="card-img-top course-img" alt="Yoga">
                 <div class="card-body text-center p-4">
                     <h5 class="card-title fw-bold">YOGA</h5>
                     <p class="card-text small text-muted">Thân khỏe, tâm an cùng không gian Studio thiền tịnh cao cấp.</p>
                 </div>
             </div>
         </div>
-        
+
         <div class="col-12 col-md-6 col-lg-3">
             <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&auto=format&fit=crop" class="card-img-top course-img" alt="Gym">
+                <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&amp;auto=format&amp;fit=crop" class="card-img-top course-img" alt="Gym">
                 <div class="card-body text-center p-4">
                     <h5 class="card-title fw-bold">GYM / CARDIO</h5>
                     <p class="card-text small text-muted">Tăng cơ, giảm mỡ hiệu quả với trang thiết bị máy móc Technogym.</p>
                 </div>
             </div>
         </div>
-        
+
         <div class="col-12 col-md-6 col-lg-3">
             <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=500&auto=format&fit=crop" class="card-img-top course-img" alt="Zumba">
+                <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=500&amp;auto=format&amp;fit=crop" class="card-img-top course-img" alt="Zumba">
                 <div class="card-body text-center p-4">
-                    <h5 class="card-title fw-bold">DANCE & ZUMBA</h5>
+                    <h5 class="card-title fw-bold">DANCE &amp; ZUMBA</h5>
                     <p class="card-text small text-muted">Hòa mình vào âm nhạc sôi động, giải tỏa căng thẳng sau giờ làm.</p>
                 </div>
             </div>
         </div>
-        
+
         <div class="col-12 col-md-6 col-lg-3">
             <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=500&auto=format&fit=crop" class="card-img-top course-img" alt="Kick Fit">
+                <img src="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=500&amp;auto=format&amp;fit=crop" class="card-img-top course-img" alt="Kick Fit">
                 <div class="card-body text-center p-4">
                     <h5 class="card-title fw-bold">KICK FIT</h5>
                     <p class="card-text small text-muted">Rèn luyện cơ thể săn chắc, tăng phản xạ và khả năng tự vệ.</p>
@@ -165,14 +129,15 @@
 
 <section id="hethongphong" class="container mt-5 pt-5 mb-5">
     <div class="text-center mb-5">
-        <h2 class="fw-bold text-uppercase">Hệ thống <span class="text-danger">Trung Tâm</span></h2>
-        <p class="text-muted">Diện tích chuẩn cao cấp, không gian tập luyện thiết kế theo từng concept riêng biệt.</p>
+        <span class="section-eyebrow">Chi nhánh</span>
+        <h2 class="section-title">Hệ thống <span class="text-brand-red">Trung Tâm</span></h2>
+        <p class="section-subtitle">Diện tích chuẩn cao cấp, không gian tập luyện thiết kế theo từng concept riêng biệt.</p>
     </div>
 
     <div class="row g-4">
         <div class="col-12 col-md-6 col-lg-4">
             <div class="card bg-dark text-white border-0 branch-card position-relative">
-                <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=600&auto=format&fit=crop" class="branch-img" alt="Quận 10">
+                <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=600&amp;auto=format&amp;fit=crop" class="branch-img" alt="Quận 10">
                 <div class="card-img-overlay d-flex flex-column justify-content-end p-4">
                     <h4 class="card-title fw-bold mb-1">CHI NHÁNH QUẬN 10</h4>
                     <p class="card-text small mb-3">Khu vườn nhiệt đới Fitness chuẩn 5 sao với diện tích hơn 3000 m2.</p>
@@ -180,10 +145,10 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="col-12 col-md-6 col-lg-4">
             <div class="card bg-dark text-white border-0 branch-card position-relative">
-                <img src="https://images.unsplash.com/photo-1593079831268-3381b0c13182?w=600&auto=format&fit=crop" class="branch-img" alt="Vạn Hạnh Mall">
+                <img src="https://images.unsplash.com/photo-1593079831268-3381b0c13182?w=600&amp;auto=format&amp;fit=crop" class="branch-img" alt="Vạn Hạnh Mall">
                 <div class="card-img-overlay d-flex flex-column justify-content-end p-4">
                     <h4 class="card-title fw-bold mb-1">VẠN HẠNH MALL</h4>
                     <p class="card-text small mb-3">Tiện lợi kết hợp mua sắm và tập luyện tại trung tâm thương mại lớn.</p>
@@ -191,10 +156,10 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="col-12 col-md-6 col-lg-4">
             <div class="card bg-dark text-white border-0 branch-card position-relative">
-                <img src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=600&auto=format&fit=crop" class="branch-img" alt="Quận 4">
+                <img src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=600&amp;auto=format&amp;fit=crop" class="branch-img" alt="Quận 4">
                 <div class="card-img-overlay d-flex flex-column justify-content-end p-4">
                     <h4 class="card-title fw-bold mb-1">CHI NHÁNH QUẬN 4</h4>
                     <p class="card-text small mb-3">Sở hữu không gian thoáng đãng với hướng nhìn 2 mặt tiền sầm uất.</p>
@@ -202,5 +167,13 @@
                 </div>
             </div>
         </div>
+    </div>
+</section>
+
+<section class="container mb-5">
+    <div class="cta-band text-white text-center p-5 shadow">
+        <h3 class="fw-bold text-uppercase mb-2">Sẵn sàng bắt đầu hành trình của bạn?</h3>
+        <p class="mb-4">Đăng ký ngay hôm nay để nhận buổi tập thử miễn phí cùng huấn luyện viên chuyên nghiệp.</p>
+        <a asp-controller="Account" asp-action="Register" class="btn btn-dark btn-lg px-5 rounded-pill fw-bold">Đăng ký ngay</a>
     </div>
 </section>

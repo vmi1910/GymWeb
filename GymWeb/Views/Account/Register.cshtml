@@ -3,20 +3,20 @@
     ViewData["Title"] = "Đăng ký tài khoản mới";
 }
 
-<section class="position-relative d-flex align-items-center justify-content-center" 
-         style="min-height: 90vh; background: url('https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=1470&auto=format&fit=crop') no-repeat center center/cover;">
-    
-    <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0,0,0,0.75);"></div>
+<section class="position-relative d-flex align-items-center justify-content-center"
+         style="min-height: 95vh; background: url('https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&amp;w=1470&amp;auto=format&amp;fit=crop') no-repeat center center/cover;">
+
+    <div class="position-absolute top-0 start-0 w-100 h-100" style="background-color: rgba(0,0,0,0.8);"></div>
 
     <div class="container position-relative z-index-1 my-5">
         <div class="row justify-content-center">
             <div class="col-12 col-md-10 col-lg-6">
                 <div class="card bg-dark text-white border-danger shadow-lg rounded-4 overflow-hidden">
                     <div class="card-header border-danger text-center py-4 bg-transparent">
-                        <h3 class="fw-bold text-danger mb-0">THÀNH VIÊN MỚI</h3>
+                        <h3 class="fw-bold text-brand-red mb-0 brand-font">THÀNH VIÊN MỚI</h3>
                         <p class="text-muted small mb-0 mt-1">Đăng ký tài khoản để nhận ưu đãi tập luyện</p>
                     </div>
-                    
+
                     <div class="card-body p-4 p-md-5">
 
                         @if (!ViewData.ModelState.IsValid)
@@ -70,13 +70,13 @@
                                 <input type="checkbox" class="form-check-input border-secondary bg-dark" id="agreeTerms" required>
                                 <label class="form-check-label text-muted small" for="agreeTerms">Tôi đồng ý với các điều khoản sử dụng và chính sách bảo mật của phòng GYM.</label>
                             </div>
-                            
+
                             <div class="d-grid mt-4">
-                                <button type="submit" class="btn btn-danger btn-lg fw-bold rounded-pill shadow-sm">ĐĂNG KÝ NGAY</button>
+                                <button type="submit" class="btn btn-brand btn-lg rounded-pill shadow-sm">ĐĂNG KÝ NGAY</button>
                             </div>
 
                             <div class="text-center mt-4">
-                                <p class="text-muted small mb-0">Bạn đã có tài khoản? <a asp-controller="Account" asp-action="Login" class="text-danger text-decoration-none fw-bold">Đăng nhập tại đây</a></p>
+                                <p class="text-muted small mb-0">Bạn đã có tài khoản? <a asp-controller="Account" asp-action="Login" class="text-brand-red text-decoration-none fw-bold">Đăng nhập tại đây</a></p>
                             </div>
                         </form>
                     </div>

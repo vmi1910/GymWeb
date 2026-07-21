@@ -1,0 +1,79 @@
+@model IEnumerable<GymWeb.Models.Staff>
+@{
+    ViewData["Title"] = "Quản lý nhân viên";
+    Layout = "_AdminLayout";
+    var list = Model.ToList();
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success py-2 small">@TempData["Success"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger py-2 small">@TempData["Error"]</div>
+}
+
+<div class="admin-card p-4 shadow">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h3 class="fw-bold mb-1">DANH SÁCH NHÂN VIÊN</h3>
+            <p class="text-muted small mb-0">Tổng số: @list.Count nhân viên</p>
+        </div>
+        <form method="get" class="d-flex" style="max-width: 320px;">
+            <input type="text" name="search" value="@ViewData["Search"]" class="form-control bg-dark text-white border-secondary me-2" placeholder="Tìm tên, SĐT...">
+            <button type="submit" class="btn btn-outline-brand"><i class="bi bi-search"></i></button>
+        </form>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle mb-0" style="border-color: #222222;">
+            <thead>
+                <tr class="text-secondary small text-uppercase">
+                    <th>Họ và tên</th>
+                    <th>Số điện thoại</th>
+                    <th>Ngày vào làm</th>
+                    <th>Lương cơ bản</th>
+                    <th>Trạng thái</th>
+                    <th class="text-end">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!list.Any())
+                {
+                    <tr><td colspan="6" class="text-center text-muted py-4">Không tìm thấy nhân viên nào. Thêm mới tại "Quản lý tài khoản".</td></tr>
+                }
+                @foreach (var item in list)
+                {
+                    <tr>
+                        <td class="fw-bold">@item.FullName</td>
+                        <td>@item.PhoneNumber</td>
+                        <td>@item.HireDate.ToString("dd/MM/yyyy")</td>
+                        <td>@item.Salary.ToString("N0") đ</td>
+                        <td>
+                            @if (item.Status == "Active")
+                            {
+                                <span class="badge bg-success">Đang làm việc</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">@item.Status</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <a asp-action="Edit" asp-route-id="@item.StaffID" class="btn btn-outline-warning btn-sm me-2 rounded-pill px-3">
+                                <i class="bi bi-pencil-square"></i> Sửa
+                            </a>
+                            <form asp-action="Delete" asp-route-id="@item.StaffID" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3"
+                                        onclick="return confirm('Xóa nhân viên @item.FullName?');">
+                                    <i class="bi bi-trash3-fill"></i> Xóa
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

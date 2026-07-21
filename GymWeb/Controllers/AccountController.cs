@@ -27,7 +27,7 @@ namespace GymWeb.Controllers
                 // KIỂM TRA ROLE ĐỂ ĐIỀU HƯỚNG
                 if (user.Role == "Admin")
                 {
-                    return RedirectToAction("Accounts", "Admin"); // Sang trang quản lý tài khoản của Admin
+                    return RedirectToAction("Index", "Dashboard"); // Sang trang thống kê tổng quan của Admin
                 }
     
                 return RedirectToAction("Index", "Home"); // Khách thường về trang chủ

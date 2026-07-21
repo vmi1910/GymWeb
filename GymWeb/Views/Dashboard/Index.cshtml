@@ -1,0 +1,83 @@
+@model GymWeb.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Thống kê doanh thu";
+    Layout = "_AdminLayout";
+}
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3">
+        <div class="admin-card p-4">
+            <div class="feature-icon mb-2" style="width:52px;height:52px;font-size:1.2rem;"><i class="bi bi-cash-coin"></i></div>
+            <div class="fs-4 fw-bold">@Model.TotalRevenue.ToString("N0") đ</div>
+            <div class="text-muted small text-uppercase">Tổng doanh thu</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="admin-card p-4">
+            <div class="feature-icon mb-2" style="width:52px;height:52px;font-size:1.2rem;"><i class="bi bi-graph-up-arrow"></i></div>
+            <div class="fs-4 fw-bold">@Model.RevenueThisMonth.ToString("N0") đ</div>
+            <div class="text-muted small text-uppercase">Doanh thu tháng này</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="admin-card p-4">
+            <div class="feature-icon mb-2" style="width:52px;height:52px;font-size:1.2rem;"><i class="bi bi-people-fill"></i></div>
+            <div class="fs-4 fw-bold">@Model.TotalMembers</div>
+            <div class="text-muted small text-uppercase">Tổng hội viên</div>
+        </div>
+    </div>
+    <div class="col-6 col-lg-3">
+        <div class="admin-card p-4">
+            <div class="feature-icon mb-2" style="width:52px;height:52px;font-size:1.2rem;"><i class="bi bi-card-list"></i></div>
+            <div class="fs-4 fw-bold">@Model.ActivePackages</div>
+            <div class="text-muted small text-uppercase">Gói tập đang bán</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-6">
+        <div class="admin-card p-4 text-center">
+            <div class="fs-3 fw-bold text-brand-red">@Model.TotalStaff</div>
+            <div class="text-muted small text-uppercase">Nhân viên</div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="admin-card p-4 text-center">
+            <div class="fs-3 fw-bold text-brand-red">@Model.TotalTrainers</div>
+            <div class="text-muted small text-uppercase">Huấn luyện viên</div>
+        </div>
+    </div>
+</div>
+
+<div class="admin-card p-4 shadow">
+    <h5 class="fw-bold mb-4">DOANH THU 6 THÁNG GẦN NHẤT</h5>
+    <canvas id="revenueChart" height="90"></canvas>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyLabels)),
+                datasets: [{
+                    label: 'Doanh thu (đ)',
+                    data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyRevenue)),
+                    backgroundColor: '#e30613',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { ticks: { color: '#9a9a9a' }, grid: { color: '#2a2a2a' } },
+                    x: { ticks: { color: '#9a9a9a' }, grid: { display: false } }
+                }
+            }
+        });
+    </script>
+}

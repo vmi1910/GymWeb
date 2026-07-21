@@ -1,0 +1,65 @@
+@model IEnumerable<GymWeb.Models.StaffSchedule>
+@{
+    ViewData["Title"] = "Quản lý lịch tập";
+    Layout = "_AdminLayout";
+    var list = Model.ToList();
+    var staffNames = (Dictionary<int, string>)ViewBag.StaffNames;
+    var roomNames = (Dictionary<int, string>)ViewBag.RoomNames;
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success py-2 small">@TempData["Success"]</div>
+}
+
+<div class="admin-card p-4 shadow">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">LỊCH LÀM VIỆC / LỊCH TẬP</h3>
+            <p class="text-muted small mb-0">Phân công nhân viên, huấn luyện viên theo ca và phòng tập</p>
+        </div>
+        <a asp-action="Create" class="btn btn-brand fw-bold px-4 rounded-pill">
+            <i class="bi bi-plus-circle me-2"></i> Thêm lịch
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle mb-0" style="border-color: #222222;">
+            <thead>
+                <tr class="text-secondary small text-uppercase">
+                    <th>Ngày</th>
+                    <th>Nhân viên / HLV</th>
+                    <th>Phòng</th>
+                    <th>Ca làm việc</th>
+                    <th class="text-end">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!list.Any())
+                {
+                    <tr><td colspan="5" class="text-center text-muted py-4">Chưa có lịch tập nào.</td></tr>
+                }
+                @foreach (var item in list)
+                {
+                    <tr>
+                        <td class="fw-bold">@item.ShiftDate.ToString("dd/MM/yyyy")</td>
+                        <td>@(staffNames.GetValueOrDefault(item.StaffID, "—"))</td>
+                        <td>@(roomNames.GetValueOrDefault(item.RoomID, "—"))</td>
+                        <td>@item.StartTime.ToString(@"hh\:mm") - @item.EndTime.ToString(@"hh\:mm")</td>
+                        <td class="text-end">
+                            <a asp-action="Edit" asp-route-id="@item.ScheduleID" class="btn btn-outline-warning btn-sm me-2 rounded-pill px-3">
+                                <i class="bi bi-pencil-square"></i> Sửa
+                            </a>
+                            <form asp-action="Delete" asp-route-id="@item.ScheduleID" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3"
+                                        onclick="return confirm('Xóa lịch này?');">
+                                    <i class="bi bi-trash3-fill"></i> Xóa
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
