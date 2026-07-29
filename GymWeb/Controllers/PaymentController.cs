@@ -5,13 +5,17 @@ using GymWeb.ViewModels;
 
 namespace GymWeb.Controllers
 {
-    // Quản lý thanh toán (Admin) - lập hóa đơn cho hội viên đăng ký / gia hạn gói tập
+    // Quản lý thanh toán - dùng chung cho Admin và Nhân viên (Staff): lập hóa đơn, gia hạn gói tập
     public class PaymentController : Controller
     {
         private readonly DataContext _context;
         public PaymentController(DataContext context) { _context = context; }
 
-        private bool IsAdmin() => HttpContext.Session.GetString("Role") == "Admin";
+        private bool IsAdminOrStaff()
+        {
+            var role = HttpContext.Session.GetString("Role");
+            return role == "Admin" || role == "Staff";
+        }
 
         private int? GetCurrentStaffId()
         {
@@ -27,7 +31,7 @@ namespace GymWeb.Controllers
 
         public IActionResult Index()
         {
-            if (!IsAdmin()) return RedirectToAction("Login", "Account");
+            if (!IsAdminOrStaff()) return RedirectToAction("Login", "Account");
 
             var payments = _context.Payments.OrderByDescending(p => p.PaymentDate).ToList();
             var subscriptions = _context.Subscriptions.ToDictionary(s => s.SubscriptionID);
@@ -45,11 +49,11 @@ namespace GymWeb.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult Create(int? memberId)
         {
-            if (!IsAdmin()) return RedirectToAction("Login", "Account");
-            LoadDropdowns();
-            return View(new PaymentCreateViewModel());
+            if (!IsAdminOrStaff()) return RedirectToAction("Login", "Account");
+            LoadDropdowns(memberId);
+            return View(new PaymentCreateViewModel { MemberID = memberId ?? 0 });
         }
 
         private void LoadDropdowns(int? memberId = null, int? packageId = null)
@@ -68,7 +72,7 @@ namespace GymWeb.Controllers
         [HttpPost]
         public IActionResult Create(PaymentCreateViewModel model)
         {
-            if (!IsAdmin()) return RedirectToAction("Login", "Account");
+            if (!IsAdminOrStaff()) return RedirectToAction("Login", "Account");
 
             var member = _context.Members.Find(model.MemberID);
             var package = _context.MembershipPackages.Find(model.PackageID);
@@ -82,12 +86,20 @@ namespace GymWeb.Controllers
                 return View(model);
             }
 
+            // Nếu hội viên đang có gói còn hạn thì cộng dồn thời gian (gia hạn) thay vì tính lại từ hôm nay
+            var latest = _context.Subscriptions
+                .Where(s => s.MemberID == model.MemberID)
+                .OrderByDescending(s => s.EndDate)
+                .FirstOrDefault();
+
+            var startDate = (latest != null && latest.EndDate.Date > DateTime.Today) ? latest.EndDate.Date : DateTime.Today;
+
             var subscription = new Subscription
             {
                 MemberID = model.MemberID,
                 PackageID = model.PackageID,
-                StartDate = DateTime.Today,
-                EndDate = DateTime.Today.AddDays(package!.DurationDays),
+                StartDate = startDate,
+                EndDate = startDate.AddDays(package!.DurationDays),
                 TotalAmount = package.Price
             };
             _context.Subscriptions.Add(subscription);

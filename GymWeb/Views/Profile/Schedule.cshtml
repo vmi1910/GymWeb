@@ -1,0 +1,59 @@
+@model IEnumerable<GymWeb.Models.StaffSchedule>
+@{
+    ViewData["Title"] = "Lịch tập";
+    var list = Model.ToList();
+    var staffNames = (Dictionary<int, string>)ViewBag.StaffNames;
+    var roomNames = (Dictionary<int, string>)ViewBag.RoomNames;
+}
+
+<section class="static-page-hero py-5">
+    <div class="container text-center text-white py-4">
+        <span class="section-eyebrow">Tài khoản của tôi</span>
+        <h1 class="section-title mb-0">Lịch tập &amp; huấn luyện viên</h1>
+    </div>
+</section>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <ul class="nav nav-pills mb-4 gap-2">
+                <li class="nav-item"><a class="nav-link text-dark" asp-action="Index">Thông tin cá nhân</a></li>
+                <li class="nav-item"><a class="nav-link text-dark" asp-action="Packages">Gói tập</a></li>
+                <li class="nav-item"><a class="nav-link text-dark" asp-action="History">Lịch sử thanh toán</a></li>
+                <li class="nav-item"><a class="nav-link active" style="background-color:var(--brand-red);" asp-action="Schedule">Lịch tập</a></li>
+            </ul>
+
+            <div class="static-page-card border p-4 p-md-5">
+                <p class="text-muted small mb-4">Lịch làm việc sắp tới của nhân viên / huấn luyện viên tại các phòng tập.</p>
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr class="text-muted small text-uppercase">
+                                <th>Ngày</th>
+                                <th>Huấn luyện viên / Nhân viên</th>
+                                <th>Phòng</th>
+                                <th>Khung giờ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!list.Any())
+                            {
+                                <tr><td colspan="4" class="text-center text-muted py-4">Chưa có lịch nào sắp tới.</td></tr>
+                            }
+                            @foreach (var item in list)
+                            {
+                                <tr>
+                                    <td class="fw-bold">@item.ShiftDate.ToString("dd/MM/yyyy")</td>
+                                    <td>@(staffNames.GetValueOrDefault(item.StaffID, "—"))</td>
+                                    <td>@(roomNames.GetValueOrDefault(item.RoomID, "—"))</td>
+                                    <td>@item.StartTime.ToString(@"hh\:mm") - @item.EndTime.ToString(@"hh\:mm")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

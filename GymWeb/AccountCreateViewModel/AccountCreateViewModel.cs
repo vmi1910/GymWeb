@@ -34,5 +34,8 @@ namespace GymWeb.ViewModels
         public string? Specialty { get; set; }
         public string? Certification { get; set; }
         public IFormFile? CertificateImage { get; set; }
+
+        // Dùng cho màn Sửa: hiển thị ảnh chứng chỉ hiện có, không bắt buộc chọn ảnh mới
+        public string? ExistingCertificateImagePath { get; set; }
     }
 }

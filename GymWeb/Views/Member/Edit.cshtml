@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Chỉnh sửa hội viên";
     Layout = "_AdminLayout";
+    bool isAdmin = Context.Session.GetString("Role") == "Admin";
 }
 
 <div class="row justify-content-center">
@@ -69,6 +70,23 @@
                     <label class="form-label text-muted small fw-bold">ĐỊA CHỈ</label>
                     <input asp-for="Address" class="form-control bg-dark text-white border-secondary">
                 </div>
+
+                @if (isAdmin)
+                {
+                    <div class="mb-4">
+                        <label class="form-label text-muted small fw-bold">VAI TRÒ (ROLE)</label>
+                        <select name="role" class="form-select bg-dark text-white border-secondary">
+                            <option value="Member" selected>Hội viên (Member)</option>
+                            <option value="Staff">Nhân viên (Staff)</option>
+                            <option value="Trainer">Huấn luyện viên (Trainer)</option>
+                            <option value="Admin">Quản trị viên (Admin)</option>
+                        </select>
+                        <div class="form-text text-warning">
+                            Đổi vai trò sẽ chuyển hồ sơ này sang mục quản lý Nhân viên/HLV tương ứng.
+                            Sẽ bị chặn nếu hội viên đã có gói tập/hóa đơn thanh toán.
+                        </div>
+                    </div>
+                }
 
                 <div class="d-flex justify-content-end pt-3 border-top border-secondary">
                     <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4 me-3">Hủy bỏ</a>
