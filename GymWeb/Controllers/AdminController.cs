@@ -3,6 +3,7 @@ using GymWeb.Models;
 using Microsoft.AspNetCore.Identity;
 using GymWeb.ViewModels;
 using GymWeb.Helpers;
+using Microsoft.EntityFrameworkCore;
 
 namespace GymWeb.Controllers
 {
@@ -66,7 +67,7 @@ namespace GymWeb.Controllers
             return View(list);
         }
 
-        //Tạo tài khoản (Admin)
+        //Tạo tài khoản (Admin)
         [HttpGet]
         public IActionResult Create()
         {
@@ -239,16 +240,26 @@ namespace GymWeb.Controllers
             _context.SaveChanges();
             return RedirectToAction("Accounts");
         }
+
         [HttpPost]
         public IActionResult Delete(int id)
         {
             if (HttpContext.Session.GetString("Role") != "Admin") return RedirectToAction("Login", "Account");
-    
+
             var account = _context.Accounts.Find(id);
             if (account != null)
             {
-                _context.Accounts.Remove(account);
-                _context.SaveChanges();
+                try
+                {
+                    _context.Accounts.Remove(account);
+                    _context.SaveChanges();
+                }
+                catch (DbUpdateException)
+                {
+                    // Xảy ra khi tài khoản này là Staff/Trainer đã từng thu ngân một hóa đơn (Payment.StaffID)
+                    // -> ràng buộc Restrict trên Payment.Staff chặn việc xóa dây chuyền.
+                    TempData["Error"] = "Không thể xóa tài khoản này vì đã có hóa đơn thanh toán gắn với tài khoản.";
+                }
             }
             return RedirectToAction("Accounts");
         }
