@@ -95,6 +95,96 @@ namespace GymWeb.Migrations
                     b.ToTable("Members");
                 });
 
+            modelBuilder.Entity("GymWeb.Models.MembershipPackage", b =>
+                {
+                    b.Property<int>("PackageID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PackageID"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DurationDays")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PackageName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(12,0)");
+
+                    b.HasKey("PackageID");
+
+                    b.ToTable("MembershipPackages");
+                });
+
+            modelBuilder.Entity("GymWeb.Models.Payment", b =>
+                {
+                    b.Property<int>("PaymentID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentID"), 1L, 1);
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(12,0)");
+
+                    b.Property<string>("Method")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("StaffID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SubscriptionID")
+                        .HasColumnType("int");
+
+                    b.HasKey("PaymentID");
+
+                    b.HasIndex("StaffID");
+
+                    b.HasIndex("SubscriptionID");
+
+                    b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("GymWeb.Models.Room", b =>
+                {
+                    b.Property<int>("RoomID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoomID"), 1L, 1);
+
+                    b.Property<int>("Capacity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Floor")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RoomName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("RoomID");
+
+                    b.ToTable("Rooms");
+                });
+
             modelBuilder.Entity("GymWeb.Models.Staff", b =>
                 {
                     b.Property<int>("StaffID")
@@ -150,6 +240,91 @@ namespace GymWeb.Migrations
                     b.ToTable("Staffs");
                 });
 
+            modelBuilder.Entity("GymWeb.Models.StaffSchedule", b =>
+                {
+                    b.Property<int>("ScheduleID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ScheduleID"), 1L, 1);
+
+                    b.Property<TimeSpan>("EndTime")
+                        .HasColumnType("time");
+
+                    b.Property<int>("RoomID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ShiftDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("StaffID")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("StartTime")
+                        .HasColumnType("time");
+
+                    b.HasKey("ScheduleID");
+
+                    b.HasIndex("RoomID");
+
+                    b.HasIndex("StaffID");
+
+                    b.ToTable("StaffSchedules");
+                });
+
+            modelBuilder.Entity("GymWeb.Models.Subscription", b =>
+                {
+                    b.Property<int>("SubscriptionID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubscriptionID"), 1L, 1);
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MemberID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PackageID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(12,0)");
+
+                    b.HasKey("SubscriptionID");
+
+                    b.HasIndex("MemberID");
+
+                    b.HasIndex("PackageID");
+
+                    b.ToTable("Subscriptions");
+                });
+
+            modelBuilder.Entity("GymWeb.Models.TrainerProfile", b =>
+                {
+                    b.Property<int>("StaffID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CertificateImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Certification")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Specialty")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("StaffID");
+
+                    b.ToTable("TrainerProfiles");
+                });
+
             modelBuilder.Entity("GymWeb.Models.Member", b =>
                 {
                     b.HasOne("GymWeb.Models.Account", "Account")
@@ -161,6 +336,24 @@ namespace GymWeb.Migrations
                     b.Navigation("Account");
                 });
 
+            modelBuilder.Entity("GymWeb.Models.Payment", b =>
+                {
+                    b.HasOne("GymWeb.Models.Staff", "Staff")
+                        .WithMany()
+                        .HasForeignKey("StaffID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("GymWeb.Models.Subscription", "Subscription")
+                        .WithMany()
+                        .HasForeignKey("SubscriptionID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Staff");
+
+                    b.Navigation("Subscription");
+                });
+
             modelBuilder.Entity("GymWeb.Models.Staff", b =>
                 {
                     b.HasOne("GymWeb.Models.Account", "Account")
@@ -170,6 +363,55 @@ namespace GymWeb.Migrations
                         .IsRequired();
 
                     b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("GymWeb.Models.StaffSchedule", b =>
+                {
+                    b.HasOne("GymWeb.Models.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GymWeb.Models.Staff", "Staff")
+                        .WithMany()
+                        .HasForeignKey("StaffID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+
+                    b.Navigation("Staff");
+                });
+
+            modelBuilder.Entity("GymWeb.Models.Subscription", b =>
+                {
+                    b.HasOne("GymWeb.Models.Member", "Member")
+                        .WithMany()
+                        .HasForeignKey("MemberID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GymWeb.Models.MembershipPackage", "Package")
+                        .WithMany()
+                        .HasForeignKey("PackageID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Member");
+
+                    b.Navigation("Package");
+                });
+
+            modelBuilder.Entity("GymWeb.Models.TrainerProfile", b =>
+                {
+                    b.HasOne("GymWeb.Models.Staff", "Staff")
+                        .WithMany()
+                        .HasForeignKey("StaffID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Staff");
                 });
 #pragma warning restore 612, 618
         }
