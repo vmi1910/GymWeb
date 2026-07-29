@@ -1,0 +1,66 @@
+@using GymWeb.Models
+@model IEnumerable<GymWeb.Models.Subscription>
+@{
+    ViewData["Title"] = "Đăng ký gói tập";
+    Layout = "_AdminLayout";
+    var list = Model.ToList();
+    var members = (Dictionary<int, Member>)ViewBag.Members;
+    var packages = (Dictionary<int, MembershipPackage>)ViewBag.Packages;
+    var today = DateTime.Today;
+}
+
+<div class="admin-card p-4 shadow">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">ĐĂNG KÝ GÓI TẬP CỦA HỘI VIÊN</h3>
+            <p class="text-muted small mb-0">Danh sách được tạo tự động khi lập hóa đơn tại "Quản lý thanh toán"</p>
+        </div>
+        <a asp-controller="Payment" asp-action="Create" class="btn btn-brand fw-bold px-4 rounded-pill">
+            <i class="bi bi-plus-circle me-2"></i> Đăng ký / gia hạn
+        </a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle mb-0" style="border-color: #222222;">
+            <thead>
+                <tr class="text-secondary small text-uppercase">
+                    <th>Hội viên</th>
+                    <th>Gói tập</th>
+                    <th>Ngày bắt đầu</th>
+                    <th>Ngày hết hạn</th>
+                    <th>Số tiền</th>
+                    <th>Trạng thái</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!list.Any())
+                {
+                    <tr><td colspan="6" class="text-center text-muted py-4">Chưa có đăng ký gói tập nào.</td></tr>
+                }
+                @foreach (var item in list)
+                {
+                    Member? member = members.ContainsKey(item.MemberID) ? members[item.MemberID] : null;
+                    MembershipPackage? package = packages.ContainsKey(item.PackageID) ? packages[item.PackageID] : null;
+                    bool active = item.EndDate.Date >= today;
+                    <tr>
+                        <td class="fw-bold">@(member?.FullName ?? "—")</td>
+                        <td>@(package?.PackageName ?? "—")</td>
+                        <td>@item.StartDate.ToString("dd/MM/yyyy")</td>
+                        <td>@item.EndDate.ToString("dd/MM/yyyy")</td>
+                        <td class="text-brand-red fw-bold">@item.TotalAmount.ToString("N0") đ</td>
+                        <td>
+                            @if (active)
+                            {
+                                <span class="badge bg-success">Còn hạn</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">Hết hạn</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

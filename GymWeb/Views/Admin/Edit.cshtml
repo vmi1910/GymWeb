@@ -1,0 +1,83 @@
+@model GymWeb.ViewModels.AccountCreateViewModel
+@{
+    ViewData["Title"] = "Sửa tài khoản";
+    Layout = "_AdminLayout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+        <div class="admin-card p-4 shadow mt-4">
+            <h4 class="text-danger fw-bold mb-4">
+                <i class="bi bi-pencil-square me-2"></i> SỬA TÀI KHOẢN & THÔNG TIN
+            </h4>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    <div asp-validation-summary="All" class="text-danger small"></div>
+                </div>
+            }
+
+            <form asp-controller="Admin" asp-action="Edit" method="post">
+                <input type="hidden" name="id" value="@ViewBag.AccountID" />
+
+                <h6 class="text-white border-bottom border-secondary pb-2 mb-3">1. THÔNG TIN ĐĂNG NHẬP</h6>
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small fw-bold">TÊN ĐĂNG NHẬP *</label>
+                        <input asp-for="Username" class="form-control bg-dark text-white border-secondary">
+                        <span asp-validation-for="Username" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small fw-bold">MẬT KHẨU MỚI</label>
+                        <input type="password" asp-for="RawPassword" class="form-control bg-dark text-white border-secondary" placeholder="Để trống nếu không đổi mật khẩu">
+                        <span asp-validation-for="RawPassword" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small fw-bold">VAI TRÒ (ROLE)</label>
+                        <!-- Khóa không cho đổi Role để tránh lệch dữ liệu Member/Staff -->
+                        <input class="form-control bg-dark text-white border-secondary" value="@Model.Role" disabled>
+                        <input type="hidden" asp-for="Role" />
+                    </div>
+                </div>
+
+                <h6 class="text-white border-bottom border-secondary pb-2 mb-3 mt-4">2. THÔNG TIN CÁ NHÂN</h6>
+                <div class="mb-3">
+                    <label class="form-label text-muted small fw-bold">HỌ VÀ TÊN *</label>
+                    <input asp-for="FullName" class="form-control bg-dark text-white border-secondary">
+                    <span asp-validation-for="FullName" class="text-danger small"></span>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small fw-bold">GIỚI TÍNH</label>
+                        <select asp-for="Gender" class="form-select bg-dark text-white border-secondary">
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small fw-bold">SỐ ĐIỆN THOẠI</label>
+                        <input asp-for="PhoneNumber" class="form-control bg-dark text-white border-secondary">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small fw-bold">EMAIL</label>
+                        <input asp-for="Email" type="email" class="form-control bg-dark text-white border-secondary">
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end mt-5 pt-3 border-top border-secondary">
+                    <a asp-action="Accounts" class="btn btn-outline-secondary rounded-pill px-4 me-3">Hủy bỏ</a>
+                    <button type="submit" class="btn btn-danger rounded-pill px-4 fw-bold">
+                        <i class="bi bi-floppy-fill me-2"></i> Cập nhật
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

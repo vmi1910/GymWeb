@@ -1,0 +1,106 @@
+@model GymWeb.ViewModels.TrainerViewModel
+@{
+    ViewData["Title"] = "Chỉnh sửa huấn luyện viên";
+    Layout = "_AdminLayout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+        <div class="admin-card p-4 shadow mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="text-brand-red fw-bold mb-0">
+                    <i class="bi bi-person-badge-fill me-2"></i> CHỈNH SỬA HUẤN LUYỆN VIÊN
+                </h4>
+                <a asp-action="Index" class="text-muted small text-decoration-none">
+                    <i class="bi bi-arrow-left me-1"></i> Quay lại danh sách
+                </a>
+            </div>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger py-2">
+                    <div asp-validation-summary="All" class="small mb-0"></div>
+                </div>
+            }
+
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                <input type="hidden" asp-for="StaffID" />
+                <input type="hidden" asp-for="CertificateImagePath" />
+
+                <div class="mb-3">
+                    <label class="form-label text-muted small fw-bold">HỌ VÀ TÊN *</label>
+                    <input asp-for="FullName" class="form-control bg-dark text-white border-secondary" required>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small fw-bold">NGÀY SINH</label>
+                        <input type="date" name="DateOfBirth" id="DateOfBirth" class="form-control bg-dark text-white border-secondary" value="@Model.DateOfBirth.ToString("yyyy-MM-dd")">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small fw-bold">GIỚI TÍNH</label>
+                        <select asp-for="Gender" class="form-select bg-dark text-white border-secondary">
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small fw-bold">TRẠNG THÁI</label>
+                        <select asp-for="Status" class="form-select bg-dark text-white border-secondary">
+                            <option value="Active">Đang làm việc</option>
+                            <option value="Inactive">Đã nghỉ việc</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small fw-bold">SỐ ĐIỆN THOẠI</label>
+                        <input asp-for="PhoneNumber" class="form-control bg-dark text-white border-secondary">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small fw-bold">EMAIL</label>
+                        <input asp-for="Email" type="email" class="form-control bg-dark text-white border-secondary">
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label text-muted small fw-bold">ĐỊA CHỈ</label>
+                    <input asp-for="Address" class="form-control bg-dark text-white border-secondary">
+                </div>
+
+                <h6 class="text-white border-bottom border-secondary pb-2 mb-3 mt-4">HỒ SƠ HUẤN LUYỆN VIÊN</h6>
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small fw-bold">CHUYÊN MÔN</label>
+                        <input asp-for="Specialty" class="form-control bg-dark text-white border-secondary" placeholder="VD: Tăng cơ, Yoga, Cardio...">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small fw-bold">CHỨNG CHỈ</label>
+                        <input asp-for="Certification" class="form-control bg-dark text-white border-secondary" placeholder="VD: ACE Certified, Yoga Alliance...">
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label text-muted small fw-bold">ẢNH CHỨNG CHỈ</label>
+                    @if (!string.IsNullOrEmpty(Model.CertificateImagePath))
+                    {
+                        <div class="mb-2">
+                            <img src="@Model.CertificateImagePath" alt="Ảnh chứng chỉ" class="rounded-3 border border-secondary" style="max-height: 160px;">
+                        </div>
+                    }
+                    <input asp-for="CertificateImage" type="file" accept="image/*" class="form-control bg-dark text-white border-secondary">
+                    <div class="form-text text-muted">Để trống nếu muốn giữ ảnh hiện tại. Chấp nhận jpg, png, webp, gif — tối đa 5MB.</div>
+                    <span asp-validation-for="CertificateImage" class="text-danger small"></span>
+                </div>
+
+                <div class="d-flex justify-content-end pt-3 border-top border-secondary">
+                    <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4 me-3">Hủy bỏ</a>
+                    <button type="submit" class="btn btn-brand rounded-pill px-4 fw-bold">
+                        <i class="bi bi-floppy-fill me-2"></i> Lưu thay đổi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

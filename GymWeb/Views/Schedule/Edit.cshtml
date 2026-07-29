@@ -1,0 +1,60 @@
+@model GymWeb.Models.StaffSchedule
+@{
+    ViewData["Title"] = "Chỉnh sửa lịch tập";
+    Layout = "_AdminLayout";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-10 col-lg-7">
+        <div class="admin-card p-4 shadow mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="text-brand-red fw-bold mb-0"><i class="bi bi-calendar2-check me-2"></i> CHỈNH SỬA LỊCH TẬP</h4>
+                <a asp-action="Index" class="text-muted small text-decoration-none"><i class="bi bi-arrow-left me-1"></i> Quay lại</a>
+            </div>
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger py-2"><div asp-validation-summary="All" class="small mb-0"></div></div>
+            }
+
+            <form asp-action="Edit" method="post">
+                <input type="hidden" asp-for="ScheduleID" />
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small fw-bold">NHÂN VIÊN / HLV *</label>
+                        <select asp-for="StaffID" asp-items="ViewBag.StaffList" class="form-select bg-dark text-white border-secondary">
+                            <option value="">-- Chọn --</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small fw-bold">PHÒNG TẬP *</label>
+                        <select asp-for="RoomID" asp-items="ViewBag.RoomList" class="form-select bg-dark text-white border-secondary">
+                            <option value="">-- Chọn --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small fw-bold">NGÀY *</label>
+                        <input asp-for="ShiftDate" class="form-control bg-dark text-white border-secondary" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small fw-bold">GIỜ BẮT ĐẦU *</label>
+                        <input asp-for="StartTime" type="time" class="form-control bg-dark text-white border-secondary" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label text-muted small fw-bold">GIỜ KẾT THÚC *</label>
+                        <input asp-for="EndTime" type="time" class="form-control bg-dark text-white border-secondary" required>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end pt-3 border-top border-secondary">
+                    <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4 me-3">Hủy bỏ</a>
+                    <button type="submit" class="btn btn-brand rounded-pill px-4 fw-bold"><i class="bi bi-floppy-fill me-2"></i> Lưu thay đổi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
