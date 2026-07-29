@@ -1,0 +1,132 @@
+@using GymWeb.Models
+@model GymWeb.Models.Member
+@{
+    ViewData["Title"] = "Tra cứu thông tin hội viên";
+    Layout = "_AdminLayout";
+    var subscriptions = (List<Subscription>)ViewBag.Subscriptions;
+    var payments = (List<Payment>)ViewBag.Payments;
+    var packages = (Dictionary<int, MembershipPackage>)ViewBag.Packages;
+    var today = DateTime.Today;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4 class="text-brand-red fw-bold mb-0">
+        <i class="bi bi-person-lines-fill me-2"></i> HỒ SƠ HỘI VIÊN
+    </h4>
+    <div>
+        <a asp-controller="Payment" asp-action="Create" asp-route-memberId="@Model.MemberID" class="btn btn-brand btn-sm rounded-pill px-3 me-2">
+            <i class="bi bi-cash-stack me-1"></i> Lập hóa đơn / Gia hạn
+        </a>
+        <a asp-action="Edit" asp-route-id="@Model.MemberID" class="btn btn-outline-warning btn-sm rounded-pill px-3 me-2">
+            <i class="bi bi-pencil-square me-1"></i> Sửa
+        </a>
+        <a asp-action="Index" class="text-muted small text-decoration-none">
+            <i class="bi bi-arrow-left me-1"></i> Quay lại danh sách
+        </a>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-5">
+        <div class="admin-card p-4">
+            <h6 class="text-white border-bottom border-secondary pb-2 mb-3">THÔNG TIN CÁ NHÂN</h6>
+            <table class="table table-dark table-borderless mb-0 small">
+                <tbody>
+                    <tr><td class="text-muted" style="width:40%;">Họ và tên</td><td class="fw-bold">@Model.FullName</td></tr>
+                    <tr><td class="text-muted">Ngày sinh</td><td>@(Model.DateOfBirth == default ? "—" : Model.DateOfBirth.ToString("dd/MM/yyyy"))</td></tr>
+                    <tr><td class="text-muted">Giới tính</td><td>@Model.Gender</td></tr>
+                    <tr><td class="text-muted">Số điện thoại</td><td>@Model.PhoneNumber</td></tr>
+                    <tr><td class="text-muted">Email</td><td>@Model.Email</td></tr>
+                    <tr><td class="text-muted">Địa chỉ</td><td>@Model.Address</td></tr>
+                    <tr><td class="text-muted">Ngày tham gia</td><td>@Model.RegisterDate.ToString("dd/MM/yyyy")</td></tr>
+                    <tr>
+                        <td class="text-muted">Trạng thái</td>
+                        <td>
+                            @if (Model.Status == "Active")
+                            {
+                                <span class="badge bg-success">Đang hoạt động</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">@Model.Status</span>
+                            }
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-md-7">
+        <div class="admin-card p-4 mb-4">
+            <h6 class="text-white border-bottom border-secondary pb-2 mb-3">GÓI TẬP ĐÃ ĐĂNG KÝ</h6>
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle mb-0 small">
+                    <thead>
+                        <tr class="text-secondary text-uppercase">
+                            <th>Gói tập</th>
+                            <th>Hiệu lực</th>
+                            <th>Số tiền</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!subscriptions.Any())
+                        {
+                            <tr><td colspan="4" class="text-center text-muted py-3">Chưa đăng ký gói tập nào.</td></tr>
+                        }
+                        @foreach (var sub in subscriptions)
+                        {
+                            var package = packages.ContainsKey(sub.PackageID) ? packages[sub.PackageID] : null;
+                            bool active = sub.EndDate.Date >= today;
+                            <tr>
+                                <td class="fw-bold">@(package?.PackageName ?? "—")</td>
+                                <td>@sub.StartDate.ToString("dd/MM/yyyy") - @sub.EndDate.ToString("dd/MM/yyyy")</td>
+                                <td class="text-brand-red fw-bold">@sub.TotalAmount.ToString("N0") đ</td>
+                                <td>
+                                    @if (active)
+                                    {
+                                        <span class="badge bg-success">Còn hạn</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Hết hạn</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="admin-card p-4">
+            <h6 class="text-white border-bottom border-secondary pb-2 mb-3">LỊCH SỬ THANH TOÁN</h6>
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle mb-0 small">
+                    <thead>
+                        <tr class="text-secondary text-uppercase">
+                            <th>Ngày</th>
+                            <th>Số tiền</th>
+                            <th>Phương thức</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!payments.Any())
+                        {
+                            <tr><td colspan="3" class="text-center text-muted py-3">Chưa có giao dịch nào.</td></tr>
+                        }
+                        @foreach (var p in payments)
+                        {
+                            <tr>
+                                <td>@p.PaymentDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td class="text-brand-red fw-bold">@p.Amount.ToString("N0") đ</td>
+                                <td><span class="badge bg-info text-dark">@p.Method</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

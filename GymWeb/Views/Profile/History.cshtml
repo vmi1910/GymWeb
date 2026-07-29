@@ -1,0 +1,72 @@
+@using GymWeb.Models
+@model IEnumerable<GymWeb.Models.Payment>
+@{
+    ViewData["Title"] = "Lịch sử thanh toán";
+    var list = Model.ToList();
+    var subscriptions = (Dictionary<int, Subscription>)ViewBag.Subscriptions;
+    var packages = (Dictionary<int, MembershipPackage>)ViewBag.Packages;
+}
+
+<section class="static-page-hero py-5">
+    <div class="container text-center text-white py-4">
+        <span class="section-eyebrow">Tài khoản của tôi</span>
+        <h1 class="section-title mb-0">Lịch sử thanh toán</h1>
+    </div>
+</section>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            <ul class="nav nav-pills mb-4 gap-2">
+                <li class="nav-item"><a class="nav-link text-dark" asp-action="Index">Thông tin cá nhân</a></li>
+                <li class="nav-item"><a class="nav-link text-dark" asp-action="Packages">Gói tập</a></li>
+                <li class="nav-item"><a class="nav-link active" style="background-color:var(--brand-red);" asp-action="History">Lịch sử thanh toán</a></li>
+                <li class="nav-item"><a class="nav-link text-dark" asp-action="Schedule">Lịch tập</a></li>
+            </ul>
+
+            <div class="static-page-card border p-4 p-md-5">
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr class="text-muted small text-uppercase">
+                                <th>Ngày thanh toán</th>
+                                <th>Gói tập</th>
+                                <th>Hiệu lực</th>
+                                <th>Số tiền</th>
+                                <th>Phương thức</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (!list.Any())
+                            {
+                                <tr><td colspan="5" class="text-center text-muted py-4">Bạn chưa có giao dịch thanh toán nào.</td></tr>
+                            }
+                            @foreach (var item in list)
+                            {
+                                Subscription? sub = subscriptions.ContainsKey(item.SubscriptionID) ? subscriptions[item.SubscriptionID] : null;
+                                MembershipPackage? package = sub != null && packages.ContainsKey(sub.PackageID) ? packages[sub.PackageID] : null;
+                                <tr>
+                                    <td>@item.PaymentDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td class="fw-bold">@(package?.PackageName ?? "—")</td>
+                                    <td class="small text-muted">
+                                        @if (sub != null)
+                                        {
+                                            @($"{sub.StartDate:dd/MM/yyyy} - {sub.EndDate:dd/MM/yyyy}")
+                                        }
+                                        else
+                                        {
+                                            @:—
+                                        }
+                                    </td>
+                                    <td class="text-brand-red fw-bold">@item.Amount.ToString("N0") đ</td>
+                                    <td><span class="badge bg-info text-dark">@item.Method</span></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
