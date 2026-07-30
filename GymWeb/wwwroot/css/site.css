@@ -1,31 +1,47 @@
 /* ==========================================================================
-   GYM FITNESS — Design System
-   Lấy cảm hứng từ phong cách nhận diện của CityGym: nền đen sâu, điểm nhấn đỏ
-   rực, tiêu đề in hoa đậm bo góc, ảnh lớn tương phản cao.
+   GYM FITNESS — Modern Design System (Nike / Vercel Inspired)
    ========================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap');
+/* 1. FONTS & VARIABLES */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&display=swap');
 
 :root {
-  --brand-red: #e30613;
-  --brand-red-dark: #b8050f;
-  --brand-red-light: #ff2d3a;
-  --brand-black: #0a0a0a;
-  --brand-black-soft: #121212;
-  --brand-surface: #161616;
-  --brand-surface-2: #1e1e1e;
-  --brand-border: #2a2a2a;
-  --brand-muted: #9a9a9a;
-  --brand-white: #f5f5f5;
-  --font-heading: 'Bebas Neue', 'Inter', sans-serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --radius-lg: 16px;
-  --radius-md: 10px;
-  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.35);
+  /* Typography */
+  --font-heading: 'Oswald', sans-serif;
+  --font-body: 'Manrope', sans-serif;
+
+  /* Color Palette - Modern High Contrast */
+  --brand-red: #ff2b2b;
+  --brand-red-dark: #d90429;
+  --brand-red-light: #ff5b5b;
+
+  --brand-black: #0f1115;
+  --brand-black-soft: #171a21;
+  --brand-surface: #1d2129;
+  --brand-surface-2: #262b35;
+
+  --brand-border: #343b47;
+
+  --brand-white: #f8fafc;
+  --brand-muted: #9ca3af;
+
+  /* Layout & Utility */
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --shadow-soft: 0 15px 45px rgba(0, 0, 0, 0.25);
+}
+
+/* 2. GLOBAL RESET & BASE STYLES */
+* {
+  box-sizing: border-box;
+  transition: background 0.25s, color 0.25s, border 0.25s, transform 0.3s;
 }
 
 html {
   font-size: 14px;
+  position: relative;
+  min-height: 100%;
+  scroll-behavior: smooth;
 }
 
 @media (min-width: 768px) {
@@ -34,21 +50,42 @@ html {
   }
 }
 
-html {
-  position: relative;
-  min-height: 100%;
-  scroll-behavior: smooth;
-}
-
 body {
   margin-bottom: 0;
   font-family: var(--font-body);
-  background-color: #ffffff;
-  color: #1a1a1a;
+  background: var(--brand-black); /* Dark mode mặc định */
+  color: var(--brand-white);
+  line-height: 1.7;
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* ---------- Typography ---------- */
-h1, h2, h3, h4, h5, .brand-font {
+/* Tùy chọn Light Mode nếu cần dùng class .light-mode */
+body.light-mode {
+  background: #f5f6f8;
+  color: #1b1d22;
+}
+
+section {
+  padding: 90px 0;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--brand-red);
+  border-radius: 100px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111;
+}
+
+/* 3. TYPOGRAPHY */
+h1, h2, h3, h4, h5, h6, .brand-font, .heading-font {
   font-family: var(--font-heading);
   letter-spacing: 0.5px;
 }
@@ -67,8 +104,10 @@ h1, .display-1, .display-2, .display-3 {
 
 .section-title {
   font-family: var(--font-heading);
-  font-size: 2.75rem;
-  letter-spacing: 1px;
+  font-size: clamp(2.3rem, 5vw, 4rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.5px;
   text-transform: uppercase;
   margin-bottom: 0.75rem;
 }
@@ -80,29 +119,40 @@ h1, .display-1, .display-2, .display-3 {
   margin-right: auto;
 }
 
-/* ---------- Buttons ---------- */
-.btn-brand {
-  background-color: var(--brand-red);
-  border-color: var(--brand-red);
-  color: #fff;
+.price-tag, .price {
+  font-family: var(--font-heading);
   font-weight: 700;
+}
+
+/* 4. BUTTONS */
+.btn-brand {
+  font-family: var(--font-body);
+  font-weight: 600; /* Manrope SemiBold */
+  background: linear-gradient(135deg, var(--brand-red), var(--brand-red-dark));
+  color: #ffffff;
+  border: none;
+  border-radius: 50px;
+  padding: 14px 30px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  transition: all 0.2s ease;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
 }
 
 .btn-brand:hover, .btn-brand:focus {
-  background-color: var(--brand-red-dark);
-  border-color: var(--brand-red-dark);
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(227, 6, 19, 0.35);
+  background: linear-gradient(135deg, var(--brand-red-light), var(--brand-red));
+  color: #ffffff;
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(255, 43, 43, 0.35);
 }
 
 .btn-outline-brand {
   border: 2px solid var(--brand-red);
   color: var(--brand-red);
-  font-weight: 700;
+  font-weight: 600;
+  border-radius: 50px;
+  padding: 12px 28px;
   text-transform: uppercase;
   letter-spacing: 1px;
   background: transparent;
@@ -110,14 +160,25 @@ h1, .display-1, .display-2, .display-3 {
 
 .btn-outline-brand:hover {
   background-color: var(--brand-red);
-  color: #fff;
+  color: #ffffff;
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(255, 43, 43, 0.25);
 }
 
-/* ---------- Navbar ---------- */
+/* 5. NAVIGATION & NAVBAR */
+.navbar {
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  background: rgba(15, 17, 21, 0.85) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
 .navbar-brand {
   font-family: var(--font-heading);
   font-size: 1.9rem;
   letter-spacing: 2px;
+  white-space: normal;
+  text-align: center;
 }
 
 .topbar {
@@ -135,27 +196,52 @@ h1, .display-1, .display-2, .display-3 {
   color: var(--brand-red-light);
 }
 
-.navbar.navbar-brand-dark {
-  background-color: var(--brand-black-soft) !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
-}
-
 .navbar .nav-link {
-  font-weight: 600;
+  position: relative;
+  font-family: var(--font-body);
+  font-weight: 500;
   letter-spacing: 0.5px;
   text-transform: uppercase;
   font-size: 0.85rem;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: var(--brand-red);
+  transition: 0.3s;
+  transform: translateX(-50%);
+}
+
+.nav-link:hover::after, .navbar .nav-link.active::after {
+  width: 80%;
 }
 
 .navbar .nav-link.active {
   color: var(--brand-red-light) !important;
 }
 
-/* ---------- Cards & sections ---------- */
+@media (min-width: 992px) {
+  .dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+  }
+
+  .dropdown:hover .dropdown-toggle {
+    color: var(--brand-red-light) !important;
+  }
+}
+
+/* 6. CARDS, SECTIONS & PRICING */
 .surface-card {
   background-color: var(--brand-surface);
   border: 1px solid var(--brand-border);
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
 }
 
 .stat-block {
@@ -168,6 +254,7 @@ h1, .display-1, .display-2, .display-3 {
   font-size: 3rem;
   color: var(--brand-red);
   line-height: 1;
+  font-weight: 700;
 }
 
 .stat-block .stat-label {
@@ -180,26 +267,32 @@ h1, .display-1, .display-2, .display-3 {
 
 .stats-strip {
   background-color: var(--brand-black);
-  background-image: linear-gradient(180deg, #0a0a0a 0%, #141414 100%);
+  background-image: linear-gradient(180deg, var(--brand-black) 0%, var(--brand-black-soft) 100%);
 }
 
 .feature-icon {
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  background-color: rgba(227, 6, 19, 0.1);
+  background-color: rgba(255, 43, 43, 0.1);
   color: var(--brand-red);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.6rem;
   margin: 0 auto 1rem;
-  border: 1px solid rgba(227, 6, 19, 0.25);
+  border: 1px solid rgba(255, 43, 43, 0.25);
 }
 
 .course-img {
   height: 250px;
   object-fit: cover;
+  border-radius: var(--radius-md);
+  transition: 0.5s ease;
+}
+
+.course-img:hover {
+  transform: scale(1.08);
 }
 
 .branch-card {
@@ -223,27 +316,127 @@ h1, .display-1, .display-2, .display-3 {
 .cta-band {
   background: linear-gradient(120deg, var(--brand-red-dark), var(--brand-red));
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
 }
 
-/* ---------- Forms (dark theme, used on auth pages) ---------- */
+/* Membership Pricing Cards (Stripe / Modern Style) */
+.pricing-card {
+  background: linear-gradient(180deg, #20242c, #16191f);
+  border: 1px solid var(--brand-border);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 2rem;
+  position: relative;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  overflow: hidden;
+  transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.pricing-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  border-color: rgba(255, 43, 43, 0.5);
+  box-shadow: 0 20px 40px rgba(255, 43, 43, 0.25);
+}
+
+.pricing-card.featured {
+  transform: scale(1.05);
+  border: 2px solid var(--brand-red);
+  box-shadow: 0 15px 35px rgba(255, 43, 43, 0.3);
+}
+
+.pricing-card.featured:hover {
+  transform: translateY(-10px) scale(1.07);
+}
+
+.pricing-badge {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  background-color: var(--brand-red);
+  color: #fff;
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  padding: 4px 14px;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+
+.pricing-header .package-name {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 0.25rem;
+}
+
+.pricing-header .price {
+  font-family: var(--font-heading);
+  font-size: 3rem;
+  color: var(--brand-red);
+  line-height: 1;
+}
+
+.pricing-header .price span {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--brand-muted);
+}
+
+.pricing-features {
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+}
+
+.pricing-features li {
+  color: var(--brand-white);
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+}
+
+.pricing-features li i {
+  color: var(--brand-red);
+  font-size: 1.1rem;
+}
+
+.pricing-features li.disabled {
+  color: var(--brand-muted);
+  text-decoration: line-through;
+}
+
+.pricing-features li.disabled i {
+  color: #555;
+}
+
+/* 7. FORMS & FOOTER */
 .form-control.form-dark,
 .form-select.form-dark,
 .form-control.bg-dark,
 .form-select.bg-dark {
   border-radius: var(--radius-md);
+  border: 1px solid var(--brand-border);
 }
 
 .form-control.bg-dark:focus,
 .form-select.bg-dark:focus {
   border-color: var(--brand-red);
-  box-shadow: 0 0 0 0.2rem rgba(227, 6, 19, 0.2);
-  background-color: #1c1c1c;
+  box-shadow: 0 0 0 0.2rem rgba(255, 43, 43, 0.2);
+  background-color: var(--brand-surface-2);
   color: #fff;
 }
 
-/* ---------- Footer ---------- */
 .site-footer {
   background-color: var(--brand-black);
+  border-top: 1px solid var(--brand-border);
 }
 
 .site-footer h5 {
@@ -254,6 +447,7 @@ h1, .display-1, .display-2, .display-3 {
 
 .site-footer a {
   color: #cfcfcf;
+  text-decoration: none;
 }
 
 .site-footer a:hover {
@@ -264,41 +458,24 @@ h1, .display-1, .display-2, .display-3 {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  border: 1px solid #333;
+  border: 1px solid var(--brand-border);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: #fff;
-  transition: all 0.2s ease;
+  transition: all 0.25s ease;
 }
 
 .social-icon:hover {
   background-color: var(--brand-red);
   border-color: var(--brand-red);
   color: #fff;
+  transform: translateY(-2px);
 }
 
-/* ---------- Nav dropdown hover (desktop) ---------- */
-@media (min-width: 992px) {
-  .dropdown:hover .dropdown-menu {
-    display: block;
-    margin-top: 0;
-  }
-
-  .dropdown:hover .dropdown-toggle {
-    color: #ffc107 !important;
-  }
-}
-
-/* ---------- Misc ---------- */
-a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
-}
-
+/* 8. MISC & UTILITY CLASSES */
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+  box-shadow: var(--shadow-soft);
 }
 
 .text-brand-red {
@@ -309,9 +486,8 @@ a.navbar-brand {
   background-color: var(--brand-black) !important;
 }
 
-/* Static/plain content pages (Privacy, Error) */
 .static-page-hero {
-  background: linear-gradient(120deg, #0a0a0a, #1c1c1c);
+  background: linear-gradient(120deg, var(--brand-black), var(--brand-surface));
 }
 
 .static-page-card {
