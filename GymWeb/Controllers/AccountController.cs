@@ -29,7 +29,12 @@ namespace GymWeb.Controllers
                 {
                     return RedirectToAction("Index", "Dashboard"); // Sang trang thống kê tổng quan của Admin
                 }
-    
+
+                if (user.Role == "Staff")
+                {
+                    return RedirectToAction("Index", "Member"); // Nhân viên vào thẳng khu vực quản lý hội viên
+                }
+
                 return RedirectToAction("Index", "Home"); // Khách thường về trang chủ
             }
             ModelState.AddModelError("", "Sai tài khoản hoặc mật khẩu!");
