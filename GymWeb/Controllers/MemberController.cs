@@ -129,8 +129,8 @@ namespace GymWeb.Controllers
             var member = _context.Members.Find(model.MemberID);
             if (member == null) return NotFound();
 
-            // Chỉ Admin mới được đổi vai trò; Staff không có quyền này (dropdown bị ẩn ở view)
-            var newRole = IsAdmin() ? (role ?? "Member") : "Member";
+            var allowedRoles = new[] { "Staff", "Trainer" }; // Không cho thăng "Admin" qua màn này, dùng màn Admin/Create riêng
+            var newRole = (IsAdmin() && allowedRoles.Contains(role)) ? role! : "Member";
 
             if (newRole != "Member")
             {
@@ -149,9 +149,11 @@ namespace GymWeb.Controllers
                 var newStaff = new Staff
                 {
                     FullName = model.FullName,
+                    DateOfBirth = model.DateOfBirth,
+                    Gender = model.Gender,
                     PhoneNumber = model.PhoneNumber,
                     Email = model.Email,
-                    Gender = model.Gender,
+                    Address = model.Address,
                     Role = newRole,
                     AccountID = account.AccountID
                 };
