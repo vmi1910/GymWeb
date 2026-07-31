@@ -29,38 +29,49 @@
                 @{
                     var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
                     Func<string, string> navClass = c => "nav-link-admin" + (string.Equals(currentController, c, StringComparison.OrdinalIgnoreCase) ? " active" : "");
+                    var currentRole = Context.Session.GetString("Role") ?? "";
+                    bool isAdminRole = currentRole == "Admin";
                 }
                 <div class="py-3">
-                    <a class="@navClass("Dashboard")" asp-controller="Dashboard" asp-action="Index">
-                        <i class="bi bi-speedometer2 me-2"></i> Thống kê doanh thu
-                    </a>
-                    <a class="@navClass("Admin")" asp-controller="Admin" asp-action="Accounts">
-                        <i class="bi bi-people-fill me-2"></i> Quản lý tài khoản
-                    </a>
+                    @if (isAdminRole)
+                    {
+                        <a class="@navClass("Dashboard")" asp-controller="Dashboard" asp-action="Index">
+                            <i class="bi bi-speedometer2 me-2"></i> Thống kê doanh thu
+                        </a>
+                        <a class="@navClass("Admin")" asp-controller="Admin" asp-action="Accounts">
+                            <i class="bi bi-people-fill me-2"></i> Quản lý tài khoản
+                        </a>
+                    }
                     <a class="@navClass("Member")" asp-controller="Member" asp-action="Index">
                         <i class="bi bi-person-vcard-fill me-2"></i> Quản lý hội viên
                     </a>
-                    <a class="@navClass("Staff")" asp-controller="Staff" asp-action="Index">
-                        <i class="bi bi-person-badge me-2"></i> Quản lý nhân viên
-                    </a>
-                    <a class="@navClass("Trainer")" asp-controller="Trainer" asp-action="Index">
-                        <i class="bi bi-person-badge-fill me-2"></i> Quản lý huấn luyện viên
-                    </a>
-                    <a class="@navClass("Package")" asp-controller="Package" asp-action="Index">
-                        <i class="bi bi-card-list me-2"></i> Quản lý gói tập
-                    </a>
-                    <a class="@navClass("Schedule")" asp-controller="Schedule" asp-action="Index">
-                        <i class="bi bi-calendar2-week me-2"></i> Quản lý lịch tập
-                    </a>
+                    @if (isAdminRole)
+                    {
+                        <a class="@navClass("Staff")" asp-controller="Staff" asp-action="Index">
+                            <i class="bi bi-person-badge me-2"></i> Quản lý nhân viên
+                        </a>
+                        <a class="@navClass("Trainer")" asp-controller="Trainer" asp-action="Index">
+                            <i class="bi bi-person-badge-fill me-2"></i> Quản lý huấn luyện viên
+                        </a>
+                        <a class="@navClass("Package")" asp-controller="Package" asp-action="Index">
+                            <i class="bi bi-card-list me-2"></i> Quản lý gói tập
+                        </a>
+                        <a class="@navClass("Schedule")" asp-controller="Schedule" asp-action="Index">
+                            <i class="bi bi-calendar2-week me-2"></i> Quản lý lịch tập
+                        </a>
+                    }
                     <a class="@navClass("Payment")" asp-controller="Payment" asp-action="Index">
                         <i class="bi bi-cash-stack me-2"></i> Quản lý thanh toán
                     </a>
                     <a class="@navClass("Subscription")" asp-controller="Subscription" asp-action="Index">
                         <i class="bi bi-journal-check me-2"></i> Đăng ký gói tập
                     </a>
-                    <a class="@navClass("Room")" asp-controller="Room" asp-action="Index">
-                        <i class="bi bi-door-open-fill me-2"></i> Phòng tập
-                    </a>
+                    @if (isAdminRole)
+                    {
+                        <a class="@navClass("Room")" asp-controller="Room" asp-action="Index">
+                            <i class="bi bi-door-open-fill me-2"></i> Phòng tập
+                        </a>
+                    }
                     <div class="border-top border-secondary my-3"></div>
                     <a class="nav-link-admin text-muted" asp-controller="Home" asp-action="Index">
                         <i class="bi bi-arrow-left-circle me-2"></i> Về trang chủ

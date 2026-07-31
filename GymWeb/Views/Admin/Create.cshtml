@@ -26,18 +26,13 @@
             <form asp-controller="Admin" asp-action="Create" method="post" enctype="multipart/form-data">
                 
                 <h6 class="text-white border-bottom border-secondary pb-2 mb-3">1. THÔNG TIN ĐĂNG NHẬP</h6>
-                <div class="row mb-4">
-                    <div class="col-md-4">
+                <div class="row mb-3">
+                    <div class="col-md-6">
                         <label class="form-label text-muted small fw-bold">TÊN ĐĂNG NHẬP *</label>
                         <input asp-for="Username" class="form-control bg-dark text-white border-secondary">
                         <span asp-validation-for="Username" class="text-danger small"></span>
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label text-muted small fw-bold">MẬT KHẨU *</label>
-                        <input type="password" asp-for="RawPassword" class="form-control bg-dark text-white border-secondary">
-                        <span asp-validation-for="RawPassword" class="text-danger small"></span>
-                    </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <label class="form-label text-muted small fw-bold">VAI TRÒ (ROLE) *</label>
                         <select asp-for="Role" id="roleSelect" class="form-select bg-dark text-white border-secondary" onchange="toggleTrainerFields()">
                             <option value="Member">Hội viên (Member)</option>
@@ -45,6 +40,18 @@
                             <option value="Trainer">Huấn luyện viên (Trainer)</option>
                             <option value="Admin">Quản trị viên (Admin)</option>
                         </select>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small fw-bold">MẬT KHẨU *</label>
+                        <input type="password" asp-for="RawPassword" class="form-control bg-dark text-white border-secondary">
+                        <span asp-validation-for="RawPassword" class="text-danger small"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label text-muted small fw-bold">NHẬP LẠI MẬT KHẨU *</label>
+                        <input type="password" asp-for="ConfirmPassword" class="form-control bg-dark text-white border-secondary">
+                        <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
                     </div>
                 </div>
 

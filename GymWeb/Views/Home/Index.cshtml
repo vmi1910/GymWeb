@@ -170,10 +170,13 @@
     </div>
 </section>
 
-<section class="container mb-5">
-    <div class="cta-band text-white text-center p-5 shadow">
-        <h3 class="fw-bold text-uppercase mb-2">Sẵn sàng bắt đầu hành trình của bạn?</h3>
-        <p class="mb-4">Đăng ký ngay hôm nay để nhận buổi tập thử miễn phí cùng huấn luyện viên chuyên nghiệp.</p>
-        <a asp-controller="Account" asp-action="Register" class="btn btn-dark btn-lg px-5 rounded-pill fw-bold">Đăng ký ngay</a>
-    </div>
-</section>
+@if (Context.Session.GetString("Username") == null)
+{
+    <section class="container mb-5">
+        <div class="cta-band text-white text-center p-5 shadow">
+            <h3 class="fw-bold text-uppercase mb-2">Sẵn sàng bắt đầu hành trình của bạn?</h3>
+            <p class="mb-4">Đăng ký ngay hôm nay để nhận buổi tập thử miễn phí cùng huấn luyện viên chuyên nghiệp.</p>
+            <a asp-controller="Account" asp-action="Register" class="btn btn-dark btn-lg px-5 rounded-pill fw-bold">Đăng ký ngay</a>
+        </div>
+    </section>
+}
