@@ -1,61 +1,66 @@
 @model IEnumerable<GymWeb.Models.MembershipPackage>
 @{
     ViewData["Title"] = "Gói tập";
-    var list = Model.ToList();
+    var list = Model.Where(m => m.IsActive).ToList();
 }
 
-<section class="static-page-hero py-5">
-    <div class="container text-center text-white py-4">
-        <span class="section-eyebrow">Tài khoản của tôi</span>
-        <h1 class="section-title mb-0">Đăng ký / Gia hạn gói tập</h1>
-    </div>
-</section>
+<section class="membership-section">
+    <div class="container">
 
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
+        <div class="title">
+            <span class="section-eyebrow">TÀI KHOẢN CỦA TÔI</span>
+            <h2>ĐĂNG KÝ / GIA HẠN GÓI TẬP</h2>
+            <p class="section-subtitle">
+                Chọn gói tập phù hợp với mục tiêu, lịch trình và ngân sách của bạn
+            </p>
+        </div>
 
-            @if (TempData["Success"] != null)
+        <div class="package-grid">
+            @foreach (var item in list)
             {
-                <div class="alert alert-success py-2 small">@TempData["Success"]</div>
-            }
-            @if (TempData["Error"] != null)
-            {
-                <div class="alert alert-danger py-2 small">@TempData["Error"]</div>
-            }
+                <div class="pricing-card @(item.IsFeatured ? "featured" : "")">
 
-            <ul class="nav nav-pills mb-4 gap-2">
-                <li class="nav-item"><a class="nav-link text-dark" asp-action="Index">Thông tin cá nhân</a></li>
-                <li class="nav-item"><a class="nav-link active" style="background-color:var(--brand-red);" asp-action="Packages">Gói tập</a></li>
-                <li class="nav-item"><a class="nav-link text-dark" asp-action="History">Lịch sử thanh toán</a></li>
-                <li class="nav-item"><a class="nav-link text-dark" asp-action="Schedule">Lịch tập</a></li>
-            </ul>
+                    @if (!string.IsNullOrWhiteSpace(item.BadgeText))
+                    {
+                        <span class="pricing-badge">@item.BadgeText</span>
+                    }
 
-            @if (!list.Any())
-            {
-                <p class="text-muted">Hiện chưa có gói tập nào đang mở bán.</p>
-            }
+                    <div class="package-thumb">
+                        <img src="@item.ImageUrl" alt="@item.PackageName">
+                    </div>
 
-            <div class="row g-4">
-                @foreach (var item in list)
-                {
-                    <div class="col-12 col-md-6 col-lg-4">
-                        <div class="static-page-card border p-4 h-100 d-flex flex-column">
-                            <h5 class="fw-bold">@item.PackageName</h5>
-                            <p class="text-muted small mb-2">@item.DurationDays ngày sử dụng</p>
-                            <h3 class="text-brand-red fw-bold mb-3">@item.Price.ToString("N0") đ</h3>
-                            <p class="small text-muted flex-grow-1">@item.Description</p>
-                            <form asp-action="Register" method="post">
-                                <input type="hidden" name="packageId" value="@item.PackageID" />
-                                <button type="submit" class="btn btn-brand w-100 rounded-pill fw-bold"
-                                        onclick="return confirm('Xác nhận đăng ký gói này?');">
-                                    Đăng ký ngay
-                                </button>
-                            </form>
+                    <div class="pricing-header">
+                        <span class="duration-tag">@item.DurationDays ngày</span>
+                        <h3 class="package-name">@item.PackageName</h3>
+                        <div class="price">
+                            @item.Price.ToString("N0")<span> đ / gói</span>
                         </div>
                     </div>
-                }
-            </div>
+
+                    @if (!string.IsNullOrWhiteSpace(item.Description))
+                    {
+                        <p class="package-desc">@item.Description</p>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(item.Highlights))
+                    {
+                        <ul class="pricing-features">
+                            @foreach (var line in item.Highlights.Split(';', StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                <li><span class="check-icon">✓</span> @line.Trim()</li>
+                            }
+                        </ul>
+                    }
+
+                    <a asp-controller="Membership"
+                       asp-action="Register"
+                       asp-route-id="@item.PackageID"
+                       class="btn-register">
+                        Đăng ký ngay
+                    </a>
+                </div>
+            }
         </div>
+
     </div>
-</div>
+</section>
