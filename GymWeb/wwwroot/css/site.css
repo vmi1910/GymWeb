@@ -23,12 +23,14 @@
   --brand-border: #343b47;
 
   --brand-white: #f8fafc;
-  --brand-muted: #9ca3af;
+  /* Chữ xám sáng hơn để dễ đọc trên nền tối (trước: #9ca3af quá tối) */
+  --brand-muted: #c3c9d4;
+  --brand-muted-dim: #8b93a1; /* dùng cho chữ phụ ít quan trọng hơn */
 
   /* Layout & Utility */
   --radius-lg: 24px;
   --radius-md: 16px;
-  --shadow-soft: 0 15px 45px rgba(0, 0, 0, 0.25);
+  --shadow-soft: 0 15px 45px rgba(0, 0, 0, 0.3);
 }
 
 /* 2. GLOBAL RESET & BASE STYLES */
@@ -70,6 +72,12 @@ section {
   padding: 90px 0;
 }
 
+@media (max-width: 768px) {
+  section {
+    padding: 56px 0;
+  }
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
@@ -102,11 +110,12 @@ h1, .display-1, .display-2, .display-3 {
   text-transform: uppercase;
 }
 
+/* Tiêu đề section: giảm bớt kích thước tối đa (trước: 4rem quá to, mất cân đối) */
 .section-title {
   font-family: var(--font-heading);
-  font-size: clamp(2.3rem, 5vw, 4rem);
+  font-size: clamp(1.9rem, 4vw, 3rem);
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1.15;
   letter-spacing: 0.5px;
   text-transform: uppercase;
   margin-bottom: 0.75rem;
@@ -117,6 +126,7 @@ h1, .display-1, .display-2, .display-3 {
   max-width: 640px;
   margin-left: auto;
   margin-right: auto;
+  font-size: 1rem;
 }
 
 .price-tag, .price {
@@ -127,7 +137,7 @@ h1, .display-1, .display-2, .display-3 {
 /* 4. BUTTONS */
 .btn-brand {
   font-family: var(--font-body);
-  font-weight: 600; /* Manrope SemiBold */
+  font-weight: 600;
   background: linear-gradient(135deg, var(--brand-red), var(--brand-red-dark));
   color: #ffffff;
   border: none;
@@ -138,18 +148,19 @@ h1, .display-1, .display-2, .display-3 {
   cursor: pointer;
   display: inline-block;
   text-decoration: none;
+  box-shadow: 0 8px 24px rgba(255, 43, 43, 0.25);
 }
 
 .btn-brand:hover, .btn-brand:focus {
   background: linear-gradient(135deg, var(--brand-red-light), var(--brand-red));
   color: #ffffff;
   transform: translateY(-4px);
-  box-shadow: 0 15px 35px rgba(255, 43, 43, 0.35);
+  box-shadow: 0 15px 35px rgba(255, 43, 43, 0.4);
 }
 
 .btn-outline-brand {
   border: 2px solid var(--brand-red);
-  color: var(--brand-red);
+  color: var(--brand-red-light);
   font-weight: 600;
   border-radius: 50px;
   padding: 12px 28px;
@@ -162,11 +173,11 @@ h1, .display-1, .display-2, .display-3 {
   background-color: var(--brand-red);
   color: #ffffff;
   transform: translateY(-4px);
-  box-shadow: 0 15px 35px rgba(255, 43, 43, 0.25);
+  box-shadow: 0 15px 35px rgba(255, 43, 43, 0.3);
 }
 
 /* ==========================================================================
-   5. NAVIGATION & NAVBAR — bản nâng cấp thẩm mỹ
+   5. NAVIGATION & NAVBAR
    ========================================================================== */
 .topbar {
   background-color: #000000;
@@ -207,7 +218,7 @@ h1, .display-1, .display-2, .display-3 {
 
 .navbar-brand {
   font-family: var(--font-heading);
-  font-size: 1.7rem;
+  font-size: 1.6rem;
   font-weight: 700;
   letter-spacing: 1px;
   color: var(--brand-red) !important;
@@ -215,7 +226,7 @@ h1, .display-1, .display-2, .display-3 {
 }
 
 .navbar .navbar-nav {
-  gap: 8px;
+  gap: 6px;
   align-items: center;
 }
 
@@ -223,9 +234,9 @@ h1, .display-1, .display-2, .display-3 {
   position: relative;
   font-family: var(--font-body);
   font-weight: 600;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.6px;
   text-transform: uppercase;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: var(--brand-muted) !important;
   padding: 10px 16px !important;
   border-radius: 50px;
@@ -234,7 +245,7 @@ h1, .display-1, .display-2, .display-3 {
 
 .navbar .nav-link:hover {
   color: var(--brand-white) !important;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .navbar .nav-link.active {
@@ -243,25 +254,23 @@ h1, .display-1, .display-2, .display-3 {
   box-shadow: 0 6px 18px rgba(255, 43, 43, 0.35);
 }
 
-/* Bỏ gạch chân underline kiểu cũ vì đã dùng background pill cho active */
 .nav-link::after {
   content: none;
 }
 
-/* Nút tài khoản (VD: "NHI") tách riêng thành pill viền */
 .navbar .account-link {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   color: var(--brand-white) !important;
   font-weight: 600;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   padding: 9px 16px !important;
   border: 1px solid var(--brand-border);
   border-radius: 50px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .navbar .account-link i,
@@ -272,7 +281,7 @@ h1, .display-1, .display-2, .display-3 {
 
 .navbar .account-link:hover {
   border-color: var(--brand-red);
-  background: rgba(255, 43, 43, 0.08);
+  background: rgba(255, 43, 43, 0.1);
 }
 
 @media (min-width: 992px) {
@@ -283,6 +292,43 @@ h1, .display-1, .display-2, .display-3 {
   .dropdown:hover .dropdown-toggle {
     color: var(--brand-red-light) !important;
   }
+}
+
+/* Tabs kiểu Bootstrap (.nav-tabs / .nav-pills) đồng bộ theme đỏ-đen,
+   dùng cho các khu vực có tab lọc/điều hướng trong trang (VD: lịch tập, bộ môn) */
+.nav-tabs,
+.nav-pills {
+  border-bottom: none;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.nav-tabs .nav-link,
+.nav-pills .nav-link {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--brand-muted) !important;
+  background: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  border-radius: 50px !important;
+  padding: 10px 22px;
+}
+
+.nav-tabs .nav-link:hover,
+.nav-pills .nav-link:hover {
+  color: var(--brand-white) !important;
+  border-color: var(--brand-red);
+}
+
+.nav-tabs .nav-link.active,
+.nav-pills .nav-link.active {
+  color: #fff !important;
+  background: linear-gradient(135deg, var(--brand-red), var(--brand-red-dark));
+  border-color: transparent;
+  box-shadow: 0 8px 20px rgba(255, 43, 43, 0.3);
 }
 
 /* 6. CARDS, SECTIONS & PRICING */
@@ -300,7 +346,7 @@ h1, .display-1, .display-2, .display-3 {
 
 .stat-block .stat-number {
   font-family: var(--font-heading);
-  font-size: 3rem;
+  font-size: 2.75rem;
   color: var(--brand-red);
   line-height: 1;
   font-weight: 700;
@@ -370,13 +416,13 @@ h1, .display-1, .display-2, .display-3 {
 
 /* Membership Pricing Cards (Stripe / Modern Style) */
 .pricing-card {
-  background: linear-gradient(180deg, #20242c, #16191f);
+  background: linear-gradient(180deg, rgba(32, 36, 44, 0.9), rgba(22, 25, 31, 0.95));
   border: 1px solid var(--brand-border);
   border-radius: var(--radius-lg);
-  padding: 2.5rem 2rem;
+  padding: 2.25rem 2rem;
   position: relative;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
   box-shadow: var(--shadow-soft);
   display: flex;
   flex-direction: column;
@@ -389,17 +435,17 @@ h1, .display-1, .display-2, .display-3 {
 .pricing-card:hover {
   transform: translateY(-10px) scale(1.02);
   border-color: rgba(255, 43, 43, 0.5);
-  box-shadow: 0 20px 40px rgba(255, 43, 43, 0.25);
+  box-shadow: 0 20px 45px rgba(255, 43, 43, 0.28);
 }
 
 .pricing-card.featured {
-  transform: scale(1.05);
+  transform: scale(1.04);
   border: 2px solid var(--brand-red);
-  box-shadow: 0 15px 35px rgba(255, 43, 43, 0.3);
+  box-shadow: 0 15px 40px rgba(255, 43, 43, 0.32);
 }
 
 .pricing-card.featured:hover {
-  transform: translateY(-10px) scale(1.07);
+  transform: translateY(-10px) scale(1.06);
 }
 
 .pricing-badge {
@@ -409,78 +455,126 @@ h1, .display-1, .display-2, .display-3 {
   background-color: var(--brand-red);
   color: #fff;
   font-family: var(--font-heading);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   letter-spacing: 1px;
   padding: 4px 14px;
   border-radius: 20px;
   text-transform: uppercase;
+  z-index: 2;
+}
+
+/* Ảnh minh họa gói tập trong pricing-card */
+.package-thumb {
+  margin: -2.25rem -2rem 1.5rem;
+  height: 190px;
+  overflow: hidden;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.package-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.pricing-card:hover .package-thumb img {
+  transform: scale(1.08);
+}
+
+.duration-tag {
+  display: inline-block;
+  color: var(--brand-red-light);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 1.5px;
+  margin-bottom: 0.4rem;
 }
 
 .pricing-header .package-name {
   font-family: var(--font-heading);
-  font-size: 2rem;
+  font-size: 1.75rem;
   color: #fff;
   margin-bottom: 0.25rem;
 }
 
 .pricing-header .price {
   font-family: var(--font-heading);
-  font-size: 3rem;
-  color: var(--brand-red);
+  font-size: 2.5rem;
+  color: var(--brand-red-light);
   line-height: 1;
 }
 
 .pricing-header .price span {
   font-family: var(--font-body);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: var(--brand-muted);
+}
+
+.package-desc {
+  color: var(--brand-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0.75rem 0 0;
 }
 
 .pricing-features {
   list-style: none;
   padding: 0;
-  margin: 2rem 0;
+  margin: 1.5rem 0;
 }
 
 .pricing-features li {
   color: var(--brand-white);
   padding: 0.6rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
 }
 
-.pricing-features li i {
-  color: var(--brand-red);
-  font-size: 1.1rem;
+.pricing-features li i,
+.pricing-features li .check-icon {
+  color: var(--brand-red-light);
+  font-size: 1.05rem;
+  font-weight: 700;
+  flex-shrink: 0;
 }
 
 .pricing-features li.disabled {
-  color: var(--brand-muted);
+  color: var(--brand-muted-dim);
   text-decoration: line-through;
 }
 
-.pricing-features li.disabled i {
+.pricing-features li.disabled i,
+.pricing-features li.disabled .check-icon {
   color: #555;
 }
+
 /* ==========================================================================
-   MEMBERSHIP SECTION — bản chuẩn, không xung đột với .pricing-card gốc
+   MEMBERSHIP SECTION
    ========================================================================== */
 .membership-section {
   padding: 90px 0;
   background: var(--brand-black);
 }
 
+@media (max-width: 768px) {
+  .membership-section {
+    padding: 56px 0;
+  }
+}
+
 .membership-section .title {
   text-align: center;
-  margin-bottom: 3.5rem;
+  margin-bottom: 3rem;
 }
 
 .membership-section .title h2 {
   font-family: var(--font-heading);
-  font-size: clamp(2.3rem, 5vw, 3.2rem);
+  font-size: clamp(1.9rem, 4vw, 2.75rem);
   font-weight: 700;
   color: var(--brand-white);
   text-transform: uppercase;
@@ -495,8 +589,23 @@ h1, .display-1, .display-2, .display-3 {
 
 .package-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 28px;
+}
+
+@media (max-width: 576px) {
+  .package-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .pricing-card.featured {
+    transform: scale(1);
+  }
+
+  .pricing-card.featured:hover {
+    transform: translateY(-6px);
+  }
 }
 
 .btn-register {
@@ -512,13 +621,16 @@ h1, .display-1, .display-2, .display-3 {
   text-transform: uppercase;
   letter-spacing: 1px;
   transition: 0.3s;
+  box-shadow: 0 8px 20px rgba(255, 43, 43, 0.25);
 }
 
 .btn-register:hover {
   background: #fff;
   color: var(--brand-red-dark);
   transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(255, 255, 255, 0.15);
 }
+
 /* 7. FORMS & FOOTER */
 .form-control.form-dark,
 .form-select.form-dark,
@@ -526,6 +638,7 @@ h1, .display-1, .display-2, .display-3 {
 .form-select.bg-dark {
   border-radius: var(--radius-md);
   border: 1px solid var(--brand-border);
+  color: var(--brand-white);
 }
 
 .form-control.bg-dark:focus,
@@ -548,7 +661,7 @@ h1, .display-1, .display-2, .display-3 {
 }
 
 .site-footer a {
-  color: #cfcfcf;
+  color: var(--brand-muted);
   text-decoration: none;
 }
 
@@ -594,4 +707,61 @@ h1, .display-1, .display-2, .display-3 {
 
 .static-page-card {
   border-radius: var(--radius-lg);
+}
+
+/* 8b. STATIC PAGE CARD — nền cho các khối thông tin (Hồ sơ hội viên, Gói tập hiện tại...) */
+.static-page-card {
+  background-color: var(--brand-surface);
+  border-color: var(--brand-border) !important;
+}
+
+/* Sửa bảng Bootstrap (table-borderless) mặc định set chữ gần như đen,
+   khiến giá trị "abc", "Nam", "0987654321"... gần như vô hình trên nền tối */
+.static-page-card .table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--brand-white);
+  color: var(--brand-white);
+}
+
+.static-page-card .table td {
+  color: var(--brand-white);
+  border-color: rgba(255, 255, 255, 0.06);
+  vertical-align: middle;
+  padding-top: 0.65rem;
+  padding-bottom: 0.65rem;
+}
+
+/* Cột nhãn bên trái (Họ và tên, Ngày sinh...) giữ màu xám sáng cho phân cấp rõ ràng */
+.static-page-card .table td.text-muted {
+  color: var(--brand-muted) !important;
+}
+
+/* Bootstrap .border mặc định dùng viền xám sáng cho nền trắng, đổi lại cho khớp theme tối */
+.static-page-card.border {
+  border-color: var(--brand-border) !important;
+}
+
+/* 9. RESPONSIVE FINE-TUNING (điện thoại) */
+@media (max-width: 576px) {
+  .navbar-brand {
+    font-size: 1.35rem;
+  }
+
+  .navbar .nav-link,
+  .navbar .account-link {
+    font-size: 0.75rem;
+    padding: 8px 12px !important;
+  }
+
+  .pricing-card {
+    padding: 1.75rem 1.5rem;
+  }
+
+  .pricing-header .price {
+    font-size: 2.1rem;
+  }
+
+  .stat-block .stat-number {
+    font-size: 2.2rem;
+  }
 }
