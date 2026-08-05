@@ -15,6 +15,7 @@ namespace GymWeb.Models
         public DbSet<StaffSchedule> StaffSchedules => Set<StaffSchedule>();
         public DbSet<Subscription> Subscriptions => Set<Subscription>();
         public DbSet<Payment> Payments => Set<Payment>();
+        public DbSet<RoomBooking> RoomBookings => Set<RoomBooking>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -30,6 +31,28 @@ namespace GymWeb.Models
                 .WithMany()
                 .HasForeignKey(p => p.StaffID)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<RoomBooking>()
+                .HasOne(b => b.Room)
+                .WithMany()
+                .HasForeignKey(b => b.RoomID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<RoomBooking>()
+                .HasOne(b => b.ProcessedByStaff)
+                .WithMany()
+                .HasForeignKey(b => b.ProcessedByStaffID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<RoomBooking>()
+                .HasIndex(b => new { b.RoomID, b.StartTime, b.EndTime });
+
+            modelBuilder.Entity<RoomBooking>()
+                .HasIndex(b => new { b.MemberID, b.Status });
+
+            modelBuilder.Entity<RoomBooking>()
+                .Property(b => b.Status)
+                .HasMaxLength(20);
         }
     }
 }

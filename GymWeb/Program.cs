@@ -11,6 +11,8 @@ builder.Services.AddSession(options => {
 // Add DB
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddScoped<GymWeb.Services.BookingConflictService>();
+builder.Services.AddScoped<GymWeb.Services.ScheduleConflictService>();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

@@ -20,10 +20,13 @@
             <h3 class="fw-bold mb-1">DANH SÁCH NHÂN VIÊN</h3>
             <p class="text-muted small mb-0">Tổng số: @list.Count nhân viên</p>
         </div>
-        <form method="get" class="d-flex" style="max-width: 320px;">
-            <input type="text" name="search" value="@ViewData["Search"]" class="form-control bg-dark text-white border-secondary me-2" placeholder="Tìm tên, SĐT...">
-            <button type="submit" class="btn btn-outline-brand"><i class="bi bi-search"></i></button>
-        </form>
+        <div class="d-flex gap-2">
+            <form method="get" class="d-flex" style="max-width: 320px;">
+                <input type="text" name="search" value="@ViewData["Search"]" class="form-control bg-dark text-white border-secondary me-2" placeholder="Tìm tên, SĐT...">
+                <button type="submit" class="btn btn-outline-brand"><i class="bi bi-search"></i></button>
+            </form>
+            <a asp-controller="Admin" asp-action="Create" asp-route-role="Staff" class="btn btn-brand rounded-pill px-3 text-nowrap"><i class="bi bi-person-plus-fill me-1"></i> Tạo tài khoản</a>
+        </div>
     </div>
 
     <div class="table-responsive">

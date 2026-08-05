@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using GymWeb.Models;
+using GymWeb.Services;
 
 namespace GymWeb.Controllers
 {
@@ -8,7 +9,12 @@ namespace GymWeb.Controllers
     public class ScheduleController : Controller
     {
         private readonly DataContext _context;
-        public ScheduleController(DataContext context) { _context = context; }
+        private readonly ScheduleConflictService _scheduleConflictService;
+        public ScheduleController(DataContext context, ScheduleConflictService scheduleConflictService)
+        {
+            _context = context;
+            _scheduleConflictService = scheduleConflictService;
+        }
 
         private bool IsAdmin() => HttpContext.Session.GetString("Role") == "Admin";
 
@@ -63,6 +69,11 @@ namespace GymWeb.Controllers
                 ModelState.AddModelError("", "Giờ kết thúc phải sau giờ bắt đầu!");
             }
 
+            if (model.EndTime > model.StartTime && _scheduleConflictService.HasConflict(model.StaffID, model.RoomID, model.ShiftDate, model.StartTime, model.EndTime))
+            {
+                ModelState.AddModelError("", "Nhân viên hoặc phòng tập đã có ca làm việc trùng khung giờ này.");
+            }
+
             if (!ModelState.IsValid)
             {
                 LoadDropdowns(model.StaffID, model.RoomID);
@@ -98,6 +109,11 @@ namespace GymWeb.Controllers
             if (model.EndTime <= model.StartTime)
             {
                 ModelState.AddModelError("", "Giờ kết thúc phải sau giờ bắt đầu!");
+            }
+
+            if (model.EndTime > model.StartTime && _scheduleConflictService.HasConflict(model.StaffID, model.RoomID, model.ShiftDate, model.StartTime, model.EndTime, model.ScheduleID))
+            {
+                ModelState.AddModelError("", "Nhân viên hoặc phòng tập đã có ca làm việc trùng khung giờ này.");
             }
 
             if (!ModelState.IsValid)
