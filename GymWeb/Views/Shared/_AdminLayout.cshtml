@@ -4,6 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Hệ thống Quản trị GymFitness</title>
+    <link rel="icon" type="image/svg+xml" href="~/favicon.svg" />
+    <link rel="alternate icon" href="~/favicon.ico" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -60,12 +62,54 @@
                             <i class="bi bi-calendar2-week me-2"></i> Quản lý lịch tập
                         </a>
                     }
+<<<<<<< HEAD
                     <a class="@navClass("Payment")" asp-controller="Payment" asp-action="Index">
                         <i class="bi bi-cash-stack me-2"></i> Quản lý thanh toán
                     </a>
                     <a class="@navClass("Subscription")" asp-controller="Subscription" asp-action="Index">
                         <i class="bi bi-journal-check me-2"></i> Đăng ký gói tập
                     </a>
+=======
+                    @if (isAdminRole || currentRole == "Staff")
+                    {
+                        <a class="@navClass("Payment")" asp-controller="Payment" asp-action="Index">
+                            <i class="bi bi-cash-stack me-2"></i> Quản lý thanh toán
+                        </a>
+                        <a class="@navClass("Equipment")" asp-controller="Equipment" asp-action="Index">
+                            <i class="bi bi-tools me-2"></i> Quản lý trang thiết bị
+                        </a>
+                    }
+                    @if (isAdminRole || currentRole == "Staff" || currentRole == "Trainer")
+                    {
+                        <a class="@navClass("RoomAvailability")" asp-controller="RoomAvailability" asp-action="Index">
+                            <i class="bi bi-door-open me-2"></i> Tình trạng phòng hôm nay
+                        </a>
+                    }
+                    @if (currentRole == "Admin" || currentRole == "Staff")
+                    {
+                        <a class="@navClass("RoomBooking")" asp-controller="RoomBooking" asp-action="Index">
+                            <i class="bi bi-calendar2-check me-2"></i> Quản lý đặt phòng
+                        </a>
+                    }
+                    @if (currentRole == "Staff" || currentRole == "Trainer")
+                    {
+                        <a class="@navClass("MySchedule")" asp-controller="MySchedule" asp-action="Index">
+                            <i class="bi bi-calendar-week me-2"></i> Lịch làm việc của tôi
+                        </a>
+                    }
+                    @if (isAdminRole || currentRole == "Staff" || currentRole == "Trainer")
+                    {
+                        <a class="@navClass("TrainerBooking")" asp-controller="TrainerBooking" asp-action="Index">
+                            <i class="bi bi-person-check-fill me-2"></i> Quản lý đăng ký PT
+                        </a>
+                    }
+                    @if (isAdminRole || currentRole == "Staff")
+                    {
+                        <a class="@navClass("Subscription")" asp-controller="Subscription" asp-action="Index">
+                            <i class="bi bi-journal-check me-2"></i> Đăng ký gói tập
+                        </a>
+                    }
+>>>>>>> 634c4d42240dd4bfec8c106cb497c88a218d478f
                     @if (isAdminRole)
                     {
                         <a class="@navClass("Room")" asp-controller="Room" asp-action="Index">
@@ -90,6 +134,8 @@
                     </a>
                 </header>
 
+                <partial name="_ToastNotifications" />
+
                 <main role="main" class="px-4 pb-4">
                     @RenderBody()
                 </main>
@@ -97,8 +143,25 @@
         </div>
     </div>
 
+    <div class="modal fade app-confirm-modal" id="appConfirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white border-danger">
+                <div class="modal-body text-center p-4">
+                    <div class="confirm-icon mb-3"><i class="bi bi-question-circle"></i></div>
+                    <h5 class="fw-bold mb-2" id="appConfirmTitle">Xác nhận thao tác</h5>
+                    <p class="text-muted small mb-4" id="appConfirmMessage"></p>
+                    <div class="d-flex gap-2 justify-content-center">
+                        <button type="button" class="btn btn-outline-light rounded-pill px-4" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-brand rounded-pill px-4" id="appConfirmOkBtn">Xác nhận</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

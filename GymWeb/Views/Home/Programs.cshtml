@@ -1,0 +1,115 @@
+@model List<GymWeb.ViewModels.TrainerViewModel>
+@{
+    ViewData["Title"] = "Bộ môn tập luyện";
+
+    var disciplines = new[]
+    {
+        new { Name = "YOGA", Img = "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=700&auto=format&fit=crop", Desc = "Thân khỏe, tâm an cùng không gian Studio thiền tịnh cao cấp.", Level = "Mọi trình độ", Sessions = "6 buổi / tuần", Icon = "bi-flower2" },
+        new { Name = "GYM / CARDIO", Img = "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=700&auto=format&fit=crop", Desc = "Tăng cơ, giảm mỡ hiệu quả với trang thiết bị máy móc Technogym.", Level = "Mọi trình độ", Sessions = "Tự do cả tuần", Icon = "bi-cpu" },
+        new { Name = "DANCE & ZUMBA", Img = "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=700&auto=format&fit=crop", Desc = "Hòa mình vào âm nhạc sôi động, giải tỏa căng thẳng sau giờ làm.", Level = "Cơ bản - Trung cấp", Sessions = "5 buổi / tuần", Icon = "bi-music-note-beamed" },
+        new { Name = "KICK FIT", Img = "https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=700&auto=format&fit=crop", Desc = "Rèn luyện cơ thể săn chắc, tăng phản xạ và khả năng tự vệ.", Level = "Trung cấp - Nâng cao", Sessions = "4 buổi / tuần", Icon = "bi-lightning-charge" },
+        new { Name = "BOXING", Img = "https://images.unsplash.com/photo-1517438476312-10d79c077509?w=700&auto=format&fit=crop", Desc = "Giải phóng năng lượng, cải thiện sức bền và sự tự tin.", Level = "Trung cấp - Nâng cao", Sessions = "4 buổi / tuần", Icon = "bi-shield-fill-check" },
+        new { Name = "FUNCTIONAL TRAINING", Img = "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=700&auto=format&fit=crop", Desc = "Bài tập đa khớp, cải thiện sức mạnh và sự linh hoạt toàn thân.", Level = "Mọi trình độ", Sessions = "5 buổi / tuần", Icon = "bi-activity" },
+    };
+}
+
+<section class="position-relative d-flex align-items-center justify-content-center static-page-hero"
+         style="min-height: 55vh; background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1571731956672-f2b94d7dd0cb?q=80&amp;w=1470&amp;auto=format&amp;fit=crop') no-repeat center center/cover;">
+    <div class="container position-relative text-center text-white px-3" style="z-index: 2; max-width: 820px;">
+        <span class="section-eyebrow d-inline-block mb-3">Chương trình tập luyện</span>
+        <h1 class="section-title mb-3">Bộ môn <span class="text-brand-red">tập luyện</span></h1>
+        <p class="lead fw-normal text-white-50">Đa dạng bộ môn theo xu hướng, thiết kế bởi đội ngũ huấn luyện viên chuyên nghiệp — phù hợp với mọi mục tiêu và thể trạng.</p>
+    </div>
+</section>
+
+<section class="container mt-5 pt-4">
+    <div class="row g-4">
+        @foreach (var d in disciplines)
+        {
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden bg-transparent">
+                    <div class="position-relative">
+                        <img src="@d.Img" class="card-img-top course-img" alt="@d.Name" style="height: 220px;">
+                        <span class="position-absolute top-0 start-0 m-3 badge rounded-pill bg-dark bg-opacity-75 px-3 py-2">
+                            <i class="bi @d.Icon me-1 text-brand-red"></i> @d.Level
+                        </span>
+                    </div>
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold mb-2">@d.Name</h5>
+                        <p class="card-text small text-muted mb-3">@d.Desc</p>
+                        <div class="d-flex align-items-center justify-content-between small text-secondary border-top pt-3" style="border-color: var(--brand-border) !important;">
+                            <span><i class="bi bi-calendar2-week me-1 text-brand-red"></i> @d.Sessions</span>
+                            @if (Context.Session.GetString("Username") == null)
+                            {
+                                <a asp-controller="Account" asp-action="Register" class="text-brand-red text-decoration-none fw-bold">Đăng ký &rarr;</a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Profile" asp-action="Packages" class="text-brand-red text-decoration-none fw-bold">Chọn gói &rarr;</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+
+<section class="container mt-5 pt-5 pb-5">
+    <div class="text-center mb-5">
+        <span class="section-eyebrow">Đồng hành cùng bạn</span>
+        <h2 class="section-title">Đội ngũ <span class="text-brand-red">huấn luyện viên</span></h2>
+        <p class="section-subtitle">Các huấn luyện viên đang hoạt động tại hệ thống, trực tiếp phụ trách các bộ môn trên.</p>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center text-muted py-4">
+            <i class="bi bi-people display-6 d-block mb-2 opacity-50"></i>
+            Hệ thống chưa cập nhật huấn luyện viên nào.
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var t in Model)
+            {
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="surface-card text-center p-4 h-100">
+                        @if (!string.IsNullOrEmpty(t.CertificateImagePath))
+                        {
+                            <img src="@t.CertificateImagePath" class="rounded-circle mb-3" style="width: 96px; height: 96px; object-fit: cover; border: 3px solid var(--brand-red);" alt="@t.FullName">
+                        }
+                        else
+                        {
+                            <div class="rounded-circle mb-3 d-flex align-items-center justify-content-center mx-auto" style="width: 96px; height: 96px; background: rgba(255,43,43,0.12); border: 3px solid var(--brand-red);">
+                                <i class="bi bi-person-fill" style="font-size: 2.4rem; color: var(--brand-red);"></i>
+                            </div>
+                        }
+                        <h6 class="fw-bold mb-1">@t.FullName</h6>
+                        <p class="text-brand-red small fw-semibold mb-1 text-uppercase">@(string.IsNullOrWhiteSpace(t.Specialty) ? "Huấn luyện viên" : t.Specialty)</p>
+                        @if (!string.IsNullOrWhiteSpace(t.Certification))
+                        {
+                            <p class="text-muted small mb-0"><i class="bi bi-patch-check-fill me-1"></i>@t.Certification</p>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>
+
+<section class="container mb-5">
+    <div class="cta-band text-white text-center p-5 shadow">
+        <h3 class="fw-bold text-uppercase mb-2">Chọn bộ môn phù hợp với bạn</h3>
+        <p class="mb-4">Đăng ký ngay hôm nay để được tư vấn lộ trình tập luyện miễn phí cùng huấn luyện viên.</p>
+        @if (Context.Session.GetString("Username") == null)
+        {
+            <a asp-controller="Account" asp-action="Register" class="btn btn-dark btn-lg px-5 rounded-pill fw-bold">Đăng ký ngay</a>
+        }
+        else
+        {
+            <a asp-controller="Profile" asp-action="Packages" class="btn btn-dark btn-lg px-5 rounded-pill fw-bold">Xem các gói tập</a>
+        }
+    </div>
+</section>

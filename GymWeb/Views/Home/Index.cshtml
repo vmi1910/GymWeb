@@ -11,7 +11,14 @@
         <span class="section-eyebrow d-inline-block mb-3">Hệ thống phòng tập đẳng cấp</span>
         <h1 class="fs-3 fs-md-1 fw-bold text-uppercase mb-3 text-nowrap">Trải nghiệm phòng tập <span class="text-brand-red">5 sao</span></h1>
         <p class="lead mb-4 fw-normal">Tặng ngay 1 tháng tập luyện miễn phí với hệ thống máy móc hiện đại nhất.</p>
-        <a href="#hethongphong" class="btn btn-brand btn-lg px-5 py-3 rounded-pill shadow">Đăng ký nhận ưu đãi</a>
+        @if (Context.Session.GetString("Username") == null)
+        {
+            <a asp-controller="Account" asp-action="Register" class="btn btn-brand btn-lg px-5 py-3 rounded-pill shadow">Đăng ký nhận ưu đãi</a>
+        }
+        else
+        {
+            <a asp-controller="Home" asp-action="Facilities" class="btn btn-brand btn-lg px-5 py-3 rounded-pill shadow">Khám phá phòng tập</a>
+        }
     </div>
 </section>
 
@@ -89,7 +96,7 @@
             <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
                 <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=500&amp;auto=format&amp;fit=crop" class="card-img-top course-img" alt="Yoga">
                 <div class="card-body text-center p-4">
-                    <h5 class="card-title fw-bold">YOGA</h5>
+                    <h5 class="card-title fw-bold text-dark">YOGA</h5>
                     <p class="card-text small text-muted">Thân khỏe, tâm an cùng không gian Studio thiền tịnh cao cấp.</p>
                 </div>
             </div>
@@ -99,7 +106,7 @@
             <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
                 <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?w=500&amp;auto=format&amp;fit=crop" class="card-img-top course-img" alt="Gym">
                 <div class="card-body text-center p-4">
-                    <h5 class="card-title fw-bold">GYM / CARDIO</h5>
+                    <h5 class="card-title fw-bold text-dark">GYM / CARDIO</h5>
                     <p class="card-text small text-muted">Tăng cơ, giảm mỡ hiệu quả với trang thiết bị máy móc Technogym.</p>
                 </div>
             </div>
@@ -109,7 +116,7 @@
             <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
                 <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?w=500&amp;auto=format&amp;fit=crop" class="card-img-top course-img" alt="Zumba">
                 <div class="card-body text-center p-4">
-                    <h5 class="card-title fw-bold">DANCE &amp; ZUMBA</h5>
+                    <h5 class="card-title fw-bold text-dark">DANCE &amp; ZUMBA</h5>
                     <p class="card-text small text-muted">Hòa mình vào âm nhạc sôi động, giải tỏa căng thẳng sau giờ làm.</p>
                 </div>
             </div>
@@ -119,11 +126,17 @@
             <div class="card h-100 border-0 shadow-sm rounded-3 overflow-hidden">
                 <img src="https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=500&amp;auto=format&amp;fit=crop" class="card-img-top course-img" alt="Kick Fit">
                 <div class="card-body text-center p-4">
-                    <h5 class="card-title fw-bold">KICK FIT</h5>
+                    <h5 class="card-title fw-bold text-dark">KICK FIT</h5>
                     <p class="card-text small text-muted">Rèn luyện cơ thể săn chắc, tăng phản xạ và khả năng tự vệ.</p>
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a asp-controller="Home" asp-action="Programs" class="btn btn-outline-brand rounded-pill px-5">
+            Xem tất cả bộ môn <i class="bi bi-arrow-right ms-1"></i>
+        </a>
     </div>
 </section>
 
@@ -141,18 +154,18 @@
                 <div class="card-img-overlay d-flex flex-column justify-content-end p-4">
                     <h4 class="card-title fw-bold mb-1">CHI NHÁNH QUẬN 10</h4>
                     <p class="card-text small mb-3">Khu vườn nhiệt đới Fitness chuẩn 5 sao với diện tích hơn 3000 m2.</p>
-                    <div><a href="#" class="btn btn-outline-light btn-sm fw-bold">XEM THÊM &rarr;</a></div>
+                    <div><a asp-controller="Home" asp-action="Facilities" class="btn btn-outline-light btn-sm fw-bold">XEM THÊM &rarr;</a></div>
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-md-6 col-lg-4">
             <div class="card bg-dark text-white border-0 branch-card position-relative">
-                <img src="https://images.unsplash.com/photo-1593079831268-3381b0c13182?w=600&amp;auto=format&amp;fit=crop" class="branch-img" alt="Vạn Hạnh Mall">
+                <img src="https://images.unsplash.com/photo-1555529771-835f59fc5efe?w=600&amp;auto=format&amp;fit=crop" class="branch-img" alt="Vạn Hạnh Mall">
                 <div class="card-img-overlay d-flex flex-column justify-content-end p-4">
                     <h4 class="card-title fw-bold mb-1">VẠN HẠNH MALL</h4>
                     <p class="card-text small mb-3">Tiện lợi kết hợp mua sắm và tập luyện tại trung tâm thương mại lớn.</p>
-                    <div><a href="#" class="btn btn-outline-light btn-sm fw-bold">XEM THÊM &rarr;</a></div>
+                    <div><a asp-controller="Home" asp-action="Facilities" class="btn btn-outline-light btn-sm fw-bold">XEM THÊM &rarr;</a></div>
                 </div>
             </div>
         </div>
@@ -163,10 +176,16 @@
                 <div class="card-img-overlay d-flex flex-column justify-content-end p-4">
                     <h4 class="card-title fw-bold mb-1">CHI NHÁNH QUẬN 4</h4>
                     <p class="card-text small mb-3">Sở hữu không gian thoáng đãng với hướng nhìn 2 mặt tiền sầm uất.</p>
-                    <div><a href="#" class="btn btn-outline-light btn-sm fw-bold">XEM THÊM &rarr;</a></div>
+                    <div><a asp-controller="Home" asp-action="Facilities" class="btn btn-outline-light btn-sm fw-bold">XEM THÊM &rarr;</a></div>
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a asp-controller="Home" asp-action="Facilities" class="btn btn-outline-brand rounded-pill px-5">
+            Xem tất cả phòng tập <i class="bi bi-arrow-right ms-1"></i>
+        </a>
     </div>
 </section>
 

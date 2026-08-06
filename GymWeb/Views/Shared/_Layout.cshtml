@@ -4,6 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Gym Management</title>
+    <link rel="icon" type="image/svg+xml" href="~/favicon.svg" />
+    <link rel="alternate icon" href="~/favicon.ico" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -25,6 +27,12 @@
             </div>
         </div>
 
+        @{
+            var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+            var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+            Func<string, string, string> navActive = (controller, action) =>
+                (currentController == controller && currentAction == action) ? "active" : "";
+        }
         <nav class="navbar navbar-expand-lg navbar-dark navbar-brand-dark sticky-top py-3">
             <div class="container">
                 <a class="navbar-brand text-brand-red fw-bold" asp-controller="Home" asp-action="Index">GYM FITNESS</a>
@@ -33,9 +41,9 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto align-items-lg-center">
-                        <li class="nav-item"><a class="nav-link active" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#bomontap">Bộ môn tập luyện</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#hethongphong">Hệ thống phòng tập</a></li>
+                        <li class="nav-item"><a class="nav-link @navActive("Home", "Index")" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                        <li class="nav-item"><a class="nav-link @navActive("Home", "Programs")" asp-controller="Home" asp-action="Programs">Bộ môn tập luyện</a></li>
+                        <li class="nav-item"><a class="nav-link @navActive("Home", "Facilities")" asp-controller="Home" asp-action="Facilities">Hệ thống phòng tập</a></li>
                         @if (Context.Session.GetString("Username") != null) {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-warning fw-bold" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -69,8 +77,33 @@
                                                 <i class="bi bi-card-list me-2"></i> Gói tập của tôi
                                             </a>
                                         </li>
+<<<<<<< HEAD
                                         <li>
                                             <a class="dropdown-item text-white" asp-controller="Profile" asp-action="History">
+=======
+                        <li>
+                            <a class="dropdown-item text-white" asp-controller="RoomBooking" asp-action="Create">
+                                <i class="bi bi-calendar2-plus me-2"></i> Đặt phòng tập
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item text-white" asp-controller="RoomBooking" asp-action="MyBookings">
+                                <i class="bi bi-calendar-check me-2"></i> Lịch đặt phòng của tôi
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item text-white" asp-controller="TrainerBooking" asp-action="Create">
+                                <i class="bi bi-person-badge-fill me-2"></i> Đăng ký tập cùng PT
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item text-white" asp-controller="TrainerBooking" asp-action="MyBookings">
+                                <i class="bi bi-calendar-heart me-2"></i> Lịch tập PT của tôi
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item text-white" asp-controller="Profile" asp-action="History">
+>>>>>>> 634c4d42240dd4bfec8c106cb497c88a218d478f
                                                 <i class="bi bi-receipt me-2"></i> Lịch sử thanh toán
                                             </a>
                                         </li>
@@ -99,9 +132,27 @@
         </nav>
     </header>
 
+    <partial name="_ToastNotifications" />
+
     <main role="main">
         @RenderBody()
     </main>
+
+    <div class="modal fade app-confirm-modal" id="appConfirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white border-danger">
+                <div class="modal-body text-center p-4">
+                    <div class="confirm-icon mb-3"><i class="bi bi-question-circle"></i></div>
+                    <h5 class="fw-bold mb-2" id="appConfirmTitle">Xác nhận thao tác</h5>
+                    <p class="text-muted small mb-4" id="appConfirmMessage"></p>
+                    <div class="d-flex gap-2 justify-content-center">
+                        <button type="button" class="btn btn-outline-light rounded-pill px-4" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-brand rounded-pill px-4" id="appConfirmOkBtn">Xác nhận</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <footer class="site-footer text-white py-5 mt-auto">
         <div class="container">
@@ -118,7 +169,8 @@
                     <ul class="list-unstyled">
                         <li class="mb-2"><a href="#" class="text-decoration-none">Điều khoản sử dụng</a></li>
                         <li class="mb-2"><a asp-controller="Home" asp-action="Privacy" class="text-decoration-none">Chính sách bảo mật</a></li>
-                        <li class="mb-2"><a href="#hethongphong" class="text-decoration-none">Hệ thống phòng tập</a></li>
+                        <li class="mb-2"><a asp-controller="Home" asp-action="Programs" class="text-decoration-none">Bộ môn tập luyện</a></li>
+                        <li class="mb-2"><a asp-controller="Home" asp-action="Facilities" class="text-decoration-none">Hệ thống phòng tập</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4">

@@ -553,6 +553,7 @@ h1, .display-1, .display-2, .display-3 {
   color: #555;
 }
 
+<<<<<<< HEAD
 /* ==========================================================================
    MEMBERSHIP SECTION
    ========================================================================== */
@@ -570,11 +571,20 @@ h1, .display-1, .display-2, .display-3 {
 .membership-section .title {
   text-align: center;
   margin-bottom: 3rem;
+=======
+.membership-section .title {
+  text-align: center;
+  margin-bottom: 3.5rem;
+>>>>>>> 634c4d42240dd4bfec8c106cb497c88a218d478f
 }
 
 .membership-section .title h2 {
   font-family: var(--font-heading);
+<<<<<<< HEAD
   font-size: clamp(1.9rem, 4vw, 2.75rem);
+=======
+  font-size: clamp(2.3rem, 5vw, 3.2rem);
+>>>>>>> 634c4d42240dd4bfec8c106cb497c88a218d478f
   font-weight: 700;
   color: var(--brand-white);
   text-transform: uppercase;
@@ -589,6 +599,7 @@ h1, .display-1, .display-2, .display-3 {
 
 .package-grid {
   display: grid;
+<<<<<<< HEAD
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 28px;
 }
@@ -606,10 +617,19 @@ h1, .display-1, .display-2, .display-3 {
   .pricing-card.featured:hover {
     transform: translateY(-6px);
   }
+=======
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+>>>>>>> 634c4d42240dd4bfec8c106cb497c88a218d478f
 }
 
 .btn-register {
   display: block;
+<<<<<<< HEAD
+=======
+  width: 100%;
+  border: none;
+>>>>>>> 634c4d42240dd4bfec8c106cb497c88a218d478f
   margin-top: auto;
   text-align: center;
   text-decoration: none;
@@ -618,19 +638,94 @@ h1, .display-1, .display-2, .display-3 {
   padding: 14px;
   border-radius: 50px;
   font-weight: 600;
+<<<<<<< HEAD
   text-transform: uppercase;
   letter-spacing: 1px;
   transition: 0.3s;
   box-shadow: 0 8px 20px rgba(255, 43, 43, 0.25);
+=======
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: 0.3s;
+>>>>>>> 634c4d42240dd4bfec8c106cb497c88a218d478f
 }
 
 .btn-register:hover {
   background: #fff;
   color: var(--brand-red-dark);
   transform: translateY(-3px);
+<<<<<<< HEAD
   box-shadow: 0 12px 28px rgba(255, 255, 255, 0.15);
 }
 
+=======
+}
+
+/* Icon thumb thay cho ảnh minh họa (tránh vỡ ảnh khi chưa upload) */
+.package-thumb {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 1.25rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(255, 43, 43, 0.18), rgba(255, 43, 43, 0.05));
+  border: 1px solid rgba(255, 43, 43, 0.35);
+}
+
+.package-thumb i {
+  font-size: 2rem;
+  color: var(--brand-red-light);
+}
+
+.pricing-header {
+  text-align: center;
+}
+
+.duration-tag {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--brand-muted);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--brand-border);
+  border-radius: 20px;
+  padding: 4px 14px;
+  margin-bottom: 0.75rem;
+}
+
+.price-per-day {
+  font-size: 0.85rem;
+  color: var(--brand-muted);
+  margin-top: 0.25rem;
+}
+
+.price-per-day b {
+  color: var(--brand-white);
+}
+
+.package-desc {
+  color: var(--brand-muted);
+  font-size: 0.9rem;
+  text-align: center;
+  margin: 1rem 0 0;
+}
+
+/* Gói hội viên đang sử dụng - viền xanh để phân biệt với gói "featured" (viền đỏ) */
+.pricing-card.is-current {
+  border: 2px solid #2ecc71;
+  box-shadow: 0 15px 35px rgba(46, 204, 113, 0.2);
+}
+
+.pricing-badge.current-badge {
+  background-color: #2ecc71;
+}
+>>>>>>> 634c4d42240dd4bfec8c106cb497c88a218d478f
 /* 7. FORMS & FOOTER */
 .form-control.form-dark,
 .form-select.form-dark,
@@ -706,7 +801,10 @@ h1, .display-1, .display-2, .display-3 {
 }
 
 .static-page-card {
+  background-color: var(--brand-surface);
+  border: 1px solid var(--brand-border) !important;
   border-radius: var(--radius-lg);
+<<<<<<< HEAD
 }
 
 /* 8b. STATIC PAGE CARD — nền cho các khối thông tin (Hồ sơ hội viên, Gói tập hiện tại...) */
@@ -765,3 +863,233 @@ h1, .display-1, .display-2, .display-3 {
     font-size: 2.2rem;
   }
 }
+=======
+  box-shadow: var(--shadow-soft);
+}
+
+/* ==========================================================================
+   9. TOAST NOTIFICATIONS (thay cho alert-success/alert-danger mặc định)
+   ========================================================================== */
+.toast-stack {
+  position: fixed;
+  top: 90px;
+  right: 20px;
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 380px;
+  width: calc(100% - 40px);
+}
+
+.app-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  border-left: 4px solid var(--brand-red);
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: var(--shadow-soft);
+  color: var(--brand-white);
+  font-size: 0.9rem;
+  animation: toastSlideIn 0.35s ease;
+}
+
+.app-toast.is-hiding {
+  animation: toastSlideOut 0.3s ease forwards;
+}
+
+.app-toast > i {
+  font-size: 1.2rem;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+.app-toast > span {
+  flex: 1;
+  line-height: 1.5;
+}
+
+.app-toast .toast-close {
+  background: none;
+  border: none;
+  color: var(--brand-muted);
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.app-toast .toast-close:hover {
+  color: var(--brand-white);
+}
+
+.app-toast-success {
+  border-left-color: #2ecc71;
+}
+.app-toast-success > i {
+  color: #2ecc71;
+}
+
+.app-toast-error {
+  border-left-color: var(--brand-red);
+}
+.app-toast-error > i {
+  color: var(--brand-red-light);
+}
+
+.app-toast-info {
+  border-left-color: #3498db;
+}
+.app-toast-info > i {
+  color: #3498db;
+}
+
+@keyframes toastSlideIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes toastSlideOut {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(30px); }
+}
+
+@media (max-width: 576px) {
+  .toast-stack {
+    left: 12px;
+    right: 12px;
+    top: 80px;
+    max-width: none;
+    width: auto;
+  }
+}
+
+/* ==========================================================================
+   10. CONFIRM MODAL (thay cho window.confirm() mặc định của trình duyệt)
+   ========================================================================== */
+.app-confirm-modal .modal-content {
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--brand-border);
+}
+
+.app-confirm-modal .confirm-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 43, 43, 0.12);
+  border: 1px solid rgba(255, 43, 43, 0.3);
+  color: var(--brand-red-light);
+  font-size: 1.8rem;
+}
+
+/* ==========================================================================
+   11. DASHBOARD — stat cards, trend badges, hoạt động gần đây
+   ========================================================================== */
+.stat-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.stat-icon-red { background: rgba(255, 43, 43, 0.14); color: var(--brand-red-light); }
+.stat-icon-green { background: rgba(46, 204, 113, 0.14); color: #2ecc71; }
+.stat-icon-blue { background: rgba(52, 152, 219, 0.14); color: #3498db; }
+.stat-icon-purple { background: rgba(155, 89, 182, 0.16); color: #b07cd6; }
+.stat-icon-orange { background: rgba(243, 156, 18, 0.16); color: #f5a623; }
+
+.dashboard-stat-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.dashboard-stat-card .stat-content {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.dashboard-stat-card .stat-value,
+.dashboard-stat-card .stat-label,
+.dashboard-stat-card .trend-badge {
+  overflow-wrap: break-word;
+}
+
+.dashboard-stat-card .stat-value {
+  font-size: 1.35rem;
+}
+
+@media (min-width: 992px) {
+  .dashboard-stat-card .stat-value {
+    font-size: 1.6rem;
+  }
+}
+
+.dashboard-stat-card .stat-value {
+  font-family: var(--font-heading);
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.dashboard-stat-card .stat-label {
+  color: var(--brand-muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.trend-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 20px;
+  margin-top: 4px;
+}
+
+.trend-up { color: #2ecc71; background: rgba(46, 204, 113, 0.12); }
+.trend-down { color: var(--brand-red-light); background: rgba(255, 43, 43, 0.12); }
+.trend-flat { color: var(--brand-muted); background: rgba(255, 255, 255, 0.05); }
+
+.activity-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--brand-border);
+}
+
+.activity-row:last-child {
+  border-bottom: none;
+}
+
+.activity-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 43, 43, 0.12);
+  color: var(--brand-red-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+  font-size: 0.9rem;
+}
+>>>>>>> 634c4d42240dd4bfec8c106cb497c88a218d478f

@@ -1,0 +1,187 @@
+@model List<GymWeb.ViewModels.RoomAvailabilityViewModel>
+@{
+    ViewData["Title"] = "Tình trạng phòng tập hôm nay";
+    Layout = "_AdminLayout";
+    DateTime now = ViewBag.Now;
+    var freeCount = Model.Count(r => r.IsFreeNow);
+    var isAdmin = Context.Session.GetString("Role") == "Admin";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <div>
+        <h3 class="fw-bold mb-1">TÌNH TRẠNG PHÒNG TẬP HÔM NAY</h3>
+        <p class="text-muted small mb-0">Dành cho lễ tân xếp phòng cho khách vãng lai chưa đặt lịch trước · Cập nhật lúc @now.ToString("HH:mm dd/MM/yyyy")</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-brand btn-sm rounded-pill px-3"><i class="bi bi-arrow-clockwise me-1"></i>Làm mới</a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="admin-card p-4 dashboard-stat-card">
+            <div class="stat-icon stat-icon-green"><i class="bi bi-door-open-fill"></i></div>
+            <div class="stat-content">
+                <div class="stat-value">@freeCount</div>
+                <div class="stat-label">Phòng đang trống</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="admin-card p-4 dashboard-stat-card">
+            <div class="stat-icon stat-icon-red"><i class="bi bi-door-closed-fill"></i></div>
+            <div class="stat-content">
+                <div class="stat-value">@(Model.Count - freeCount)</div>
+                <div class="stat-label">Phòng đang bận / bảo trì</div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="admin-card p-4 dashboard-stat-card">
+            <div class="stat-icon stat-icon-blue"><i class="bi bi-people-fill"></i></div>
+            <div class="stat-content">
+                <div class="stat-value">@Model.Sum(r => r.CurrentOccupancy)</div>
+                <div class="stat-label">Người đang tập (check-in)</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    @foreach (var room in Model)
+    {
+        var isMaintenance = room.IsUnderMaintenance || room.RoomStatus != "Đang hoạt động";
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="surface-card p-4 h-100 d-flex flex-column">
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <div>
+                        <h5 class="fw-bold mb-0">@room.RoomName</h5>
+                        <span class="text-muted small"><i class="bi bi-layers-half me-1"></i>Tầng @room.Floor</span>
+                    </div>
+                    @if (isMaintenance)
+                    {
+                        <span class="badge bg-secondary bg-opacity-25 text-secondary border border-secondary px-3 py-2 rounded-pill">
+                            <i class="bi bi-tools me-1"></i>@(room.IsUnderMaintenance ? "BẢO TRÌ" : room.RoomStatus)
+                        </span>
+                    }
+                    else if (room.IsFreeNow)
+                    {
+                        <span class="badge bg-success bg-opacity-25 text-success border border-success px-3 py-2 rounded-pill">
+                            <i class="bi bi-check-circle-fill me-1"></i>TRỐNG
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger bg-opacity-25 text-danger border border-danger px-3 py-2 rounded-pill">
+                            <i class="bi bi-hourglass-split me-1"></i>ĐANG SỬ DỤNG
+                        </span>
+                    }
+                </div>
+
+                @if (isMaintenance && room.MaintenanceReason != null)
+                {
+                    <p class="small text-muted mb-2"><i class="bi bi-exclamation-triangle me-1"></i>@room.MaintenanceReason</p>
+                }
+                @if (!isMaintenance && !room.IsFreeNow && room.CurrentActivity != null)
+                {
+                    <p class="small text-muted mb-2"><i class="bi bi-person-fill me-1"></i>@room.CurrentActivity</p>
+                }
+
+                <div class="d-flex align-items-center justify-content-between small mb-3">
+                    <span class="text-muted"><i class="bi bi-people-fill me-1"></i>Sức chứa</span>
+                    <span class="fw-bold @(room.CurrentOccupancy >= room.Capacity ? "text-danger" : "text-white")">@room.CurrentOccupancy / @room.Capacity người</span>
+                </div>
+                <div class="progress mb-3" style="height: 6px; background-color: var(--brand-surface-2);">
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: @(room.Capacity > 0 ? Math.Min(100, room.CurrentOccupancy * 100 / room.Capacity) : 0)%"></div>
+                </div>
+
+                @if (room.CheckedInPeople.Any())
+                {
+                    <div class="mb-3">
+                        @foreach (var p in room.CheckedInPeople)
+                        {
+                            <div class="d-flex align-items-center justify-content-between small py-1">
+                                <span><i class="bi bi-person-check-fill me-1 text-brand-red"></i>@p.MemberName <span class="text-muted">(@p.CheckInTime.ToString("HH:mm"))</span></span>
+                                <form asp-action="CheckOut" asp-route-id="@p.CheckInID" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-secondary btn-sm rounded-pill py-0 px-2" style="font-size: 0.72rem;">Check-out</button>
+                                </form>
+                            </div>
+                        }
+                    </div>
+                }
+
+                @if (!isMaintenance && room.CurrentOccupancy < room.Capacity)
+                {
+                    <form asp-action="CheckIn" method="post" class="d-flex gap-2 mb-3">
+                        <input type="hidden" name="roomId" value="@room.RoomID" />
+                        <select name="memberId" class="form-select bg-dark text-white border-secondary form-select-sm" asp-items="ViewBag.MemberList" required>
+                            <option value="">-- Check-in khách --</option>
+                        </select>
+                        <button type="submit" class="btn btn-brand btn-sm rounded-pill px-3 flex-shrink-0"><i class="bi bi-box-arrow-in-right"></i></button>
+                    </form>
+                }
+
+                <hr class="border-secondary my-2" />
+
+                <div class="mt-auto">
+                    <p class="text-uppercase small text-muted fw-bold mb-2" style="font-size: 0.72rem; letter-spacing: 1px;">Lịch trong ngày</p>
+                    @if (!room.BusyBlocks.Any())
+                    {
+                        <p class="text-muted small mb-0">Trống cả ngày.</p>
+                    }
+                    else
+                    {
+                        <div class="d-flex flex-column gap-1 mb-3">
+                            @foreach (var block in room.BusyBlocks)
+                            {
+                                var isNowBlock = block.Start <= now.TimeOfDay && now.TimeOfDay < block.End;
+                                <div class="d-flex justify-content-between small @(isNowBlock ? "text-white fw-bold" : "text-muted")">
+                                    <span>@block.Start.ToString(@"hh\:mm") - @block.End.ToString(@"hh\:mm")</span>
+                                    <span>@(block.IsMaintenance ? "🔧 " : "")@block.Label</span>
+                                </div>
+                            }
+                        </div>
+                    }
+
+                    @if (isAdmin)
+                    {
+                        @if (room.UpcomingMaintenance.Any())
+                        {
+                            <div class="mb-2">
+                                @foreach (var m in room.UpcomingMaintenance)
+                                {
+                                    <div class="d-flex align-items-center justify-content-between small text-muted py-1">
+                                        <span><i class="bi bi-tools me-1"></i>@m.StartTime.ToString("dd/MM HH:mm") - @m.EndTime.ToString("dd/MM HH:mm")</span>
+                                        <form asp-action="CancelMaintenance" asp-route-id="@m.RoomMaintenanceID" method="post"
+                                              data-confirm-title="Hủy lịch bảo trì" data-confirm="Hủy lịch bảo trì phòng @room.RoomName?">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill py-0 px-2" style="font-size: 0.7rem;">Hủy</button>
+                                        </form>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill w-100" data-bs-toggle="collapse" data-bs-target="#maint-@room.RoomID">
+                            <i class="bi bi-tools me-1"></i>Đặt lịch bảo trì
+                        </button>
+                        <div class="collapse mt-2" id="maint-@room.RoomID">
+                            <form asp-action="ScheduleMaintenance" method="post" class="surface-card p-3">
+                                <input type="hidden" name="roomId" value="@room.RoomID" />
+                                <div class="mb-2">
+                                    <label class="form-label small text-muted mb-1">Từ</label>
+                                    <input type="datetime-local" name="startTime" class="form-control bg-dark text-white border-secondary form-control-sm" required />
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label small text-muted mb-1">Đến</label>
+                                    <input type="datetime-local" name="endTime" class="form-control bg-dark text-white border-secondary form-control-sm" required />
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label small text-muted mb-1">Lý do</label>
+                                    <input type="text" name="reason" class="form-control bg-dark text-white border-secondary form-control-sm" placeholder="VD: Bảo trì máy lạnh" />
+                                </div>
+                                <button type="submit" class="btn btn-brand btn-sm rounded-pill w-100">Xác nhận đặt lịch</button>
+                            </form>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using GymWeb.Models; // Hoặc namespace chứa class DataContext của mày
+using GymWeb.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 //Thêm dịch vụ Session
@@ -11,6 +12,17 @@ builder.Services.AddSession(options => {
 // Add DB
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+<<<<<<< HEAD
+=======
+
+// Gửi email OTP (cấu hình thật nằm trong dotnet user-secrets, xem EmailSettings.cs)
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
+
+builder.Services.AddScoped<GymWeb.Services.BookingConflictService>();
+builder.Services.AddScoped<GymWeb.Services.ScheduleConflictService>();
+
+>>>>>>> 634c4d42240dd4bfec8c106cb497c88a218d478f
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
