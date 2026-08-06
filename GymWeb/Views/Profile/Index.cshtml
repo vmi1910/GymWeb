@@ -17,11 +17,6 @@
     <div class="row justify-content-center">
         <div class="col-lg-9">
 
-            @if (TempData["Success"] != null)
-            {
-                <div class="alert alert-success py-2 small">@TempData["Success"]</div>
-            }
-
             <ul class="nav nav-pills mb-4 gap-2">
                 <li class="nav-item"><a class="nav-link active" style="background-color:var(--brand-red);" asp-action="Index">Thông tin cá nhân</a></li>
                 <li class="nav-item"><a class="nav-link text-dark" asp-action="Packages">Gói tập</a></li>

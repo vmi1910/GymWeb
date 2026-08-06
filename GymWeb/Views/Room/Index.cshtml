@@ -5,15 +5,6 @@
     var list = Model.ToList();
 }
 
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success py-2 small">@TempData["Success"]</div>
-}
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger py-2 small">@TempData["Error"]</div>
-}
-
 <div class="admin-card p-4 shadow">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
@@ -52,9 +43,9 @@
                             <a asp-action="Edit" asp-route-id="@item.RoomID" class="btn btn-outline-warning btn-sm me-2 rounded-pill px-3">
                                 <i class="bi bi-pencil-square"></i> Sửa
                             </a>
-                            <form asp-action="Delete" asp-route-id="@item.RoomID" method="post" class="d-inline">
-                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3"
-                                        onclick="return confirm('Xóa phòng @item.RoomName?');">
+                            <form asp-action="Delete" asp-route-id="@item.RoomID" method="post" class="d-inline"
+                                  data-confirm-title="Xóa phòng tập" data-confirm="Xóa phòng @item.RoomName? Hành động này không thể hoàn tác.">
+                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3">
                                     <i class="bi bi-trash3-fill"></i> Xóa
                                 </button>
                             </form>

@@ -1,0 +1,160 @@
+@model List<GymWeb.Models.Room>
+@{
+    ViewData["Title"] = "Hệ thống phòng tập";
+
+    string IconFor(string name)
+    {
+        var n = name.ToLower();
+        if (n.Contains("yoga")) return "bi-flower2";
+        if (n.Contains("cardio")) return "bi-heart-pulse";
+        if (n.Contains("gym")) return "bi-cpu";
+        if (n.Contains("boxing") || n.Contains("kick")) return "bi-shield-fill-check";
+        if (n.Contains("dance") || n.Contains("zumba")) return "bi-music-note-beamed";
+        return "bi-building";
+    }
+
+    var totalCapacity = Model.Sum(r => r.Capacity);
+    var activeCount = Model.Count(r => r.Status == "Đang hoạt động");
+    var maxCapacity = Model.Any() ? Model.Max(r => r.Capacity) : 0;
+}
+
+<section class="position-relative d-flex align-items-center justify-content-center static-page-hero"
+         style="min-height: 55vh; background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&amp;w=1470&amp;auto=format&amp;fit=crop') no-repeat center center/cover;">
+    <div class="container position-relative text-center text-white px-3" style="z-index: 2; max-width: 820px;">
+        <span class="section-eyebrow d-inline-block mb-3">Cơ sở vật chất</span>
+        <h1 class="section-title mb-3">Hệ thống <span class="text-brand-red">phòng tập</span></h1>
+        <p class="lead fw-normal text-white-50">Không gian tập luyện rộng rãi, trang thiết bị hiện đại, được bố trí khoa học theo từng bộ môn.</p>
+    </div>
+</section>
+
+<section class="stats-strip py-4 border-bottom border-dark">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-6 col-md-3">
+                <div class="stat-block"><div class="stat-number">@Model.Count</div><div class="stat-label text-white-50">Phòng tập</div></div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-block"><div class="stat-number">@activeCount</div><div class="stat-label text-white-50">Đang hoạt động</div></div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-block"><div class="stat-number">@totalCapacity</div><div class="stat-label text-white-50">Sức chứa (người)</div></div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-block"><div class="stat-number">3+</div><div class="stat-label text-white-50">Chi nhánh</div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container mt-5 pt-4">
+    <div class="text-center mb-5">
+        <span class="section-eyebrow">Phòng tập hiện có</span>
+        <h2 class="section-title">Không gian <span class="text-brand-red">tập luyện</span></h2>
+        <p class="section-subtitle">Danh sách phòng tập được cập nhật trực tiếp từ hệ thống quản lý.</p>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center text-muted py-4">
+            <i class="bi bi-building display-6 d-block mb-2 opacity-50"></i>
+            Hệ thống chưa cập nhật phòng tập nào.
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var room in Model)
+            {
+                var isActive = room.Status == "Đang hoạt động";
+                var capacityPct = maxCapacity > 0 ? (int)Math.Round(room.Capacity * 100.0 / maxCapacity) : 0;
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="surface-card p-4 h-100 d-flex flex-column">
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="feature-icon m-0 flex-shrink-0"><i class="bi @IconFor(room.RoomName)"></i></div>
+                            <div>
+                                <h5 class="fw-bold mb-0">@room.RoomName</h5>
+                                <span class="text-muted small"><i class="bi bi-layers-half me-1"></i>Tầng @room.Floor</span>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between small text-secondary mb-2">
+                            <span><i class="bi bi-people-fill me-1 text-brand-red"></i> Sức chứa</span>
+                            <span class="fw-bold text-white">@room.Capacity người</span>
+                        </div>
+                        <div class="progress mb-3" style="height: 6px; background-color: var(--brand-surface-2);">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width: @(capacityPct)%"></div>
+                        </div>
+                        <div class="mt-auto">
+                            @if (isActive)
+                            {
+                                <span class="badge bg-success bg-opacity-25 text-success border border-success px-3 py-2 rounded-pill">
+                                    <i class="bi bi-check-circle-fill me-1"></i> @room.Status
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary bg-opacity-25 text-secondary border border-secondary px-3 py-2 rounded-pill">
+                                    <i class="bi bi-pause-circle-fill me-1"></i> @room.Status
+                                </span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</section>
+
+<section id="hethongphong" class="container mt-5 pt-5 mb-5">
+    <div class="text-center mb-5">
+        <span class="section-eyebrow">Chi nhánh</span>
+        <h2 class="section-title">Hệ thống <span class="text-brand-red">Trung Tâm</span></h2>
+        <p class="section-subtitle">Diện tích chuẩn cao cấp, không gian tập luyện thiết kế theo từng concept riêng biệt.</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card bg-dark text-white border-0 branch-card position-relative">
+                <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=600&amp;auto=format&amp;fit=crop" class="branch-img" alt="Quận 10">
+                <div class="card-img-overlay d-flex flex-column justify-content-end p-4">
+                    <h4 class="card-title fw-bold mb-1">CHI NHÁNH QUẬN 10</h4>
+                    <p class="card-text small mb-0">Khu vườn nhiệt đới Fitness chuẩn 5 sao với diện tích hơn 3000 m2.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card bg-dark text-white border-0 branch-card position-relative">
+                <img src="https://images.unsplash.com/photo-1593079831268-3381b0c13182?w=600&amp;auto=format&amp;fit=crop" class="branch-img" alt="Vạn Hạnh Mall">
+                <div class="card-img-overlay d-flex flex-column justify-content-end p-4">
+                    <h4 class="card-title fw-bold mb-1">VẠN HẠNH MALL</h4>
+                    <p class="card-text small mb-0">Tiện lợi kết hợp mua sắm và tập luyện tại trung tâm thương mại lớn.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card bg-dark text-white border-0 branch-card position-relative">
+                <img src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=600&amp;auto=format&amp;fit=crop" class="branch-img" alt="Quận 4">
+                <div class="card-img-overlay d-flex flex-column justify-content-end p-4">
+                    <h4 class="card-title fw-bold mb-1">CHI NHÁNH QUẬN 4</h4>
+                    <p class="card-text small mb-0">Sở hữu không gian thoáng đãng với hướng nhìn 2 mặt tiền sầm uất.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container mb-5">
+    <div class="cta-band text-white text-center p-5 shadow">
+        <h3 class="fw-bold text-uppercase mb-2">Sẵn sàng trải nghiệm không gian tập luyện?</h3>
+        <p class="mb-4">Đăng ký ngay hôm nay để nhận buổi tập thử miễn phí tại chi nhánh gần bạn nhất.</p>
+        @if (Context.Session.GetString("Username") == null)
+        {
+            <a asp-controller="Account" asp-action="Register" class="btn btn-dark btn-lg px-5 rounded-pill fw-bold">Đăng ký ngay</a>
+        }
+        else
+        {
+            <a asp-controller="Home" asp-action="Index" class="btn btn-dark btn-lg px-5 rounded-pill fw-bold">Về trang chủ</a>
+        }
+    </div>
+</section>

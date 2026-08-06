@@ -1,7 +1,16 @@
 @model IEnumerable<GymWeb.Models.MembershipPackage>
 @{
     ViewData["Title"] = "Gói tập";
-    var list = Model.Where(m => m.IsActive).ToList();
+    var list = Model.Where(m => m.IsActive).OrderBy(m => m.Price).ToList();
+    int? currentPackageId = ViewBag.CurrentPackageId;
+    DateTime? currentEndDate = ViewBag.CurrentEndDate;
+
+    string IconFor(int durationDays) => durationDays switch
+    {
+        <= 31 => "bi-calendar3",
+        <= 190 => "bi-star-fill",
+        _ => "bi-trophy-fill"
+    };
 }
 
 <section class="membership-section">
@@ -15,52 +24,89 @@
             </p>
         </div>
 
-        <div class="package-grid">
-            @foreach (var item in list)
-            {
-                <div class="pricing-card @(item.IsFeatured ? "featured" : "")">
+        @if (!list.Any())
+        {
+            <div class="text-center text-muted py-5">
+                <i class="bi bi-card-list display-6 d-block mb-3 opacity-50"></i>
+                Hiện chưa có gói tập nào đang mở bán, vui lòng quay lại sau.
+            </div>
+        }
+        else
+        {
+            <div class="package-grid">
+                @foreach (var item in list)
+                {
+                    var isCurrent = currentPackageId.HasValue && currentPackageId.Value == item.PackageID;
+                    var pricePerDay = item.DurationDays > 0 ? item.Price / item.DurationDays : 0;
 
-                    @if (!string.IsNullOrWhiteSpace(item.BadgeText))
-                    {
-                        <span class="pricing-badge">@item.BadgeText</span>
-                    }
+                    <div class="pricing-card @(item.IsFeatured ? "featured" : "") @(isCurrent ? "is-current" : "")">
 
-                    <div class="package-thumb">
-                        <img src="@item.ImageUrl" alt="@item.PackageName">
-                    </div>
+                        @if (isCurrent)
+                        {
+                            <span class="pricing-badge current-badge"><i class="bi bi-check-circle-fill me-1"></i>Đang sử dụng</span>
+                        }
+                        else if (!string.IsNullOrWhiteSpace(item.BadgeText))
+                        {
+                            <span class="pricing-badge">@item.BadgeText</span>
+                        }
 
-                    <div class="pricing-header">
-                        <span class="duration-tag">@item.DurationDays ngày</span>
-                        <h3 class="package-name">@item.PackageName</h3>
-                        <div class="price">
-                            @item.Price.ToString("N0")<span> đ / gói</span>
+                        <div class="package-thumb">
+                            <i class="bi @IconFor(item.DurationDays)"></i>
                         </div>
+
+                        <div class="pricing-header">
+                            <span class="duration-tag">@item.DurationDays ngày</span>
+                            <h3 class="package-name">@item.PackageName</h3>
+                            <div class="price">
+                                @item.Price.ToString("N0")<span> đ / gói</span>
+                            </div>
+                            <div class="price-per-day">
+                                Chỉ ~<b>@pricePerDay.ToString("N0") đ</b> / ngày
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrWhiteSpace(item.Description))
+                        {
+                            <p class="package-desc">@item.Description</p>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(item.Highlights))
+                        {
+                            <ul class="pricing-features">
+                                @foreach (var line in item.Highlights.Split(';', StringSplitOptions.RemoveEmptyEntries))
+                                {
+                                    <li><span class="check-icon">✓</span> @line.Trim()</li>
+                                }
+                            </ul>
+                        }
+
+                        <form asp-controller="Profile" asp-action="Register" method="post" class="mt-auto"
+                              data-confirm-title="Xác nhận đăng ký gói tập"
+                              data-confirm="Xác nhận đăng ký/gia hạn '@item.PackageName' với giá @item.Price.ToString("N0") đ?">
+                            <input type="hidden" name="packageId" value="@item.PackageID" />
+                            <button type="submit" class="btn-register">
+                                @if (isCurrent)
+                                {
+                                    <span><i class="bi bi-arrow-repeat me-1"></i>Gia hạn thêm</span>
+                                }
+                                else
+                                {
+                                    <span>Đăng ký ngay</span>
+                                }
+                            </button>
+                        </form>
                     </div>
+                }
+            </div>
+        }
 
-                    @if (!string.IsNullOrWhiteSpace(item.Description))
-                    {
-                        <p class="package-desc">@item.Description</p>
-                    }
-
-                    @if (!string.IsNullOrWhiteSpace(item.Highlights))
-                    {
-                        <ul class="pricing-features">
-                            @foreach (var line in item.Highlights.Split(';', StringSplitOptions.RemoveEmptyEntries))
-                            {
-                                <li><span class="check-icon">✓</span> @line.Trim()</li>
-                            }
-                        </ul>
-                    }
-
-                    <a asp-controller="Membership"
-                       asp-action="Register"
-                       asp-route-id="@item.PackageID"
-                       class="btn-register">
-                        Đăng ký ngay
-                    </a>
-                </div>
-            }
-        </div>
+        @if (currentPackageId.HasValue && currentEndDate.HasValue)
+        {
+            <p class="text-center text-muted small mt-5 mb-0">
+                <i class="bi bi-info-circle me-1"></i>
+                Gói hiện tại của bạn có hiệu lực đến <b class="text-white">@currentEndDate.Value.ToString("dd/MM/yyyy")</b>. Đăng ký thêm sẽ tự động cộng dồn thời hạn.
+            </p>
+        }
 
     </div>
 </section>

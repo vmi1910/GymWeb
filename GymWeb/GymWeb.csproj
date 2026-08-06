@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>gymweb-b41f2a3e-9c0d-4b7a-8e3f-6d4a2c1f9b52</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

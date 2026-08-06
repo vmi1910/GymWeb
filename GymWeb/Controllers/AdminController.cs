@@ -108,7 +108,7 @@ namespace GymWeb.Controllers
             if (ModelState.IsValid)
             {
                 // 1. Lưu vào bảng ACCOUNT trước
-                var account = new Account { Username = model.Username, Role = model.Role };
+                var account = new Account { Username = model.Username, Role = model.Role, Email = model.Email };
                 var hasher = new PasswordHasher<Account>();
                 account.PasswordHash = hasher.HashPassword(account, model.RawPassword);
 
@@ -249,6 +249,7 @@ namespace GymWeb.Controllers
 
             account.Username = model.Username;
             account.Role = newRole;
+            account.Email = model.Email;
 
             // Chỉ đổi mật khẩu nếu người dùng có nhập mới
             if (!string.IsNullOrWhiteSpace(model.RawPassword))
