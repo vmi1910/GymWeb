@@ -70,6 +70,15 @@
                         <a class="@navClass("Payment")" asp-controller="Payment" asp-action="Index">
                             <i class="bi bi-cash-stack me-2"></i> Quản lý thanh toán
                         </a>
+                        <a class="@navClass("Equipment")" asp-controller="Equipment" asp-action="Index">
+                            <i class="bi bi-tools me-2"></i> Quản lý trang thiết bị
+                        </a>
+                    }
+                    @if (isAdminRole || currentRole == "Staff" || currentRole == "Trainer")
+                    {
+                        <a class="@navClass("RoomAvailability")" asp-controller="RoomAvailability" asp-action="Index">
+                            <i class="bi bi-door-open me-2"></i> Tình trạng phòng hôm nay
+                        </a>
                     }
                     @if (currentRole == "Admin" || currentRole == "Staff")
                     {

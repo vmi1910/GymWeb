@@ -1,0 +1,72 @@
+@model List<GymWeb.Models.Equipment>
+@{
+    ViewData["Title"] = "Quản lý trang thiết bị";
+    Layout = "_AdminLayout";
+    var roomNames = (Dictionary<int, string>)ViewBag.RoomNames;
+}
+
+<div class="admin-card p-4 shadow">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h3 class="fw-bold mb-1">DANH SÁCH TRANG THIẾT BỊ</h3>
+            <p class="text-muted small mb-0">Tổng số: @Model.Count thiết bị</p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            <form method="get" class="d-flex" style="max-width: 320px;">
+                <input type="text" name="search" value="@ViewData["Search"]" class="form-control bg-dark text-white border-secondary me-2" placeholder="Tìm tên, loại thiết bị...">
+                <button type="submit" class="btn btn-outline-brand"><i class="bi bi-search"></i></button>
+            </form>
+            <a asp-action="Create" class="btn btn-brand fw-bold px-4 rounded-pill">
+                <i class="bi bi-plus-circle me-2"></i> Thêm thiết bị
+            </a>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle mb-0" style="border-color: #222222;">
+            <thead>
+                <tr class="text-secondary small text-uppercase">
+                    <th>Tên thiết bị</th>
+                    <th>Loại</th>
+                    <th>Phòng đặt</th>
+                    <th>Ngày mua</th>
+                    <th>Tình trạng</th>
+                    <th class="text-end">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr><td colspan="6" class="text-center text-muted py-4">Chưa có thiết bị nào.</td></tr>
+                }
+                @foreach (var item in Model)
+                {
+                    var badge = item.Status switch
+                    {
+                        "Đang sử dụng" => "bg-success",
+                        "Bảo trì" => "bg-warning text-dark",
+                        _ => "bg-secondary"
+                    };
+                    <tr>
+                        <td class="fw-bold">@item.EquipmentName</td>
+                        <td class="text-muted small">@(string.IsNullOrWhiteSpace(item.Category) ? "—" : item.Category)</td>
+                        <td>@roomNames.GetValueOrDefault(item.RoomID, "—")</td>
+                        <td>@item.PurchaseDate.ToString("dd/MM/yyyy")</td>
+                        <td><span class="badge @badge">@item.Status</span></td>
+                        <td class="text-end">
+                            <a asp-action="Edit" asp-route-id="@item.EquipmentID" class="btn btn-outline-warning btn-sm me-2 rounded-pill px-3">
+                                <i class="bi bi-pencil-square"></i> Sửa
+                            </a>
+                            <form asp-action="Delete" asp-route-id="@item.EquipmentID" method="post" class="d-inline"
+                                  data-confirm-title="Xóa thiết bị" data-confirm="Xóa thiết bị @item.EquipmentName? Hành động này không thể hoàn tác.">
+                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                                    <i class="bi bi-trash3-fill"></i> Xóa
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

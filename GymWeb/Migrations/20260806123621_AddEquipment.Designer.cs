@@ -4,6 +4,7 @@ using GymWeb.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GymWeb.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20260806123621_AddEquipment")]
+    partial class AddEquipment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,35 +56,6 @@ namespace GymWeb.Migrations
                     b.HasKey("AccountID");
 
                     b.ToTable("Accounts");
-                });
-
-            modelBuilder.Entity("GymWeb.Models.CheckInHistory", b =>
-                {
-                    b.Property<int>("CheckInID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CheckInID"), 1L, 1);
-
-                    b.Property<DateTime>("CheckInTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("CheckOutTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("MemberID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoomID")
-                        .HasColumnType("int");
-
-                    b.HasKey("CheckInID");
-
-                    b.HasIndex("MemberID");
-
-                    b.HasIndex("RoomID", "CheckOutTime");
-
-                    b.ToTable("CheckInHistories");
                 });
 
             modelBuilder.Entity("GymWeb.Models.Equipment", b =>
@@ -318,41 +291,6 @@ namespace GymWeb.Migrations
                     b.ToTable("RoomBookings");
                 });
 
-            modelBuilder.Entity("GymWeb.Models.RoomMaintenance", b =>
-                {
-                    b.Property<int>("RoomMaintenanceID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoomMaintenanceID"), 1L, 1);
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int?>("CreatedByStaffID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("EndTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Reason")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RoomID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("StartTime")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("RoomMaintenanceID");
-
-                    b.HasIndex("CreatedByStaffID");
-
-                    b.HasIndex("RoomID", "StartTime", "EndTime");
-
-                    b.ToTable("RoomMaintenances");
-                });
-
             modelBuilder.Entity("GymWeb.Models.Staff", b =>
                 {
                     b.Property<int>("StaffID")
@@ -541,25 +479,6 @@ namespace GymWeb.Migrations
                     b.ToTable("TrainerProfiles");
                 });
 
-            modelBuilder.Entity("GymWeb.Models.CheckInHistory", b =>
-                {
-                    b.HasOne("GymWeb.Models.Member", "Member")
-                        .WithMany()
-                        .HasForeignKey("MemberID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GymWeb.Models.Room", "Room")
-                        .WithMany()
-                        .HasForeignKey("RoomID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Member");
-
-                    b.Navigation("Room");
-                });
-
             modelBuilder.Entity("GymWeb.Models.Equipment", b =>
                 {
                     b.HasOne("GymWeb.Models.Room", "Room")
@@ -622,24 +541,6 @@ namespace GymWeb.Migrations
                     b.Navigation("Member");
 
                     b.Navigation("ProcessedByStaff");
-
-                    b.Navigation("Room");
-                });
-
-            modelBuilder.Entity("GymWeb.Models.RoomMaintenance", b =>
-                {
-                    b.HasOne("GymWeb.Models.Staff", "CreatedByStaff")
-                        .WithMany()
-                        .HasForeignKey("CreatedByStaffID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("GymWeb.Models.Room", "Room")
-                        .WithMany()
-                        .HasForeignKey("RoomID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("CreatedByStaff");
 
                     b.Navigation("Room");
                 });

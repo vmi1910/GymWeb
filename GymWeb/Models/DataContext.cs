@@ -17,6 +17,9 @@ namespace GymWeb.Models
         public DbSet<Payment> Payments => Set<Payment>();
         public DbSet<RoomBooking> RoomBookings => Set<RoomBooking>();
         public DbSet<TrainerBooking> TrainerBookings => Set<TrainerBooking>();
+        public DbSet<Equipment> Equipments => Set<Equipment>();
+        public DbSet<CheckInHistory> CheckInHistories => Set<CheckInHistory>();
+        public DbSet<RoomMaintenance> RoomMaintenances => Set<RoomMaintenance>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -79,6 +82,37 @@ namespace GymWeb.Models
             modelBuilder.Entity<TrainerBooking>()
                 .Property(b => b.Status)
                 .HasMaxLength(20);
+
+            // Không cho xóa phòng nếu vẫn còn thiết bị gắn với phòng đó (giống cách RoomBooking chặn ở trên)
+            modelBuilder.Entity<Equipment>()
+                .HasOne(e => e.Room)
+                .WithMany()
+                .HasForeignKey(e => e.RoomID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<CheckInHistory>()
+                .HasOne(c => c.Room)
+                .WithMany()
+                .HasForeignKey(c => c.RoomID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<CheckInHistory>()
+                .HasIndex(c => new { c.RoomID, c.CheckOutTime });
+
+            modelBuilder.Entity<RoomMaintenance>()
+                .HasOne(m => m.Room)
+                .WithMany()
+                .HasForeignKey(m => m.RoomID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<RoomMaintenance>()
+                .HasOne(m => m.CreatedByStaff)
+                .WithMany()
+                .HasForeignKey(m => m.CreatedByStaffID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<RoomMaintenance>()
+                .HasIndex(m => new { m.RoomID, m.StartTime, m.EndTime });
         }
     }
 }
