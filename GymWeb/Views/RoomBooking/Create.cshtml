@@ -1,0 +1,59 @@
+@model GymWeb.ViewModels.RoomBookingCreateViewModel
+@{
+    ViewData["Title"] = "Đặt phòng tập";
+    Layout = "_Layout";
+}
+
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="admin-card p-4 p-md-5 shadow">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h3 class="fw-bold mb-1"><i class="bi bi-calendar2-plus text-brand-red me-2"></i>ĐẶT PHÒNG TẬP</h3>
+                            <p class="text-muted small mb-0">Gửi yêu cầu để nhân viên xác nhận lịch sử dụng phòng.</p>
+                        </div>
+                        <a asp-action="MyBookings" class="btn btn-outline-brand btn-sm rounded-pill px-3">Lịch của tôi</a>
+                    </div>
+
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger py-2"><div asp-validation-summary="All" class="small mb-0"></div></div>
+                    }
+
+                    <form asp-action="Create" method="post">
+                        <div class="mb-3">
+                            <label asp-for="RoomID" class="form-label text-muted small fw-bold">PHÒNG TẬP *</label>
+                            <select asp-for="RoomID" asp-items="ViewBag.RoomList" class="form-select bg-dark text-white border-secondary">
+                                <option value="">-- Chọn phòng tập --</option>
+                            </select>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label asp-for="StartTime" class="form-label text-muted small fw-bold">THỜI GIAN BẮT ĐẦU *</label>
+                                <input asp-for="StartTime" type="datetime-local" class="form-control bg-dark text-white border-secondary" />
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="EndTime" class="form-label text-muted small fw-bold">THỜI GIAN KẾT THÚC *</label>
+                                <input asp-for="EndTime" type="datetime-local" class="form-control bg-dark text-white border-secondary" />
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label asp-for="Note" class="form-label text-muted small fw-bold">GHI CHÚ</label>
+                            <textarea asp-for="Note" rows="3" class="form-control bg-dark text-white border-secondary" placeholder="Ví dụ: tập nhóm, cần chuẩn bị dụng cụ..."></textarea>
+                        </div>
+                        <div class="d-flex justify-content-end border-top border-secondary pt-3">
+                            <a asp-action="MyBookings" class="btn btn-outline-secondary rounded-pill px-4 me-2">Hủy</a>
+                            <button type="submit" class="btn btn-brand rounded-pill px-4 fw-bold"><i class="bi bi-send-fill me-2"></i>Gửi yêu cầu</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

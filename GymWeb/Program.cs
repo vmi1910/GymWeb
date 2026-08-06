@@ -17,6 +17,9 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 
+builder.Services.AddScoped<GymWeb.Services.BookingConflictService>();
+builder.Services.AddScoped<GymWeb.Services.ScheduleConflictService>();
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

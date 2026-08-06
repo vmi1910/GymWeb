@@ -69,10 +69,11 @@ namespace GymWeb.Controllers
 
         //Tạo tài khoản (Admin)
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult Create(string? role)
         {
             if (HttpContext.Session.GetString("Role") != "Admin") return RedirectToAction("Login", "Account");
-            return View(new AccountCreateViewModel());
+            var allowedRoles = new[] { "Staff", "Trainer", "Member", "Admin" };
+            return View(new AccountCreateViewModel { Role = allowedRoles.Contains(role) ? role! : "Member" });
         }
 
         // 2. Xử lý khi bấm nút Lưu (POST)
