@@ -1,0 +1,87 @@
+@model GymWeb.ViewModels.TrainerBookingCreateViewModel
+@{
+    ViewData["Title"] = "Đăng ký tập cùng PT";
+    Layout = "_Layout";
+    var shifts = ViewBag.TrainerShifts as List<GymWeb.Models.StaffSchedule>;
+    var roomNames = ViewBag.RoomNames as Dictionary<int, string>;
+}
+
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="admin-card p-4 p-md-5 shadow">
+                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                        <div>
+                            <h3 class="fw-bold mb-1"><i class="bi bi-person-badge-fill text-brand-red me-2"></i>ĐĂNG KÝ TẬP CÙNG PT</h3>
+                            <p class="text-muted small mb-0">Chọn huấn luyện viên, sau đó chọn 1 ca làm việc PT đã đăng ký để gửi yêu cầu.</p>
+                        </div>
+                        <a asp-action="MyBookings" class="btn btn-outline-brand btn-sm rounded-pill px-3">Lịch PT của tôi</a>
+                    </div>
+
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger py-2"><div asp-validation-summary="All" class="small mb-0"></div></div>
+                    }
+
+                    <div class="mb-4">
+                        <label class="form-label text-muted small fw-bold">1. CHỌN HUẤN LUYỆN VIÊN</label>
+                        <select id="trainerSelect" class="form-select bg-dark text-white border-secondary" asp-items="ViewBag.TrainerList" onchange="location.href='@Url.Action("Create")?staffId=' + this.value">
+                            <option value="">-- Chọn huấn luyện viên --</option>
+                        </select>
+                    </div>
+
+                    @if (Model.StaffID > 0)
+                    {
+                        <form asp-action="Create" method="post">
+                            <input type="hidden" asp-for="StaffID" />
+
+                            <label class="form-label text-muted small fw-bold">2. CHỌN CA LÀM VIỆC</label>
+                            @if (shifts == null || !shifts.Any())
+                            {
+                                <div class="text-center text-muted py-4 surface-card">
+                                    <i class="bi bi-calendar-x display-6 d-block mb-2 opacity-50"></i>
+                                    Huấn luyện viên này chưa đăng ký ca làm việc sắp tới nào.
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="d-flex flex-column gap-2 mb-4">
+                                    @foreach (var s in shifts)
+                                    {
+                                        var inputId = "shift-" + s.ScheduleID;
+                                        <label class="surface-card p-3 d-flex align-items-center gap-3" for="@inputId" style="cursor: pointer;">
+                                            <input type="radio" name="ScheduleID" id="@inputId" value="@s.ScheduleID" class="form-check-input mt-0" required>
+                                            <div class="flex-grow-1">
+                                                <span class="fw-bold"><i class="bi bi-calendar3 me-1 text-brand-red"></i>@s.ShiftDate.ToString("dd/MM/yyyy")</span>
+                                                <span class="text-muted small ms-2">@s.StartTime.ToString(@"hh\:mm") - @s.EndTime.ToString(@"hh\:mm")</span>
+                                            </div>
+                                            <span class="badge bg-secondary bg-opacity-25 text-white border border-secondary">
+                                                @(roomNames != null ? roomNames.GetValueOrDefault(s.RoomID, "—") : "—")
+                                            </span>
+                                        </label>
+                                    }
+                                </div>
+                            }
+
+                            <div class="mb-4">
+                                <label asp-for="Note" class="form-label text-muted small fw-bold">GHI CHÚ</label>
+                                <textarea asp-for="Note" rows="3" class="form-control bg-dark text-white border-secondary" placeholder="Ví dụ: mục tiêu tập luyện, tình trạng sức khỏe cần lưu ý..."></textarea>
+                            </div>
+                            <div class="d-flex justify-content-end border-top border-secondary pt-3">
+                                <a asp-action="MyBookings" class="btn btn-outline-secondary rounded-pill px-4 me-2">Hủy</a>
+                                <button type="submit" class="btn btn-brand rounded-pill px-4 fw-bold" @((shifts == null || !shifts.Any()) ? "disabled" : "")>
+                                    <i class="bi bi-send-fill me-2"></i>Gửi yêu cầu
+                                </button>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -604,7 +604,10 @@ h1, .display-1, .display-2, .display-3 {
 }
 
 .static-page-card {
+  background-color: var(--brand-surface);
+  border: 1px solid var(--brand-border) !important;
   border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-soft);
 }
 
 /* ==========================================================================
@@ -728,4 +731,107 @@ h1, .display-1, .display-2, .display-3 {
   border: 1px solid rgba(255, 43, 43, 0.3);
   color: var(--brand-red-light);
   font-size: 1.8rem;
+}
+
+/* ==========================================================================
+   11. DASHBOARD — stat cards, trend badges, hoạt động gần đây
+   ========================================================================== */
+.stat-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.stat-icon-red { background: rgba(255, 43, 43, 0.14); color: var(--brand-red-light); }
+.stat-icon-green { background: rgba(46, 204, 113, 0.14); color: #2ecc71; }
+.stat-icon-blue { background: rgba(52, 152, 219, 0.14); color: #3498db; }
+.stat-icon-purple { background: rgba(155, 89, 182, 0.16); color: #b07cd6; }
+.stat-icon-orange { background: rgba(243, 156, 18, 0.16); color: #f5a623; }
+
+.dashboard-stat-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.dashboard-stat-card .stat-content {
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.dashboard-stat-card .stat-value,
+.dashboard-stat-card .stat-label,
+.dashboard-stat-card .trend-badge {
+  overflow-wrap: break-word;
+}
+
+.dashboard-stat-card .stat-value {
+  font-size: 1.35rem;
+}
+
+@media (min-width: 992px) {
+  .dashboard-stat-card .stat-value {
+    font-size: 1.6rem;
+  }
+}
+
+.dashboard-stat-card .stat-value {
+  font-family: var(--font-heading);
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.dashboard-stat-card .stat-label {
+  color: var(--brand-muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.trend-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 20px;
+  margin-top: 4px;
+}
+
+.trend-up { color: #2ecc71; background: rgba(46, 204, 113, 0.12); }
+.trend-down { color: var(--brand-red-light); background: rgba(255, 43, 43, 0.12); }
+.trend-flat { color: var(--brand-muted); background: rgba(255, 255, 255, 0.05); }
+
+.activity-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--brand-border);
+}
+
+.activity-row:last-child {
+  border-bottom: none;
+}
+
+.activity-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 43, 43, 0.12);
+  color: var(--brand-red-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  flex-shrink: 0;
+  font-size: 0.9rem;
 }
