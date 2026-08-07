@@ -46,7 +46,7 @@
                         <li class="nav-item"><a class="nav-link @navActive("Home", "Facilities")" asp-controller="Home" asp-action="Facilities">Hệ thống phòng tập</a></li>
                         @if (Context.Session.GetString("Username") != null) {
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle text-warning fw-bold" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="nav-link dropdown-toggle text-white fw-bold" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-person-circle"></i> @Context.Session.GetString("Username")
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end bg-dark border-secondary shadow" aria-labelledby="navbarDropdown">
