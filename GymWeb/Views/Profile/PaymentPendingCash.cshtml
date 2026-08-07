@@ -1,0 +1,41 @@
+@model GymWeb.Models.Payment
+@{
+    ViewData["Title"] = "Chờ xác nhận thanh toán";
+    Layout = "_Layout";
+    var package = ViewBag.Package as GymWeb.Models.MembershipPackage;
+}
+
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="static-page-card border p-4 p-md-5 text-center">
+                    <div class="mb-3" style="font-size: 3rem; color: #f5a623;"><i class="bi bi-hourglass-split"></i></div>
+                    <h3 class="fw-bold mb-2">ĐANG CHỜ THANH TOÁN TIỀN MẶT</h3>
+                    <p class="text-muted mb-4">
+                        Vui lòng đến quầy lễ tân và thanh toán <b class="text-white">@Model.Amount.ToString("N0") đ</b>
+                        cho gói <b class="text-white">@(package?.PackageName ?? "")</b>.
+                        Nhân viên sẽ xác nhận đã nhận tiền trực tiếp trên hệ thống — gói tập của bạn sẽ tự động kích hoạt ngay sau đó.
+                    </p>
+
+                    <div class="surface-card p-3 mb-4 text-start">
+                        <div class="d-flex justify-content-between small py-1">
+                            <span class="text-muted">Mã hóa đơn</span>
+                            <span class="fw-bold">#@Model.PaymentID</span>
+                        </div>
+                        <div class="d-flex justify-content-between small py-1">
+                            <span class="text-muted">Số tiền</span>
+                            <span class="fw-bold text-brand-red">@Model.Amount.ToString("N0") đ</span>
+                        </div>
+                        <div class="d-flex justify-content-between small py-1">
+                            <span class="text-muted">Trạng thái</span>
+                            <span class="badge bg-warning text-dark">Chờ xác nhận</span>
+                        </div>
+                    </div>
+
+                    <a asp-action="History" class="btn btn-brand rounded-pill px-4"><i class="bi bi-receipt me-2"></i>Xem lịch sử thanh toán</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

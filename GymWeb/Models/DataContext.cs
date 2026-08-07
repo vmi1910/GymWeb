@@ -36,6 +36,11 @@ namespace GymWeb.Models
                 .HasForeignKey(p => p.StaffID)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Payment>()
+                .Property(p => p.Status)
+                .HasMaxLength(20)
+                .HasDefaultValue("Đã thanh toán");
+
             modelBuilder.Entity<RoomBooking>()
                 .HasOne(b => b.Room)
                 .WithMany()

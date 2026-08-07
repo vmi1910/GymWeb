@@ -53,6 +53,10 @@ namespace GymWeb.Controllers
             {
                 ModelState.AddModelError("RoomID", "Phòng tập không hợp lệ.");
             }
+            if (model.MaintenanceQuantity + model.BrokenQuantity > model.TotalQuantity)
+            {
+                ModelState.AddModelError("MaintenanceQuantity", "Số máy bảo trì + hỏng không được vượt quá tổng số lượng.");
+            }
             if (!ModelState.IsValid)
             {
                 LoadRooms(model.RoomID);
@@ -86,6 +90,10 @@ namespace GymWeb.Controllers
             {
                 ModelState.AddModelError("RoomID", "Phòng tập không hợp lệ.");
             }
+            if (model.MaintenanceQuantity + model.BrokenQuantity > model.TotalQuantity)
+            {
+                ModelState.AddModelError("MaintenanceQuantity", "Số máy bảo trì + hỏng không được vượt quá tổng số lượng.");
+            }
             if (!ModelState.IsValid)
             {
                 LoadRooms(model.RoomID);
@@ -98,8 +106,10 @@ namespace GymWeb.Controllers
             equipment.EquipmentName = model.EquipmentName;
             equipment.Category = model.Category;
             equipment.PurchaseDate = model.PurchaseDate;
-            equipment.Status = model.Status;
             equipment.RoomID = model.RoomID;
+            equipment.TotalQuantity = model.TotalQuantity;
+            equipment.MaintenanceQuantity = model.MaintenanceQuantity;
+            equipment.BrokenQuantity = model.BrokenQuantity;
 
             _context.SaveChanges();
             TempData["Success"] = "Cập nhật thiết bị thành công!";
