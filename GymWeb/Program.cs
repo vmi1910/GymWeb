@@ -11,7 +11,11 @@ builder.Services.AddSession(options => {
 });
 // Add DB
 builder.Services.AddDbContext<DataContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"),
+        sqlOptions => sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(10),
+            errorNumbersToAdd: null)));
 
 // Gửi email OTP (cấu hình thật nằm trong dotnet user-secrets, xem EmailSettings.cs)
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
