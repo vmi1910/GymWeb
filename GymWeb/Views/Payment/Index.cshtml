@@ -55,13 +55,15 @@
                     <th>Gói tập</th>
                     <th>Số tiền</th>
                     <th>Phương thức</th>
+                    <th>Trạng thái</th>
                     <th>Nhân viên xử lý</th>
+                    <th class="text-end">Xử lý</th>
                 </tr>
             </thead>
             <tbody>
                 @if (!list.Any())
                 {
-                    <tr><td colspan="6" class="text-center text-muted py-4">Chưa có giao dịch thanh toán nào.</td></tr>
+                    <tr><td colspan="8" class="text-center text-muted py-4">Chưa có giao dịch thanh toán nào.</td></tr>
                 }
                 @foreach (var item in list)
                 {
@@ -69,13 +71,35 @@
                     Member? member = sub != null && members.ContainsKey(sub.MemberID) ? members[sub.MemberID] : null;
                     MembershipPackage? package = sub != null && packages.ContainsKey(sub.PackageID) ? packages[sub.PackageID] : null;
                     Staff? staff = item.StaffID.HasValue && staffs.ContainsKey(item.StaffID.Value) ? staffs[item.StaffID.Value] : null;
+                    var isPaid = item.Status == "Đã thanh toán";
                     <tr>
                         <td>@item.PaymentDate.ToString("dd/MM/yyyy HH:mm")</td>
                         <td class="fw-bold">@(member?.FullName ?? "—")</td>
                         <td>@(package?.PackageName ?? "—")</td>
                         <td class="text-brand-red fw-bold">@item.Amount.ToString("N0") đ</td>
                         <td><span class="badge bg-info text-dark">@item.Method</span></td>
+                        <td>
+                            @if (isPaid)
+                            {
+                                <span class="badge bg-success">Đã thanh toán</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">Chờ xác nhận</span>
+                            }
+                        </td>
                         <td class="text-muted small">@(staff?.FullName ?? "—")</td>
+                        <td class="text-end">
+                            @if (!isPaid && item.Method == "Tiền mặt")
+                            {
+                                <form asp-action="ConfirmCash" asp-route-id="@item.PaymentID" method="post" class="d-inline"
+                                      data-confirm-title="Xác nhận đã nhận tiền" data-confirm="Xác nhận đã nhận đủ @item.Amount.ToString("N0") đ tiền mặt từ @(member?.FullName ?? "hội viên này")?">
+                                    <button type="submit" class="btn btn-outline-success btn-sm rounded-pill px-3">
+                                        <i class="bi bi-check-circle-fill me-1"></i>Đã nhận tiền
+                                    </button>
+                                </form>
+                            }
+                        </td>
                     </tr>
                 }
             </tbody>

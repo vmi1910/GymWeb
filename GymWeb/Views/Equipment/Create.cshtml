@@ -34,20 +34,32 @@
                         </select>
                     </div>
                 </div>
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <label class="form-label text-muted small fw-bold">NGÀY MUA</label>
-                        <input asp-for="PurchaseDate" type="date" class="form-control bg-dark text-white border-secondary">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="form-label text-muted small fw-bold">TÌNH TRẠNG</label>
-                        <select asp-for="Status" class="form-select bg-dark text-white border-secondary">
-                            <option value="Đang sử dụng">Đang sử dụng</option>
-                            <option value="Bảo trì">Bảo trì</option>
-                            <option value="Hỏng - ngừng sử dụng">Hỏng - ngừng sử dụng</option>
-                        </select>
-                    </div>
+                <div class="mb-3">
+                    <label class="form-label text-muted small fw-bold">NGÀY MUA</label>
+                    <input asp-for="PurchaseDate" type="date" class="form-control bg-dark text-white border-secondary">
                 </div>
+
+                <div class="surface-card p-3 mb-4">
+                    <p class="text-uppercase small text-muted fw-bold mb-3" style="font-size: 0.72rem; letter-spacing: 1px;">
+                        <i class="bi bi-123 me-1"></i>Số lượng theo tình trạng
+                    </p>
+                    <div class="row g-3">
+                        <div class="col-4">
+                            <label class="form-label text-muted small fw-bold">TỔNG SỐ *</label>
+                            <input asp-for="TotalQuantity" type="number" min="1" class="form-control bg-dark text-white border-secondary" required>
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label text-muted small fw-bold">ĐANG BẢO TRÌ</label>
+                            <input asp-for="MaintenanceQuantity" type="number" min="0" class="form-control bg-dark text-white border-secondary">
+                        </div>
+                        <div class="col-4">
+                            <label class="form-label text-muted small fw-bold">ĐÃ HỎNG</label>
+                            <input asp-for="BrokenQuantity" type="number" min="0" class="form-control bg-dark text-white border-secondary">
+                        </div>
+                    </div>
+                    <div class="form-text text-muted mt-2">Số máy đang hoạt động sẽ tự tính = Tổng số − Bảo trì − Hỏng.</div>
+                </div>
+
                 <div class="d-flex justify-content-end pt-3 border-top border-secondary">
                     <a asp-action="Index" class="btn btn-outline-secondary rounded-pill px-4 me-3">Hủy bỏ</a>
                     <button type="submit" class="btn btn-brand rounded-pill px-4 fw-bold"><i class="bi bi-floppy-fill me-2"></i> Lưu</button>

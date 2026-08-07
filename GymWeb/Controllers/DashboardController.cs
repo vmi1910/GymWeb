@@ -17,25 +17,30 @@ namespace GymWeb.Controllers
             if (!IsAdmin()) return RedirectToAction("Login", "Account");
 
             var payments = _context.Payments.ToList();
+            // Doanh thu / gói active chỉ tính các thanh toán ĐÃ được xác nhận (tiền mặt đã nhận, chuyển khoản đã tự xác nhận) -
+            // thanh toán "Chờ xác nhận" chưa thực sự là tiền vào túi, không được tính là doanh thu.
+            var paidPayments = payments.Where(p => p.Status == "Đã thanh toán").ToList();
             var subscriptions = _context.Subscriptions.ToList();
             var members = _context.Members.ToList();
             var packages = _context.MembershipPackages.ToDictionary(p => p.PackageID);
             var today = DateTime.Today;
 
-            var revenueThisMonth = payments.Where(p => p.PaymentDate.Month == today.Month && p.PaymentDate.Year == today.Year).Sum(p => p.Amount);
+            var revenueThisMonth = paidPayments.Where(p => p.PaymentDate.Month == today.Month && p.PaymentDate.Year == today.Year).Sum(p => p.Amount);
             var lastMonth = today.AddMonths(-1);
-            var revenueLastMonth = payments.Where(p => p.PaymentDate.Month == lastMonth.Month && p.PaymentDate.Year == lastMonth.Year).Sum(p => p.Amount);
+            var revenueLastMonth = paidPayments.Where(p => p.PaymentDate.Month == lastMonth.Month && p.PaymentDate.Year == lastMonth.Year).Sum(p => p.Amount);
+
+            var paidSubscriptionIds = paidPayments.Select(p => p.SubscriptionID).ToHashSet();
 
             var model = new DashboardViewModel
             {
-                TotalRevenue = payments.Sum(p => p.Amount),
+                TotalRevenue = paidPayments.Sum(p => p.Amount),
                 RevenueThisMonth = revenueThisMonth,
                 RevenueLastMonth = revenueLastMonth,
                 RevenueTrendPercent = revenueLastMonth > 0 ? (double)((revenueThisMonth - revenueLastMonth) / revenueLastMonth * 100) : null,
                 TotalMembers = members.Count,
                 NewMembersThisMonth = members.Count(m => m.RegisterDate.Month == today.Month && m.RegisterDate.Year == today.Year),
                 ActivePackages = packages.Values.Count(p => p.IsActive),
-                ActiveSubscriptions = subscriptions.Count(s => s.EndDate.Date >= today),
+                ActiveSubscriptions = subscriptions.Count(s => s.EndDate.Date >= today && paidSubscriptionIds.Contains(s.SubscriptionID)),
                 TotalStaff = _context.Staffs.Count(s => s.Role == "Staff"),
                 TotalTrainers = _context.Staffs.Count(s => s.Role == "Trainer")
             };
@@ -44,7 +49,7 @@ namespace GymWeb.Controllers
             for (int i = 5; i >= 0; i--)
             {
                 var month = today.AddMonths(-i);
-                var revenue = payments.Where(p => p.PaymentDate.Month == month.Month && p.PaymentDate.Year == month.Year).Sum(p => p.Amount);
+                var revenue = paidPayments.Where(p => p.PaymentDate.Month == month.Month && p.PaymentDate.Year == month.Year).Sum(p => p.Amount);
                 model.MonthlyLabels.Add("Th" + month.Month + "/" + month.Year);
                 model.MonthlyRevenue.Add(revenue);
             }
@@ -77,7 +82,8 @@ namespace GymWeb.Controllers
                         PackageName = package?.PackageName ?? "—",
                         Amount = p.Amount,
                         PaymentDate = p.PaymentDate,
-                        Method = p.Method
+                        Method = p.Method,
+                        Status = p.Status
                     };
                 })
                 .ToList();

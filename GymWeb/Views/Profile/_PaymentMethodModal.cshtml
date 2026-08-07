@@ -1,0 +1,33 @@
+<div class="modal fade" id="paymentMethodModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white border-danger">
+            <div class="modal-body text-center p-4">
+                <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-3" data-bs-dismiss="modal" aria-label="Đóng"></button>
+
+                <div class="mb-3" style="font-size: 2rem; color: var(--brand-red);"><i class="bi bi-wallet2"></i></div>
+                <h5 class="fw-bold mb-1">CHỌN PHƯƠNG THỨC THANH TOÁN</h5>
+                <p class="text-muted small mb-4">
+                    Gói <b id="pmPackageName" class="text-white">—</b> ·
+                    <span id="pmPackagePrice" class="text-brand-red fw-bold">0</span> đ
+                </p>
+
+                <form asp-controller="Profile" asp-action="Register" method="post">
+                    <input type="hidden" name="packageId" id="pmPackageId" />
+
+                    <div class="d-flex flex-column gap-3">
+                        <button type="submit" name="method" value="Tiền mặt" class="btn btn-outline-brand rounded-pill py-3 text-start px-4">
+                            <i class="bi bi-cash-coin me-2 fs-5"></i>
+                            <span class="fw-bold d-block" style="display:inline-block;">Tiền mặt tại quầy</span>
+                            <small class="d-block text-muted mt-1" style="font-size: 0.75rem;">Đến quầy lễ tân thanh toán, nhân viên xác nhận trên hệ thống.</small>
+                        </button>
+                        <button type="submit" name="method" value="Chuyển khoản" class="btn btn-brand rounded-pill py-3 text-start px-4">
+                            <i class="bi bi-qr-code me-2 fs-5"></i>
+                            <span class="fw-bold d-block" style="display:inline-block;">Chuyển khoản (QR)</span>
+                            <small class="d-block mt-1" style="font-size: 0.75rem; opacity: 0.85;">Quét mã QR mô phỏng và tự xác nhận ngay sau khi chuyển.</small>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

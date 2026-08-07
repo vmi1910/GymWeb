@@ -21,6 +21,9 @@ namespace GymWeb.Models
 
         public string Method { get; set; } = "Tiền mặt";
 
+        // Chờ xác nhận (tiền mặt: chờ NV nhận tiền; chuyển khoản: chờ hội viên xác nhận) / Đã thanh toán
+        public string Status { get; set; } = "Đã thanh toán";
+
         // Nhân viên thu ngân xử lý (có thể để trống)
         public int? StaffID { get; set; }
         [ForeignKey("StaffID")]

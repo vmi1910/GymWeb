@@ -56,3 +56,24 @@
         });
     });
 })();
+
+// ==== Modal chọn gói tập -> chọn phương thức thanh toán ====
+(function () {
+    document.addEventListener('DOMContentLoaded', function () {
+        var modalEl = document.getElementById('paymentMethodModal');
+        if (!modalEl) return;
+
+        modalEl.addEventListener('show.bs.modal', function (event) {
+            var btn = event.relatedTarget;
+            if (!btn) return;
+
+            var idInput = document.getElementById('pmPackageId');
+            var nameEl = document.getElementById('pmPackageName');
+            var priceEl = document.getElementById('pmPackagePrice');
+
+            if (idInput) idInput.value = btn.getAttribute('data-package-id') || '';
+            if (nameEl) nameEl.textContent = btn.getAttribute('data-package-name') || '';
+            if (priceEl) priceEl.textContent = btn.getAttribute('data-package-price') || '0';
+        });
+    });
+})();

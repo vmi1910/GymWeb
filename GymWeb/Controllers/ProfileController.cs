@@ -27,7 +27,7 @@ namespace GymWeb.Controllers
             if (member == null) return RedirectToAction("Login", "Account");
 
             var current = _context.Subscriptions
-                .Where(s => s.MemberID == member.MemberID)
+                .Where(s => s.MemberID == member.MemberID && _context.Payments.Any(p => p.SubscriptionID == s.SubscriptionID && p.Status == "Đã thanh toán"))
                 .OrderByDescending(s => s.EndDate)
                 .FirstOrDefault();
 
@@ -90,7 +90,7 @@ namespace GymWeb.Controllers
             var packages = _context.MembershipPackages.Where(p => p.IsActive).OrderBy(p => p.Price).ToList();
 
             var current = _context.Subscriptions
-                .Where(s => s.MemberID == member.MemberID)
+                .Where(s => s.MemberID == member.MemberID && _context.Payments.Any(p => p.SubscriptionID == s.SubscriptionID && p.Status == "Đã thanh toán"))
                 .OrderByDescending(s => s.EndDate)
                 .FirstOrDefault();
 
@@ -101,7 +101,7 @@ namespace GymWeb.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register(int packageId)
+        public IActionResult Register(int packageId, string method)
         {
             var member = GetCurrentMember();
             if (member == null) return RedirectToAction("Login", "Account");
@@ -112,14 +112,20 @@ namespace GymWeb.Controllers
                 TempData["Error"] = "Gói tập không hợp lệ hoặc đã ngừng bán.";
                 return RedirectToAction("Packages");
             }
+            if (method != "Tiền mặt" && method != "Chuyển khoản")
+            {
+                TempData["Error"] = "Vui lòng chọn phương thức thanh toán hợp lệ.";
+                return RedirectToAction("Packages");
+            }
 
-            // Nếu đang có gói còn hạn thì cộng dồn thời gian (gia hạn), ngược lại tính từ hôm nay
+            // Nếu đang có gói còn hạn (và đã thanh toán) thì cộng dồn thời gian (gia hạn), ngược lại tính từ hôm nay
             var latest = _context.Subscriptions
                 .Where(s => s.MemberID == member.MemberID)
                 .OrderByDescending(s => s.EndDate)
                 .FirstOrDefault();
+            var latestPaid = latest != null && _context.Payments.Any(p => p.SubscriptionID == latest.SubscriptionID && p.Status == "Đã thanh toán");
 
-            var startDate = (latest != null && latest.EndDate.Date > DateTime.Today) ? latest.EndDate.Date : DateTime.Today;
+            var startDate = (latest != null && latestPaid && latest.EndDate.Date > DateTime.Today) ? latest.EndDate.Date : DateTime.Today;
 
             var subscription = new Subscription
             {
@@ -132,19 +138,79 @@ namespace GymWeb.Controllers
             _context.Subscriptions.Add(subscription);
             _context.SaveChanges();
 
-            // Giới hạn đề tài: không tích hợp cổng thanh toán thật, chỉ mô phỏng thanh toán ngay khi đăng ký
+            // Thanh toán thật sự chỉ được xác nhận sau: tiền mặt cần NV xác nhận đã nhận,
+            // chuyển khoản mô phỏng bằng QR + hội viên tự bấm xác nhận đã chuyển.
             var payment = new Payment
             {
                 SubscriptionID = subscription.SubscriptionID,
                 PaymentDate = DateTime.Now,
                 Amount = package.Price,
-                Method = "Thanh toán trực tuyến (mô phỏng)",
+                Method = method,
+                Status = "Chờ xác nhận",
                 StaffID = null
             };
             _context.Payments.Add(payment);
             _context.SaveChanges();
 
-            TempData["Success"] = "Đăng ký gói \"" + package.PackageName + "\" thành công!";
+            return method == "Tiền mặt"
+                ? RedirectToAction(nameof(PaymentPendingCash), new { id = payment.PaymentID })
+                : RedirectToAction(nameof(PaymentQr), new { id = payment.PaymentID });
+        }
+
+        // Hội viên chọn "Tiền mặt": chỉ hoàn tất khi nhân viên xác nhận đã nhận tiền tại quầy
+        public IActionResult PaymentPendingCash(int id)
+        {
+            var member = GetCurrentMember();
+            if (member == null) return RedirectToAction("Login", "Account");
+
+            var payment = _context.Payments.Find(id);
+            var subscription = payment != null ? _context.Subscriptions.Find(payment.SubscriptionID) : null;
+            if (payment == null || subscription == null || subscription.MemberID != member.MemberID || payment.Method != "Tiền mặt")
+            {
+                return RedirectToAction("Packages");
+            }
+
+            ViewBag.Package = _context.MembershipPackages.Find(subscription.PackageID);
+            return View(payment);
+        }
+
+        // Hội viên chọn "Chuyển khoản": hiện QR mô phỏng + nút tự xác nhận đã chuyển khoản
+        public IActionResult PaymentQr(int id)
+        {
+            var member = GetCurrentMember();
+            if (member == null) return RedirectToAction("Login", "Account");
+
+            var payment = _context.Payments.Find(id);
+            var subscription = payment != null ? _context.Subscriptions.Find(payment.SubscriptionID) : null;
+            if (payment == null || subscription == null || subscription.MemberID != member.MemberID || payment.Method != "Chuyển khoản")
+            {
+                return RedirectToAction("Packages");
+            }
+
+            ViewBag.Package = _context.MembershipPackages.Find(subscription.PackageID);
+            return View(payment);
+        }
+
+        [HttpPost]
+        public IActionResult ConfirmTransferPaid(int id)
+        {
+            var member = GetCurrentMember();
+            if (member == null) return RedirectToAction("Login", "Account");
+
+            var payment = _context.Payments.Find(id);
+            var subscription = payment != null ? _context.Subscriptions.Find(payment.SubscriptionID) : null;
+            if (payment == null || subscription == null || subscription.MemberID != member.MemberID || payment.Method != "Chuyển khoản")
+            {
+                return RedirectToAction("Packages");
+            }
+
+            if (payment.Status == "Chờ xác nhận")
+            {
+                payment.Status = "Đã thanh toán";
+                _context.SaveChanges();
+            }
+
+            TempData["Success"] = "Xác nhận chuyển khoản thành công! Gói tập của bạn đã kích hoạt.";
             return RedirectToAction("History");
         }
 
