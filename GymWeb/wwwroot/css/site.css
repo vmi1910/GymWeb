@@ -23,7 +23,9 @@
   --brand-border: #343b47;
 
   --brand-white: #f8fafc;
-  --brand-muted: #9ca3af;
+  /* Sáng hơn bản cũ (#9ca3af) để chữ phụ vẫn đọc rõ trên nền tối */
+  --brand-muted: #c3c9d4;
+  --brand-muted-dim: #8b93a1; /* chỉ dùng cho chữ thật sự phụ, VD: trạng thái vô hiệu hoá */
 
   /* Layout & Utility */
   --radius-lg: 24px;
@@ -70,6 +72,12 @@ section {
   padding: 90px 0;
 }
 
+@media (max-width: 768px) {
+  section {
+    padding: 56px 0;
+  }
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
@@ -102,11 +110,12 @@ h1, .display-1, .display-2, .display-3 {
   text-transform: uppercase;
 }
 
+/* Giảm bớt kích thước tối đa cho cân đối hơn (trước: 4rem quá to) */
 .section-title {
   font-family: var(--font-heading);
-  font-size: clamp(2.3rem, 5vw, 4rem);
+  font-size: clamp(1.9rem, 4vw, 3rem);
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1.15;
   letter-spacing: 0.5px;
   text-transform: uppercase;
   margin-bottom: 0.75rem;
@@ -138,6 +147,7 @@ h1, .display-1, .display-2, .display-3 {
   cursor: pointer;
   display: inline-block;
   text-decoration: none;
+  box-shadow: 0 8px 24px rgba(255, 43, 43, 0.25);
 }
 
 .btn-brand:hover, .btn-brand:focus {
@@ -149,7 +159,7 @@ h1, .display-1, .display-2, .display-3 {
 
 .btn-outline-brand {
   border: 2px solid var(--brand-red);
-  color: var(--brand-red);
+  color: var(--brand-red-light);
   font-weight: 600;
   border-radius: 50px;
   padding: 12px 28px;
@@ -169,16 +179,18 @@ h1, .display-1, .display-2, .display-3 {
 .navbar {
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
-  background: rgba(15, 17, 21, 0.85) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(15, 17, 21, 0.9) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 14px 0;
 }
 
 .navbar-brand {
   font-family: var(--font-heading);
-  font-size: 1.9rem;
+  font-size: 1.7rem;
   letter-spacing: 2px;
   white-space: normal;
   text-align: center;
+  color: var(--brand-red) !important;
 }
 
 .topbar {
@@ -203,6 +215,11 @@ h1, .display-1, .display-2, .display-3 {
   letter-spacing: 0.5px;
   text-transform: uppercase;
   font-size: 0.85rem;
+  color: var(--brand-muted) !important;
+}
+
+.navbar .nav-link:hover {
+  color: var(--brand-white) !important;
 }
 
 .nav-link::after {
@@ -234,6 +251,48 @@ h1, .display-1, .display-2, .display-3 {
   .dropdown:hover .dropdown-toggle {
     color: var(--brand-red-light) !important;
   }
+}
+
+/* ==========================================================================
+   5b. TABS PHỤ (.nav-pills / .nav-tabs) — dùng cho các menu con trong trang
+   (VD: "Thông tin cá nhân / Gói tập / Lịch sử thanh toán / Lịch tập").
+   Bootstrap mặc định các item không active hay được gán class "text-dark",
+   khiến chữ gần như đen và biến mất trên nền tối — override lại toàn bộ.
+   ========================================================================== */
+.nav-pills,
+.nav-tabs {
+  border-bottom: none;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.nav-pills .nav-link,
+.nav-tabs .nav-link {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--brand-muted) !important;
+  background: var(--brand-surface);
+  border: 1px solid var(--brand-border);
+  border-radius: 50px !important;
+  padding: 10px 22px;
+}
+
+.nav-pills .nav-link:hover,
+.nav-tabs .nav-link:hover {
+  color: var(--brand-white) !important;
+  border-color: var(--brand-red);
+}
+
+.nav-pills .nav-link.active,
+.nav-tabs .nav-link.active,
+.nav-pills .nav-link[style*="background-color"] {
+  color: #fff !important;
+  background: linear-gradient(135deg, var(--brand-red), var(--brand-red-dark)) !important;
+  border-color: transparent;
+  box-shadow: 0 8px 20px rgba(255, 43, 43, 0.3);
 }
 
 /* 6. CARDS, SECTIONS & PRICING */
@@ -321,13 +380,13 @@ h1, .display-1, .display-2, .display-3 {
 
 /* Membership Pricing Cards (Stripe / Modern Style) */
 .pricing-card {
-  background: linear-gradient(180deg, #20242c, #16191f);
+  background: linear-gradient(180deg, rgba(32, 36, 44, 0.92), rgba(22, 25, 31, 0.96));
   border: 1px solid var(--brand-border);
   border-radius: var(--radius-lg);
   padding: 2.5rem 2rem;
   position: relative;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(22px) saturate(140%);
+  -webkit-backdrop-filter: blur(22px) saturate(140%);
   box-shadow: var(--shadow-soft);
   display: flex;
   flex-direction: column;
@@ -377,7 +436,7 @@ h1, .display-1, .display-2, .display-3 {
 .pricing-header .price {
   font-family: var(--font-heading);
   font-size: 3rem;
-  color: var(--brand-red);
+  color: var(--brand-red-light);
   line-height: 1;
 }
 
@@ -404,12 +463,12 @@ h1, .display-1, .display-2, .display-3 {
 }
 
 .pricing-features li i {
-  color: var(--brand-red);
+  color: var(--brand-red-light);
   font-size: 1.1rem;
 }
 
 .pricing-features li.disabled {
-  color: var(--brand-muted);
+  color: var(--brand-muted-dim);
   text-decoration: line-through;
 }
 
@@ -424,7 +483,7 @@ h1, .display-1, .display-2, .display-3 {
 
 .membership-section .title h2 {
   font-family: var(--font-heading);
-  font-size: clamp(2.3rem, 5vw, 3.2rem);
+  font-size: clamp(1.9rem, 4vw, 2.75rem);
   font-weight: 700;
   color: var(--brand-white);
   text-transform: uppercase;
@@ -441,6 +500,13 @@ h1, .display-1, .display-2, .display-3 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 32px;
+}
+
+@media (max-width: 576px) {
+  .package-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
 }
 
 .btn-register {
@@ -460,6 +526,7 @@ h1, .display-1, .display-2, .display-3 {
   letter-spacing: 1px;
   cursor: pointer;
   transition: 0.3s;
+  box-shadow: 0 8px 20px rgba(255, 43, 43, 0.25);
 }
 
 .btn-register:hover {
@@ -530,6 +597,7 @@ h1, .display-1, .display-2, .display-3 {
 .pricing-badge.current-badge {
   background-color: #2ecc71;
 }
+
 /* 7. FORMS & FOOTER */
 .form-control.form-dark,
 .form-select.form-dark,
@@ -537,6 +605,7 @@ h1, .display-1, .display-2, .display-3 {
 .form-select.bg-dark {
   border-radius: var(--radius-md);
   border: 1px solid var(--brand-border);
+  color: var(--brand-white);
 }
 
 .form-control.bg-dark:focus,
@@ -559,7 +628,7 @@ h1, .display-1, .display-2, .display-3 {
 }
 
 .site-footer a {
-  color: #cfcfcf;
+  color: var(--brand-muted);
   text-decoration: none;
 }
 
@@ -608,6 +677,50 @@ h1, .display-1, .display-2, .display-3 {
   border: 1px solid var(--brand-border) !important;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-soft);
+}
+
+/* Bảng Bootstrap (table/table-borderless) bên trong các thẻ tối:
+   Bootstrap mặc định set chữ gần đen cho <td>, gần như vô hình trên nền tối */
+.static-page-card .table,
+.surface-card .table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--brand-white);
+  color: var(--brand-white);
+}
+
+.static-page-card .table td,
+.static-page-card .table th,
+.surface-card .table td,
+.surface-card .table th {
+  color: var(--brand-white);
+  border-color: rgba(255, 255, 255, 0.06);
+  vertical-align: middle;
+}
+
+.static-page-card .table td.text-muted,
+.static-page-card .table th.text-muted,
+.surface-card .table td.text-muted,
+.surface-card .table th.text-muted {
+  color: var(--brand-muted) !important;
+}
+
+/* ==========================================================================
+   8b. SAFETY NET — chặn các class chữ tối mặc định của Bootstrap
+   (text-dark, text-black, text-body...) vô tình dùng trên nền tối của web.
+   Đây là nguyên nhân của phần lớn lỗi "chữ mờ/vô hình" gặp phải trong dự án.
+   ========================================================================== */
+.text-dark,
+.text-black,
+.text-body {
+  color: var(--brand-white) !important;
+}
+
+.text-secondary {
+  color: var(--brand-muted) !important;
+}
+
+.border {
+  border-color: var(--brand-border) !important;
 }
 
 /* ==========================================================================
@@ -717,6 +830,8 @@ h1, .display-1, .display-2, .display-3 {
 .app-confirm-modal .modal-content {
   border-radius: var(--radius-lg);
   border: 1px solid var(--brand-border);
+  background-color: var(--brand-surface);
+  color: var(--brand-white);
 }
 
 .app-confirm-modal .confirm-icon {
@@ -771,20 +886,16 @@ h1, .display-1, .display-2, .display-3 {
 }
 
 .dashboard-stat-card .stat-value {
-  font-size: 1.35rem;
+  font-family: var(--font-heading);
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
 @media (min-width: 992px) {
   .dashboard-stat-card .stat-value {
     font-size: 1.6rem;
   }
-}
-
-.dashboard-stat-card .stat-value {
-  font-family: var(--font-heading);
-  font-size: 1.7rem;
-  font-weight: 700;
-  line-height: 1.2;
 }
 
 .dashboard-stat-card .stat-label {
