@@ -1,0 +1,44 @@
+@model IEnumerable<GymWeb.Models.RoomBooking>
+@{
+    ViewData["Title"] = "Lịch đặt phòng của tôi";
+    Layout = "_Layout";
+    var roomNames = (Dictionary<int, string>)ViewBag.RoomNames;
+}
+
+<section class="py-5">
+    <div class="container">
+        @if (TempData["Success"] != null) { <div class="alert alert-success">@TempData["Success"]</div> }
+        @if (TempData["Error"] != null) { <div class="alert alert-danger">@TempData["Error"]</div> }
+        <div class="admin-card p-4 shadow">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div><h3 class="fw-bold mb-1">LỊCH ĐẶT PHÒNG CỦA TÔI</h3><p class="text-muted small mb-0">Theo dõi và hủy yêu cầu trước khi lịch bắt đầu.</p></div>
+                <a asp-action="Create" class="btn btn-brand rounded-pill px-4 fw-bold"><i class="bi bi-plus-circle me-2"></i>Đặt phòng</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle mb-0" style="border-color:#222;">
+                    <thead><tr class="text-secondary small text-uppercase"><th>Phòng</th><th>Thời gian</th><th>Ghi chú</th><th>Trạng thái</th><th class="text-end">Thao tác</th></tr></thead>
+                    <tbody>
+                    @if (!Model.Any()) { <tr><td colspan="5" class="text-center text-muted py-4">Bạn chưa có yêu cầu đặt phòng nào.</td></tr> }
+                    @foreach (var item in Model)
+                    {
+                        var badge = item.Status == "Approved" ? "bg-success" : item.Status == "Pending" ? "bg-warning text-dark" : item.Status == "Rejected" ? "bg-danger" : "bg-secondary";
+                        var label = item.Status == "Approved" ? "Đã duyệt" : item.Status == "Pending" ? "Chờ duyệt" : item.Status == "Rejected" ? "Từ chối" : "Đã hủy";
+                        <tr>
+                            <td class="fw-semibold">@roomNames.GetValueOrDefault(item.RoomID, "—")</td>
+                            <td>@item.StartTime.ToString("dd/MM/yyyy HH:mm")<br /><small class="text-muted">đến @item.EndTime.ToString("HH:mm")</small></td>
+                            <td class="text-muted small">@(string.IsNullOrWhiteSpace(item.Note) ? "—" : item.Note)</td>
+                            <td><span class="badge @badge">@label</span></td>
+                            <td class="text-end">
+                                @if ((item.Status == "Pending" || item.Status == "Approved") && item.StartTime > DateTime.Now)
+                                {
+                                    <form asp-action="Cancel" asp-route-id="@item.RoomBookingID" method="post" class="d-inline"><button class="btn btn-outline-danger btn-sm rounded-pill" onclick="return confirm('Hủy yêu cầu đặt phòng này?');">Hủy</button></form>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

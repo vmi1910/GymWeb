@@ -14,5 +14,12 @@ namespace GymWeb.Models
         public string PasswordHash { get; set; } = string.Empty;
 
         public string Role { get; set; } = "Member"; // Mặc định là Member, admin sẽ là "Admin"
+
+        // Email dùng để nhận mã OTP khôi phục mật khẩu (đồng bộ từ Member/Staff khi tạo/sửa)
+        public string? Email { get; set; }
+
+        // Mã OTP khôi phục mật khẩu đang chờ xác nhận (null nếu không có yêu cầu nào đang chờ)
+        public string? ResetOtpCode { get; set; }
+        public DateTime? ResetOtpExpiryUtc { get; set; }
     }
 }

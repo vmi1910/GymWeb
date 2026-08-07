@@ -1,0 +1,15 @@
+# Local Codex instructions and session memory
+AGENTS.md
+.agents/
+
+# Local Docker runtime/configuration (not part of the application source)
+GymWeb/Dockerfile
+GymWeb/docker-compose.yml
+GymWeb/.dockerignore
+GymWeb/.env
+GymWeb/.env.example
+
+# Local database artifacts
+GymWeb/*.mdf
+GymWeb/*.ldf
+GymWeb/*.bak

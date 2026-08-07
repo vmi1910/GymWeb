@@ -17,14 +17,25 @@ namespace GymWeb.Controllers
             if (!IsAdmin()) return RedirectToAction("Login", "Account");
 
             var payments = _context.Payments.ToList();
+            var subscriptions = _context.Subscriptions.ToList();
+            var members = _context.Members.ToList();
+            var packages = _context.MembershipPackages.ToDictionary(p => p.PackageID);
             var today = DateTime.Today;
+
+            var revenueThisMonth = payments.Where(p => p.PaymentDate.Month == today.Month && p.PaymentDate.Year == today.Year).Sum(p => p.Amount);
+            var lastMonth = today.AddMonths(-1);
+            var revenueLastMonth = payments.Where(p => p.PaymentDate.Month == lastMonth.Month && p.PaymentDate.Year == lastMonth.Year).Sum(p => p.Amount);
 
             var model = new DashboardViewModel
             {
                 TotalRevenue = payments.Sum(p => p.Amount),
-                RevenueThisMonth = payments.Where(p => p.PaymentDate.Month == today.Month && p.PaymentDate.Year == today.Year).Sum(p => p.Amount),
-                TotalMembers = _context.Members.Count(),
-                ActivePackages = _context.MembershipPackages.Count(p => p.IsActive),
+                RevenueThisMonth = revenueThisMonth,
+                RevenueLastMonth = revenueLastMonth,
+                RevenueTrendPercent = revenueLastMonth > 0 ? (double)((revenueThisMonth - revenueLastMonth) / revenueLastMonth * 100) : null,
+                TotalMembers = members.Count,
+                NewMembersThisMonth = members.Count(m => m.RegisterDate.Month == today.Month && m.RegisterDate.Year == today.Year),
+                ActivePackages = packages.Values.Count(p => p.IsActive),
+                ActiveSubscriptions = subscriptions.Count(s => s.EndDate.Date >= today),
                 TotalStaff = _context.Staffs.Count(s => s.Role == "Staff"),
                 TotalTrainers = _context.Staffs.Count(s => s.Role == "Trainer")
             };
@@ -37,6 +48,39 @@ namespace GymWeb.Controllers
                 model.MonthlyLabels.Add("Th" + month.Month + "/" + month.Year);
                 model.MonthlyRevenue.Add(revenue);
             }
+
+            // Độ phổ biến từng gói tập (dựa trên số lượt đăng ký)
+            var popularity = subscriptions
+                .Where(s => packages.ContainsKey(s.PackageID))
+                .GroupBy(s => packages[s.PackageID].PackageName)
+                .Select(g => new { Name = g.Key, Count = g.Count() })
+                .OrderByDescending(g => g.Count)
+                .Take(5)
+                .ToList();
+            model.PackagePopularityLabels = popularity.Select(p => p.Name).ToList();
+            model.PackagePopularityCounts = popularity.Select(p => p.Count).ToList();
+
+            // Hoạt động thanh toán gần đây
+            var subsById = subscriptions.ToDictionary(s => s.SubscriptionID);
+            var membersById = members.ToDictionary(m => m.MemberID);
+            model.RecentPayments = payments
+                .OrderByDescending(p => p.PaymentDate)
+                .Take(6)
+                .Select(p =>
+                {
+                    var sub = subsById.GetValueOrDefault(p.SubscriptionID);
+                    var member = sub != null ? membersById.GetValueOrDefault(sub.MemberID) : null;
+                    var package = sub != null ? packages.GetValueOrDefault(sub.PackageID) : null;
+                    return new RecentPaymentItem
+                    {
+                        MemberName = member?.FullName ?? "—",
+                        PackageName = package?.PackageName ?? "—",
+                        Amount = p.Amount,
+                        PaymentDate = p.PaymentDate,
+                        Method = p.Method
+                    };
+                })
+                .ToList();
 
             return View(model);
         }

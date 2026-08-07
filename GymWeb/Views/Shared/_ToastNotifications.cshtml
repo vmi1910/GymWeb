@@ -1,0 +1,35 @@
+@{
+    var success = TempData["Success"] as string;
+    var error = TempData["Error"] as string;
+    var info = TempData["Info"] as string;
+}
+
+@if (success != null || error != null || info != null)
+{
+    <div class="toast-stack" id="toastStack">
+        @if (success != null)
+        {
+            <div class="app-toast app-toast-success">
+                <i class="bi bi-check-circle-fill"></i>
+                <span>@success</span>
+                <button type="button" class="toast-close" aria-label="Đóng">&times;</button>
+            </div>
+        }
+        @if (error != null)
+        {
+            <div class="app-toast app-toast-error">
+                <i class="bi bi-x-circle-fill"></i>
+                <span>@error</span>
+                <button type="button" class="toast-close" aria-label="Đóng">&times;</button>
+            </div>
+        }
+        @if (info != null)
+        {
+            <div class="app-toast app-toast-info">
+                <i class="bi bi-info-circle-fill"></i>
+                <span>@info</span>
+                <button type="button" class="toast-close" aria-label="Đóng">&times;</button>
+            </div>
+        }
+    </div>
+}

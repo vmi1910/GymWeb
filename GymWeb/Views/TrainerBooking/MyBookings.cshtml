@@ -1,0 +1,55 @@
+@model IEnumerable<GymWeb.Models.TrainerBooking>
+@{
+    ViewData["Title"] = "Lịch tập PT của tôi";
+    Layout = "_Layout";
+    var staffNames = (Dictionary<int, string>)ViewBag.StaffNames;
+}
+
+<section class="py-5">
+    <div class="container">
+        <div class="admin-card p-4 shadow">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div>
+                    <h3 class="fw-bold mb-1">LỊCH TẬP PT CỦA TÔI</h3>
+                    <p class="text-muted small mb-0">Theo dõi và hủy yêu cầu tập cùng huấn luyện viên trước khi lịch bắt đầu.</p>
+                </div>
+                <a asp-action="Create" class="btn btn-brand rounded-pill px-4 fw-bold"><i class="bi bi-plus-circle me-2"></i>Đăng ký PT</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle mb-0" style="border-color:#222;">
+                    <thead>
+                        <tr class="text-secondary small text-uppercase">
+                            <th>Huấn luyện viên</th><th>Thời gian</th><th>Ghi chú</th><th>Trạng thái</th><th class="text-end">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (!Model.Any())
+                        {
+                            <tr><td colspan="5" class="text-center text-muted py-4">Bạn chưa có yêu cầu tập cùng PT nào.</td></tr>
+                        }
+                        @foreach (var item in Model)
+                        {
+                            var badge = item.Status == "Approved" ? "bg-success" : item.Status == "Pending" ? "bg-warning text-dark" : item.Status == "Rejected" ? "bg-danger" : "bg-secondary";
+                            var label = item.Status == "Approved" ? "Đã duyệt" : item.Status == "Pending" ? "Chờ duyệt" : item.Status == "Rejected" ? "Từ chối" : "Đã hủy";
+                            <tr>
+                                <td class="fw-semibold">@staffNames.GetValueOrDefault(item.StaffID, "—")</td>
+                                <td>@item.StartTime.ToString("dd/MM/yyyy HH:mm")<br /><small class="text-muted">đến @item.EndTime.ToString("HH:mm")</small></td>
+                                <td class="text-muted small">@(string.IsNullOrWhiteSpace(item.Note) ? "—" : item.Note)</td>
+                                <td><span class="badge @badge">@label</span></td>
+                                <td class="text-end">
+                                    @if ((item.Status == "Pending" || item.Status == "Approved") && item.StartTime > DateTime.Now)
+                                    {
+                                        <form asp-action="Cancel" asp-route-id="@item.TrainerBookingID" method="post" class="d-inline"
+                                              data-confirm-title="Hủy yêu cầu tập PT" data-confirm="Hủy yêu cầu tập cùng @staffNames.GetValueOrDefault(item.StaffID, "PT")?">
+                                            <button class="btn btn-outline-danger btn-sm rounded-pill">Hủy</button>
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>

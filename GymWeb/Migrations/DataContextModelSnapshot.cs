@@ -30,9 +30,18 @@ namespace GymWeb.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AccountID"), 1L, 1);
 
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResetOtpCode")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ResetOtpExpiryUtc")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Role")
                         .IsRequired()
@@ -45,6 +54,68 @@ namespace GymWeb.Migrations
                     b.HasKey("AccountID");
 
                     b.ToTable("Accounts");
+                });
+
+            modelBuilder.Entity("GymWeb.Models.CheckInHistory", b =>
+                {
+                    b.Property<int>("CheckInID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CheckInID"), 1L, 1);
+
+                    b.Property<DateTime>("CheckInTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("CheckOutTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MemberID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoomID")
+                        .HasColumnType("int");
+
+                    b.HasKey("CheckInID");
+
+                    b.HasIndex("MemberID");
+
+                    b.HasIndex("RoomID", "CheckOutTime");
+
+                    b.ToTable("CheckInHistories");
+                });
+
+            modelBuilder.Entity("GymWeb.Models.Equipment", b =>
+                {
+                    b.Property<int>("EquipmentID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EquipmentID"), 1L, 1);
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("EquipmentName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("PurchaseDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("RoomID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("EquipmentID");
+
+                    b.HasIndex("RoomID");
+
+                    b.ToTable("Equipments");
                 });
 
             modelBuilder.Entity("GymWeb.Models.Member", b =>
@@ -103,6 +174,9 @@ namespace GymWeb.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PackageID"), 1L, 1);
 
+                    b.Property<string>("BadgeText")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -110,7 +184,18 @@ namespace GymWeb.Migrations
                     b.Property<int>("DurationDays")
                         .HasColumnType("int");
 
+                    b.Property<string>("Highlights")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsFeatured")
                         .HasColumnType("bit");
 
                     b.Property<string>("PackageName")
@@ -183,6 +268,89 @@ namespace GymWeb.Migrations
                     b.HasKey("RoomID");
 
                     b.ToTable("Rooms");
+                });
+
+            modelBuilder.Entity("GymWeb.Models.RoomBooking", b =>
+                {
+                    b.Property<int>("RoomBookingID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoomBookingID"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MemberID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ProcessedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ProcessedByStaffID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoomID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("RoomBookingID");
+
+                    b.HasIndex("ProcessedByStaffID");
+
+                    b.HasIndex("MemberID", "Status");
+
+                    b.HasIndex("RoomID", "StartTime", "EndTime");
+
+                    b.ToTable("RoomBookings");
+                });
+
+            modelBuilder.Entity("GymWeb.Models.RoomMaintenance", b =>
+                {
+                    b.Property<int>("RoomMaintenanceID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoomMaintenanceID"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("CreatedByStaffID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Reason")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RoomID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("RoomMaintenanceID");
+
+                    b.HasIndex("CreatedByStaffID");
+
+                    b.HasIndex("RoomID", "StartTime", "EndTime");
+
+                    b.ToTable("RoomMaintenances");
                 });
 
             modelBuilder.Entity("GymWeb.Models.Staff", b =>
@@ -304,6 +472,54 @@ namespace GymWeb.Migrations
                     b.ToTable("Subscriptions");
                 });
 
+            modelBuilder.Entity("GymWeb.Models.TrainerBooking", b =>
+                {
+                    b.Property<int>("TrainerBookingID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TrainerBookingID"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("MemberID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ProcessedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("ProcessedByStaffID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StaffID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.HasKey("TrainerBookingID");
+
+                    b.HasIndex("ProcessedByStaffID");
+
+                    b.HasIndex("MemberID", "Status");
+
+                    b.HasIndex("StaffID", "StartTime", "EndTime");
+
+                    b.ToTable("TrainerBookings");
+                });
+
             modelBuilder.Entity("GymWeb.Models.TrainerProfile", b =>
                 {
                     b.Property<int>("StaffID")
@@ -323,6 +539,36 @@ namespace GymWeb.Migrations
                     b.HasKey("StaffID");
 
                     b.ToTable("TrainerProfiles");
+                });
+
+            modelBuilder.Entity("GymWeb.Models.CheckInHistory", b =>
+                {
+                    b.HasOne("GymWeb.Models.Member", "Member")
+                        .WithMany()
+                        .HasForeignKey("MemberID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GymWeb.Models.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Member");
+
+                    b.Navigation("Room");
+                });
+
+            modelBuilder.Entity("GymWeb.Models.Equipment", b =>
+                {
+                    b.HasOne("GymWeb.Models.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Room");
                 });
 
             modelBuilder.Entity("GymWeb.Models.Member", b =>
@@ -352,6 +598,50 @@ namespace GymWeb.Migrations
                     b.Navigation("Staff");
 
                     b.Navigation("Subscription");
+                });
+
+            modelBuilder.Entity("GymWeb.Models.RoomBooking", b =>
+                {
+                    b.HasOne("GymWeb.Models.Member", "Member")
+                        .WithMany()
+                        .HasForeignKey("MemberID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GymWeb.Models.Staff", "ProcessedByStaff")
+                        .WithMany()
+                        .HasForeignKey("ProcessedByStaffID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("GymWeb.Models.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Member");
+
+                    b.Navigation("ProcessedByStaff");
+
+                    b.Navigation("Room");
+                });
+
+            modelBuilder.Entity("GymWeb.Models.RoomMaintenance", b =>
+                {
+                    b.HasOne("GymWeb.Models.Staff", "CreatedByStaff")
+                        .WithMany()
+                        .HasForeignKey("CreatedByStaffID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("GymWeb.Models.Room", "Room")
+                        .WithMany()
+                        .HasForeignKey("RoomID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("CreatedByStaff");
+
+                    b.Navigation("Room");
                 });
 
             modelBuilder.Entity("GymWeb.Models.Staff", b =>
@@ -401,6 +691,32 @@ namespace GymWeb.Migrations
                     b.Navigation("Member");
 
                     b.Navigation("Package");
+                });
+
+            modelBuilder.Entity("GymWeb.Models.TrainerBooking", b =>
+                {
+                    b.HasOne("GymWeb.Models.Member", "Member")
+                        .WithMany()
+                        .HasForeignKey("MemberID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("GymWeb.Models.Staff", "ProcessedByStaff")
+                        .WithMany()
+                        .HasForeignKey("ProcessedByStaffID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("GymWeb.Models.Staff", "Staff")
+                        .WithMany()
+                        .HasForeignKey("StaffID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Member");
+
+                    b.Navigation("ProcessedByStaff");
+
+                    b.Navigation("Staff");
                 });
 
             modelBuilder.Entity("GymWeb.Models.TrainerProfile", b =>

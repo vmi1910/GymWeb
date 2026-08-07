@@ -73,6 +73,9 @@ namespace GymWeb.Controllers
             member.Email = model.Email;
             member.Address = model.Address;
 
+            var account = _context.Accounts.Find(member.AccountID);
+            if (account != null) account.Email = model.Email;
+
             _context.SaveChanges();
             TempData["Success"] = "Cập nhật thông tin cá nhân thành công!";
             return RedirectToAction("Index");
@@ -85,6 +88,15 @@ namespace GymWeb.Controllers
             if (member == null) return RedirectToAction("Login", "Account");
 
             var packages = _context.MembershipPackages.Where(p => p.IsActive).OrderBy(p => p.Price).ToList();
+
+            var current = _context.Subscriptions
+                .Where(s => s.MemberID == member.MemberID)
+                .OrderByDescending(s => s.EndDate)
+                .FirstOrDefault();
+
+            ViewBag.CurrentPackageId = (current != null && current.EndDate.Date >= DateTime.Today) ? current.PackageID : (int?)null;
+            ViewBag.CurrentEndDate = current?.EndDate;
+
             return View(packages);
         }
 

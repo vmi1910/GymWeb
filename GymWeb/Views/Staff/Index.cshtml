@@ -5,25 +5,19 @@
     var list = Model.ToList();
 }
 
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success py-2 small">@TempData["Success"]</div>
-}
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger py-2 small">@TempData["Error"]</div>
-}
-
 <div class="admin-card p-4 shadow">
     <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <div>
             <h3 class="fw-bold mb-1">DANH SÁCH NHÂN VIÊN</h3>
             <p class="text-muted small mb-0">Tổng số: @list.Count nhân viên</p>
         </div>
-        <form method="get" class="d-flex" style="max-width: 320px;">
-            <input type="text" name="search" value="@ViewData["Search"]" class="form-control bg-dark text-white border-secondary me-2" placeholder="Tìm tên, SĐT...">
-            <button type="submit" class="btn btn-outline-brand"><i class="bi bi-search"></i></button>
-        </form>
+        <div class="d-flex gap-2">
+            <form method="get" class="d-flex" style="max-width: 320px;">
+                <input type="text" name="search" value="@ViewData["Search"]" class="form-control bg-dark text-white border-secondary me-2" placeholder="Tìm tên, SĐT...">
+                <button type="submit" class="btn btn-outline-brand"><i class="bi bi-search"></i></button>
+            </form>
+            <a asp-controller="Admin" asp-action="Create" asp-route-role="Staff" class="btn btn-brand rounded-pill px-3 text-nowrap"><i class="bi bi-person-plus-fill me-1"></i> Tạo tài khoản</a>
+        </div>
     </div>
 
     <div class="table-responsive">
@@ -64,9 +58,9 @@
                             <a asp-action="Edit" asp-route-id="@item.StaffID" class="btn btn-outline-warning btn-sm me-2 rounded-pill px-3">
                                 <i class="bi bi-pencil-square"></i> Sửa
                             </a>
-                            <form asp-action="Delete" asp-route-id="@item.StaffID" method="post" class="d-inline">
-                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3"
-                                        onclick="return confirm('Xóa nhân viên @item.FullName?');">
+                            <form asp-action="Delete" asp-route-id="@item.StaffID" method="post" class="d-inline"
+                                  data-confirm-title="Xóa nhân viên" data-confirm="Xóa nhân viên @item.FullName? Hành động này không thể hoàn tác.">
+                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3">
                                     <i class="bi bi-trash3-fill"></i> Xóa
                                 </button>
                             </form>

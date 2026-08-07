@@ -2,57 +2,7 @@
 @{
     ViewData["Title"] = "Quản lý tài khoản";
     Layout = "_AdminLayout"; // Chỉ định sử dụng Layout Admin riêng biệt
-
-    var accountList = Model.ToList();
-    var totalCount = accountList.Count;
-    var adminCount = accountList.Count(a => a.Role == "Admin");
-    var memberCount = accountList.Count(a => a.Role == "Member");
 }
-
-@if (TempData["Success"] != null)
-{
-    <div class="alert alert-success py-2 small">@TempData["Success"]</div>
-}
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger py-2 small">@TempData["Error"]</div>
-}
-
-<div class="row g-3 mb-4">
-    <div class="col-6 col-lg-4">
-        <div class="admin-card p-4">
-            <div class="d-flex align-items-center">
-                <div class="feature-icon me-3" style="width:52px;height:52px;font-size:1.2rem;margin:0;"><i class="bi bi-people-fill"></i></div>
-                <div>
-                    <div class="fs-3 fw-bold">@totalCount</div>
-                    <div class="text-muted small text-uppercase">Tổng tài khoản</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-6 col-lg-4">
-        <div class="admin-card p-4">
-            <div class="d-flex align-items-center">
-                <div class="feature-icon me-3" style="width:52px;height:52px;font-size:1.2rem;margin:0;"><i class="bi bi-shield-lock-fill"></i></div>
-                <div>
-                    <div class="fs-3 fw-bold">@adminCount</div>
-                    <div class="text-muted small text-uppercase">Quản trị viên</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-lg-4">
-        <div class="admin-card p-4">
-            <div class="d-flex align-items-center">
-                <div class="feature-icon me-3" style="width:52px;height:52px;font-size:1.2rem;margin:0;"><i class="bi bi-person-check-fill"></i></div>
-                <div>
-                    <div class="fs-3 fw-bold">@memberCount</div>
-                    <div class="text-muted small text-uppercase">Hội viên</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="admin-card p-4 shadow">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -60,7 +10,7 @@
             <h3 class="fw-bold mb-1">DANH SÁCH TÀI KHOẢN</h3>
             <p class="text-muted small mb-0">Quản lý phân quyền và thông tin đăng nhập hệ thống</p>
         </div>
-        <a asp-controller="Admin" asp-action="Create" class="btn btn-brand fw-bold px-4 rounded-pill">
+        <a asp-controller="Admin" asp-action="Create" class="btn btn-danger fw-bold px-4 rounded-pill">
             <i class="bi bi-plus-circle me-2"></i> Thêm tài khoản mới
         </a>
     </div>
@@ -71,42 +21,37 @@
                 <tr class="text-secondary small text-uppercase">
                     <th style="width: 10%">ID</th>
                     <th style="width: 35%">Tên Đăng Nhập (Username)</th>
-                    <th style="width: 20%">Vai Trò (Role)</th>
+                    <th style="width: 25%">Vai Trò (Role)</th>
                     <th style="width: 30%" class="text-end">Hành động</th>
                 </tr>
             </thead>
             <tbody>
-                @if (!accountList.Any())
-                {
-                    <tr>
-                        <td colspan="4" class="text-center text-muted py-4">Chưa có tài khoản nào trong hệ thống.</td>
-                    </tr>
-                }
-                @foreach (var item in accountList)
+                @foreach (var item in Model)
                 {
                     <tr>
                         <td class="fw-bold text-muted">#@item.AccountID</td>
                         <td>
                             <div class="d-flex align-items-center">
-                                <i class="bi bi-person-badge text-brand-red me-3 fs-4"></i>
+                                <i class="bi bi-person-badge text-danger me-3 fs-4"></i>
                                 <span class="fw-bold">@item.Username</span>
                             </div>
                         </td>
                         <td>
-                            @switch (item.Role)
+                            @if (item.Role == "Admin")
                             {
-                                case "Admin":
-                                    <span class="badge bg-danger text-uppercase px-3 py-2">Quản trị viên</span>
-                                    break;
-                                case "Trainer":
-                                    <span class="badge bg-primary text-uppercase px-3 py-2">Huấn luyện viên</span>
-                                    break;
-                                case "Staff":
-                                    <span class="badge bg-warning text-dark text-uppercase px-3 py-2">Nhân viên</span>
-                                    break;
-                                default:
-                                    <span class="badge bg-secondary text-uppercase px-3 py-2">Hội viên</span>
-                                    break;
+                                <span class="badge bg-danger text-uppercase px-3 py-2">Quản trị viên</span>
+                            }
+                            else if (item.Role == "Trainer")
+                            {
+                                <span class="badge bg-info text-dark text-uppercase px-3 py-2">Huấn luyện viên</span>
+                            }
+                            else if (item.Role == "Staff")
+                            {
+                                <span class="badge bg-warning text-dark text-uppercase px-3 py-2">Nhân viên</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary text-uppercase px-3 py-2">Hội viên</span>
                             }
                         </td>
                         <td class="text-end">
@@ -116,15 +61,9 @@
                                     <i class="bi bi-pencil-square"></i> Sửa
                                 </a>
                             }
-                            else
-                            {
-                                <button class="btn btn-outline-secondary btn-sm me-2 rounded-pill px-3" disabled title="Chưa có hồ sơ liên kết">
-                                    <i class="bi bi-pencil-square"></i> Sửa
-                                </button>
-                            }
-                            <form asp-controller="Admin" asp-action="Delete" asp-route-id="@item.AccountID" method="post" class="d-inline">
-                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3"
-                                onclick="return confirm('Bạn chắc chắn muốn xóa tài khoản @item.Username?');">
+                            <form asp-controller="Admin" asp-action="Delete" asp-route-id="@item.AccountID" method="post" class="d-inline"
+                                  data-confirm-title="Xóa tài khoản" data-confirm="Bạn chắc chắn muốn xóa tài khoản @item.Username? Hành động này không thể hoàn tác.">
+                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3">
                                     <i class="bi bi-trash3-fill"></i> Xóa
                                 </button>
                             </form>

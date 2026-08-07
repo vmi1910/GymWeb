@@ -6,60 +6,130 @@
 
 <div class="row g-3 mb-4">
     <div class="col-6 col-lg-3">
-        <div class="admin-card p-4">
-            <div class="feature-icon mb-2" style="width:52px;height:52px;font-size:1.2rem;"><i class="bi bi-cash-coin"></i></div>
-            <div class="fs-4 fw-bold">@Model.TotalRevenue.ToString("N0") đ</div>
-            <div class="text-muted small text-uppercase">Tổng doanh thu</div>
+        <div class="admin-card p-4 dashboard-stat-card">
+            <div class="stat-icon stat-icon-red"><i class="bi bi-cash-coin"></i></div>
+            <div class="stat-content">
+                <div class="stat-value">@Model.TotalRevenue.ToString("N0") đ</div>
+                <div class="stat-label">Tổng doanh thu</div>
+            </div>
         </div>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="admin-card p-4">
-            <div class="feature-icon mb-2" style="width:52px;height:52px;font-size:1.2rem;"><i class="bi bi-graph-up-arrow"></i></div>
-            <div class="fs-4 fw-bold">@Model.RevenueThisMonth.ToString("N0") đ</div>
-            <div class="text-muted small text-uppercase">Doanh thu tháng này</div>
+        <div class="admin-card p-4 dashboard-stat-card">
+            <div class="stat-icon stat-icon-green"><i class="bi bi-graph-up-arrow"></i></div>
+            <div class="stat-content">
+                <div class="stat-value">@Model.RevenueThisMonth.ToString("N0") đ</div>
+                <div class="stat-label">Doanh thu tháng này</div>
+                @if (Model.RevenueTrendPercent.HasValue)
+                {
+                    var trend = Model.RevenueTrendPercent.Value;
+                    var trendClass = trend > 0 ? "trend-up" : trend < 0 ? "trend-down" : "trend-flat";
+                    var trendIcon = trend > 0 ? "bi-arrow-up-short" : trend < 0 ? "bi-arrow-down-short" : "bi-dash";
+                    <span class="trend-badge @trendClass"><i class="bi @trendIcon"></i>@Math.Abs(trend).ToString("N0")% so với tháng trước</span>
+                }
+                else
+                {
+                    <span class="trend-badge trend-flat">Chưa có dữ liệu so sánh</span>
+                }
+            </div>
         </div>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="admin-card p-4">
-            <div class="feature-icon mb-2" style="width:52px;height:52px;font-size:1.2rem;"><i class="bi bi-people-fill"></i></div>
-            <div class="fs-4 fw-bold">@Model.TotalMembers</div>
-            <div class="text-muted small text-uppercase">Tổng hội viên</div>
+        <div class="admin-card p-4 dashboard-stat-card">
+            <div class="stat-icon stat-icon-blue"><i class="bi bi-people-fill"></i></div>
+            <div class="stat-content">
+                <div class="stat-value">@Model.TotalMembers</div>
+                <div class="stat-label">Tổng hội viên</div>
+                <span class="trend-badge trend-up"><i class="bi bi-person-plus-fill"></i>+@Model.NewMembersThisMonth mới tháng này</span>
+            </div>
         </div>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="admin-card p-4">
-            <div class="feature-icon mb-2" style="width:52px;height:52px;font-size:1.2rem;"><i class="bi bi-card-list"></i></div>
-            <div class="fs-4 fw-bold">@Model.ActivePackages</div>
-            <div class="text-muted small text-uppercase">Gói tập đang bán</div>
+        <div class="admin-card p-4 dashboard-stat-card">
+            <div class="stat-icon stat-icon-purple"><i class="bi bi-card-list"></i></div>
+            <div class="stat-content">
+                <div class="stat-value">@Model.ActivePackages</div>
+                <div class="stat-label">Gói tập đang bán</div>
+                <span class="trend-badge trend-flat"><i class="bi bi-journal-check"></i>@Model.ActiveSubscriptions lượt còn hiệu lực</span>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="row g-3 mb-4">
-    <div class="col-md-6">
-        <div class="admin-card p-4 text-center">
-            <div class="fs-3 fw-bold text-brand-red">@Model.TotalStaff</div>
-            <div class="text-muted small text-uppercase">Nhân viên</div>
+    <div class="col-lg-8">
+        <div class="admin-card p-4 shadow h-100">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h5 class="fw-bold mb-0">DOANH THU 6 THÁNG GẦN NHẤT</h5>
+                <span class="badge bg-secondary bg-opacity-25 text-secondary border border-secondary">6 tháng</span>
+            </div>
+            <canvas id="revenueChart" height="110"></canvas>
         </div>
     </div>
-    <div class="col-md-6">
-        <div class="admin-card p-4 text-center">
-            <div class="fs-3 fw-bold text-brand-red">@Model.TotalTrainers</div>
-            <div class="text-muted small text-uppercase">Huấn luyện viên</div>
+    <div class="col-lg-4">
+        <div class="admin-card p-4 shadow h-100">
+            <h5 class="fw-bold mb-4">GÓI TẬP PHỔ BIẾN</h5>
+            @if (Model.PackagePopularityLabels.Any())
+            {
+                <canvas id="packageChart" height="200"></canvas>
+            }
+            else
+            {
+                <div class="text-center text-muted py-4">
+                    <i class="bi bi-pie-chart display-6 d-block mb-2 opacity-50"></i>
+                    Chưa có dữ liệu đăng ký gói tập.
+                </div>
+            }
+
+            <hr class="border-secondary my-4" />
+
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="text-muted small"><i class="bi bi-person-badge me-2 stat-icon-orange" style="background:none;width:auto;height:auto;font-size:1rem;"></i>Nhân viên</span>
+                <span class="fw-bold">@Model.TotalStaff</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="text-muted small"><i class="bi bi-person-badge-fill me-2" style="color:#f5a623;"></i>Huấn luyện viên</span>
+                <span class="fw-bold">@Model.TotalTrainers</span>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="admin-card p-4 shadow">
-    <h5 class="fw-bold mb-4">DOANH THU 6 THÁNG GẦN NHẤT</h5>
-    <canvas id="revenueChart" height="90"></canvas>
+    <h5 class="fw-bold mb-3">HOẠT ĐỘNG THANH TOÁN GẦN ĐÂY</h5>
+    @if (!Model.RecentPayments.Any())
+    {
+        <div class="text-center text-muted py-4">
+            <i class="bi bi-receipt display-6 d-block mb-2 opacity-50"></i>
+            Chưa có giao dịch thanh toán nào.
+        </div>
+    }
+    else
+    {
+        <div>
+            @foreach (var item in Model.RecentPayments)
+            {
+                <div class="activity-row">
+                    <div class="activity-avatar">@(item.MemberName.Length > 0 ? item.MemberName[0].ToString().ToUpper() : "?")</div>
+                    <div class="flex-grow-1">
+                        <div class="fw-bold small">@item.MemberName</div>
+                        <div class="text-muted" style="font-size: 0.8rem;">Đăng ký gói <b>@item.PackageName</b> · @item.PaymentDate.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+                    <div class="text-end">
+                        <div class="text-brand-red fw-bold small">@item.Amount.ToString("N0") đ</div>
+                        <span class="badge bg-info text-dark" style="font-size: 0.7rem;">@item.Method</span>
+                    </div>
+                </div>
+            }
+        </div>
+    }
 </div>
 
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script>
-        const ctx = document.getElementById('revenueChart').getContext('2d');
-        new Chart(ctx, {
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(revenueCtx, {
             type: 'bar',
             data: {
                 labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.MonthlyLabels)),
@@ -79,5 +149,33 @@
                 }
             }
         });
+
+        @if (Model.PackagePopularityLabels.Any())
+        {
+            <text>
+            const packageCtx = document.getElementById('packageChart').getContext('2d');
+            new Chart(packageCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.PackagePopularityLabels)),
+                    datasets: [{
+                        data: @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.PackagePopularityCounts)),
+                        backgroundColor: ['#e30613', '#3498db', '#2ecc71', '#f5a623', '#b07cd6'],
+                        borderColor: '#171a21',
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#9a9a9a', boxWidth: 12, padding: 12, font: { size: 11 } }
+                        }
+                    }
+                }
+            });
+            </text>
+        }
     </script>
 }

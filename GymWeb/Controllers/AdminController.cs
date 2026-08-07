@@ -3,6 +3,7 @@ using GymWeb.Models;
 using Microsoft.AspNetCore.Identity;
 using GymWeb.ViewModels;
 using GymWeb.Helpers;
+using Microsoft.EntityFrameworkCore;
 
 namespace GymWeb.Controllers
 {
@@ -66,12 +67,13 @@ namespace GymWeb.Controllers
             return View(list);
         }
 
-        //Tạo tài khoản (Admin)
+        //Tạo tài khoản (Admin)
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult Create(string? role)
         {
             if (HttpContext.Session.GetString("Role") != "Admin") return RedirectToAction("Login", "Account");
-            return View(new AccountCreateViewModel());
+            var allowedRoles = new[] { "Staff", "Trainer", "Member", "Admin" };
+            return View(new AccountCreateViewModel { Role = allowedRoles.Contains(role) ? role! : "Member" });
         }
 
         // 2. Xử lý khi bấm nút Lưu (POST)
@@ -107,7 +109,7 @@ namespace GymWeb.Controllers
             if (ModelState.IsValid)
             {
                 // 1. Lưu vào bảng ACCOUNT trước
-                var account = new Account { Username = model.Username, Role = model.Role };
+                var account = new Account { Username = model.Username, Role = model.Role, Email = model.Email };
                 var hasher = new PasswordHasher<Account>();
                 account.PasswordHash = hasher.HashPassword(account, model.RawPassword);
 
@@ -248,6 +250,7 @@ namespace GymWeb.Controllers
 
             account.Username = model.Username;
             account.Role = newRole;
+            account.Email = model.Email;
 
             // Chỉ đổi mật khẩu nếu người dùng có nhập mới
             if (!string.IsNullOrWhiteSpace(model.RawPassword))
@@ -384,12 +387,21 @@ namespace GymWeb.Controllers
         public IActionResult Delete(int id)
         {
             if (HttpContext.Session.GetString("Role") != "Admin") return RedirectToAction("Login", "Account");
-    
+
             var account = _context.Accounts.Find(id);
             if (account != null)
             {
-                _context.Accounts.Remove(account);
-                _context.SaveChanges();
+                try
+                {
+                    _context.Accounts.Remove(account);
+                    _context.SaveChanges();
+                }
+                catch (DbUpdateException)
+                {
+                    // Xảy ra khi tài khoản này là Staff/Trainer đã từng thu ngân một hóa đơn (Payment.StaffID)
+                    // -> ràng buộc Restrict trên Payment.Staff chặn việc xóa dây chuyền.
+                    TempData["Error"] = "Không thể xóa tài khoản này vì đã có hóa đơn thanh toán gắn với tài khoản.";
+                }
             }
             return RedirectToAction("Accounts");
         }
