@@ -87,21 +87,17 @@
                                 </ul>
                             }
 
-                            <form asp-controller="Profile" asp-action="Register" method="post" class="mt-auto"
-                                  data-confirm-title="Xác nhận đăng ký gói tập"
-                                  data-confirm="Xác nhận đăng ký/gia hạn '@item.PackageName' với giá @item.Price.ToString("N0") đ?">
-                                <input type="hidden" name="packageId" value="@item.PackageID" />
-                                <button type="submit" class="btn-register">
-                                    @if (isCurrent)
-                                    {
-                                        <span><i class="bi bi-arrow-repeat me-1"></i>Gia hạn thêm</span>
-                                    }
-                                    else
-                                    {
-                                        <span>Đăng ký ngay</span>
-                                    }
-                                </button>
-                            </form>
+                            <button type="button" class="btn-register mt-auto" data-bs-toggle="modal" data-bs-target="#paymentMethodModal"
+                                    data-package-id="@item.PackageID" data-package-name="@item.PackageName" data-package-price="@item.Price.ToString("N0")">
+                                @if (isCurrent)
+                                {
+                                    <span><i class="bi bi-arrow-repeat me-1"></i>Gia hạn thêm</span>
+                                }
+                                else
+                                {
+                                    <span>Đăng ký ngay</span>
+                                }
+                            </button>
                         </div>
                     }
                 </div>
@@ -117,3 +113,5 @@
         </div>
     </div>
 </div>
+
+<partial name="_PaymentMethodModal" />

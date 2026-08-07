@@ -118,6 +118,10 @@
                     <div class="text-end">
                         <div class="text-brand-red fw-bold small">@item.Amount.ToString("N0") đ</div>
                         <span class="badge bg-info text-dark" style="font-size: 0.7rem;">@item.Method</span>
+                        @if (item.Status != "Đã thanh toán")
+                        {
+                            <span class="badge bg-warning text-dark ms-1" style="font-size: 0.7rem;">Chờ xác nhận</span>
+                        }
                     </div>
                 </div>
             }

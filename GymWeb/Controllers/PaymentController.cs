@@ -43,9 +43,29 @@ namespace GymWeb.Controllers
             ViewBag.Members = members;
             ViewBag.Packages = packages;
             ViewBag.Staffs = staffs;
-            ViewBag.TotalRevenue = payments.Sum(p => p.Amount);
+            ViewBag.TotalRevenue = payments.Where(p => p.Status == "Đã thanh toán").Sum(p => p.Amount);
 
             return View(payments);
+        }
+
+        // Nhân viên xác nhận đã nhận tiền mặt tại quầy - hoàn tất thanh toán do hội viên tự đăng ký online
+        [HttpPost]
+        public IActionResult ConfirmCash(int id)
+        {
+            if (!IsAdminOrStaff()) return RedirectToAction("Login", "Account");
+
+            var payment = _context.Payments.Find(id);
+            if (payment == null || payment.Method != "Tiền mặt" || payment.Status != "Chờ xác nhận")
+            {
+                TempData["Error"] = "Hóa đơn không hợp lệ hoặc đã được xử lý.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            payment.Status = "Đã thanh toán";
+            payment.StaffID = GetCurrentStaffId();
+            _context.SaveChanges();
+            TempData["Success"] = "Đã xác nhận nhận tiền mặt. Gói tập của hội viên đã kích hoạt.";
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
